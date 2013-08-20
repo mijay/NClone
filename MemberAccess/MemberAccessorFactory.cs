@@ -15,7 +15,8 @@ namespace Core.MemberAccess
         private static Func<object, object> BuildGetter(FieldInfo member)
         {
             var method = new DynamicMethod("getterFrom_" + member.DeclaringType.FullName + "_of_" + member.Name,
-                                           typeof (object), new[] { typeof (object) }, true);
+                                           typeof (object), new[] { typeof (object) },
+                                           member.DeclaringType, true);
             var ilGenerator = method.GetILGenerator();
 
             ilGenerator.Emit(OpCodes.Ldarg_0);
@@ -30,7 +31,8 @@ namespace Core.MemberAccess
         private static Action<object, object> BuildSetter(FieldInfo member)
         {
             var method = new DynamicMethod("setterFor_" + member.Name + "_of_" + member.DeclaringType.FullName,
-                                           typeof (void), new[] { typeof (object), typeof (object) }, true);
+                                           typeof (void), new[] { typeof (object), typeof (object) },
+                                           member.DeclaringType, true);
             var ilGenerator = method.GetILGenerator();
 
             ilGenerator.Emit(OpCodes.Ldarg_1);

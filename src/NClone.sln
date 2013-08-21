@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone", "NClone.csproj", "{28CAA240-65C7-46ED-8E73-B9AA1B3DD535}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone", "NClone\NClone.csproj", "{28CAA240-65C7-46ED-8E73-B9AA1B3DD535}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone.Tests", "..\NClone.Tests\NClone.Tests.csproj", "{0E523A67-C6C3-4B08-A085-D39B10A51465}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone.Tests", "NClone.Tests\NClone.Tests.csproj", "{0E523A67-C6C3-4B08-A085-D39B10A51465}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

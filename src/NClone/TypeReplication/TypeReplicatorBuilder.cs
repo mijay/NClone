@@ -11,13 +11,13 @@ namespace NClone.TypeReplication
             this.memberCopierBuilder = memberCopierBuilder;
         }
 
-        public ITypeReplicator<TType> BuildFor<TType>()
+        public IEntityReplicator<TType> BuildFor<TType>()
         {
             var type = typeof (TType);
             if (type == typeof (string) || type.IsEnum || type.IsPrimitive)
                 return new TrivialReplicator<TType>();
             return type.IsValueType
-                ? (ITypeReplicator<TType>) new StructureReplicator<TType>(memberCopierBuilder)
+                ? (IEntityReplicator<TType>) new StructureReplicator<TType>(memberCopierBuilder)
                 : new ObjectReplicator<TType>(memberCopierBuilder);
             //todo: memorization
         }

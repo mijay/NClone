@@ -5,11 +5,11 @@ using NClone.MemberCopying;
 
 namespace NClone.TypeReplication
 {
-    internal abstract class TypeReplicatorBase<TType>: ITypeReplicator<TType>
+    internal abstract class EntityReplicatorBase<TType>: IEntityReplicator<TType>
     {
         private readonly IMemberCopierBuilder memberCopierBuilder;
 
-        protected TypeReplicatorBase(IMemberCopierBuilder memberCopierBuilder)
+        protected EntityReplicatorBase(IMemberCopierBuilder memberCopierBuilder)
         {
             this.memberCopierBuilder = memberCopierBuilder;
         }
@@ -22,7 +22,7 @@ namespace NClone.TypeReplication
             //todo: memorization
         }
 
-        public abstract bool IsRedundant { get; }
+        public abstract bool IsTrivial { get; }
         public abstract TType Replicate(TType source);
     }
 }

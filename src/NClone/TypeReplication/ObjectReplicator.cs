@@ -1,15 +1,20 @@
 ﻿using System.Runtime.Serialization;
 using NClone.MemberCopying;
+using NClone.Shared;
 
 namespace NClone.TypeReplication
 {
-    internal class ObjectReplicator<TType>: TypeReplicatorBase<TType>
+    /// <summary>
+    /// Implementation of <see cref="IEntityReplicator{TType}"/> for reference type <typeparamref name="TType"/>.
+    /// </summary>
+    internal class ObjectReplicator<TType>: EntityReplicatorBase<TType>
     {
         public ObjectReplicator(IMemberCopierBuilder memberCopierBuilder): base(memberCopierBuilder)
         {
+            Guard.Check(!typeof (TType).IsValueType, "ObjectReplicator can be applied only to reference types, but used for {0}", typeof (TType));
         }
 
-        public override bool IsRedundant
+        public override bool IsTrivial
         {
             get { return false; }
         }

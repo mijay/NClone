@@ -40,11 +40,12 @@
     <Compile Include="MemberCopying\IMemberCopierBuilder.cs" />
     <Compile Include="ObjectReplicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TypeReplication\ITypeReplicator.cs" />
+    <Compile Include="Shared\Guard.cs" />
+    <Compile Include="TypeReplication\IEntityReplicator.cs" />
     <Compile Include="MemberCopying\MemberCopier.cs" />
     <Compile Include="TypeReplication\ObjectReplicator.cs" />
     <Compile Include="TypeReplication\TrivialReplicator.cs" />
-    <Compile Include="TypeReplication\TypeReplicatorBase.cs" />
+    <Compile Include="TypeReplication\EntityReplicatorBase.cs" />
     <Compile Include="TypeReplication\StructureReplicator.cs" />
     <Compile Include="MemberCopying\MemberCopierBuilder.cs" />
     <Compile Include="TypeReplication\TypeReplicatorBuilder.cs" />

@@ -67,10 +67,10 @@ namespace NClone.Tests.TypeReplication
         }
 
         [Test]
-        public void ReplicateEntity_MemberCopierBuildAndCalledForEachReplicatingField()
+        public void ReplicateEntity_MemberCopierBuildAndCalledForEachField()
         {
             var fakeMember = typeof (Class).GetFields().Single();
-            var fakeCopier = A.Fake<IMemberCopier<Class>>();
+            var fakeCopier = A.Fake<IMemberCopier<Class>>(x => x.Strict());
             metadataProvider
                 .Configure()
                 .CallsTo(x => x.GetReplicatingMembers(typeof (Class)))
@@ -79,6 +79,9 @@ namespace NClone.Tests.TypeReplication
                 .Configure()
                 .CallsTo(x => x.BuildFor<Class>(fakeMember))
                 .Returns(fakeCopier);
+            fakeCopier
+                .Configure()
+                .CallsTo(x => x.Copy(A<Class>.Ignored, A<Class>.Ignored));
 
             var objectReplicator = BuildObjectReplicator<Class>();
 
@@ -86,7 +89,7 @@ namespace NClone.Tests.TypeReplication
         }
 
         [Test]
-        public void ReplicateTwice_MetadataReadedOnceAndCopiersBuildedOnce()
+        public void ReplicateTwice_MetadataReadOnceAndCopiersBuiltOnce()
         {
             var fakeMember = typeof(Class).GetFields().Single();
             var fakeCopier = A.Fake<IMemberCopier<Class>>();

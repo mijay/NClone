@@ -42,6 +42,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="TypeReplication\ObjectReplicatorTest.cs" />
+    <Compile Include="TypeReplication\StructureReplicatorTest.cs" />
     <Compile Include="TypeReplication\TypeReplicatorBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

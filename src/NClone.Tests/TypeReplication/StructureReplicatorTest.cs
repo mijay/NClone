@@ -50,7 +50,7 @@ namespace NClone.Tests.TypeReplication
         {
             var fakeMembers = typeof (Structure).GetFields();
             var fakeCopiers = Repeat.Twice(() => A.Fake<IMemberCopier<Structure>>(x => x.Strict()));
-            var fakeResult = new Structure { field1 = new Random().Next() };
+            var fakeResult = new Structure { field1 = RandomInt() };
             metadataProvider
                 .Configure()
                 .CallsTo(x => x.GetReplicatingMembers(typeof (Structure)))

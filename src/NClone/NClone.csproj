@@ -43,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\EnumerableExtensions.cs" />
     <Compile Include="Shared\Guard.cs" />
+    <Compile Include="Shared\ILGeneratorExtensions.cs" />
     <Compile Include="Shared\Repeat.cs" />
     <Compile Include="TypeReplication\IEntityReplicator.cs" />
     <Compile Include="MemberCopying\MemberCopier.cs" />

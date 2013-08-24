@@ -1,4 +1,5 @@
 ﻿using System;
+using NClone.Shared;
 
 namespace NClone.MemberCopying
 {
@@ -7,9 +8,17 @@ namespace NClone.MemberCopying
     /// </summary>
     internal class MemberCopier<TEntity>: IMemberCopier<TEntity>
     {
+        private readonly Func<TEntity, TEntity, TEntity> copyDelegate;
+
+        public MemberCopier(Func<TEntity, TEntity, TEntity> copyDelegate)
+        {
+            this.copyDelegate = copyDelegate;
+            Guard.AgainstNull(copyDelegate, "copyDelegate");
+        }
+
         public TEntity Copy(TEntity source, TEntity destination)
         {
-            throw new NotImplementedException();
+            return copyDelegate(source, destination);
         }
 
         public bool Replicate

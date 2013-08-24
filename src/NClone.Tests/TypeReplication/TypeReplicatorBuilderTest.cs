@@ -1,4 +1,5 @@
 ﻿using FakeItEasy;
+using NClone.Annotation;
 using NClone.MemberCopying;
 using NClone.TypeReplication;
 using NUnit.Framework;
@@ -12,7 +13,7 @@ namespace NClone.Tests.TypeReplication
         protected override void SetUp()
         {
             base.SetUp();
-            typeReplicatorBuilder = new TypeReplicatorBuilder(A.Fake<IMemberCopierBuilder>());
+            typeReplicatorBuilder = new TypeReplicatorBuilder(A.Fake<IMetadataProvider>(), A.Fake<IMemberCopierBuilder>());
         }
 
         [Test]

@@ -11,5 +11,11 @@ namespace NClone.Shared
             if (!condition)
                 throw new ArgumentException(string.Format(errorDescriptionFormat, args));
         }
+
+        public static void NotNull(object argument, [InvokerParameterName] string argumentName)
+        {
+            if (argument == null)
+                throw new ArgumentNullException(argumentName);
+        }
     }
 }

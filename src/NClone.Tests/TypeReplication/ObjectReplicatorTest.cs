@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using FakeItEasy;
-using FakeItEasy.ExtensionSyntax.Full;
+using FakeItEasy.ExtensionSyntax;
+using NClone.Annotation;
 using NClone.MemberCopying;
 using NClone.TypeReplication;
 using NUnit.Framework;
@@ -10,13 +12,29 @@ namespace NClone.Tests.TypeReplication
 {
     public class ObjectReplicatorTest: TestBase
     {
-        private static ObjectReplicator<T> BuildReplicator<T>(Func<FieldInfo, IMemberCopier<T>> configuration)
+        private IMetadataProvider metadataProvider;
+        private IMemberCopierBuilder memberCopierBuilder;
+
+        protected override void SetUp()
         {
-            var memberCopierBuilder = A.Fake<IMemberCopierBuilder>();
-            memberCopierBuilder
-                .CallsTo(x => x.BuildFor<T>(A<FieldInfo>.Ignored))
-                .ReturnsLazily(configuration);
-            return new ObjectReplicator<T>(memberCopierBuilder);
+            base.SetUp();
+            metadataProvider = A.Fake<IMetadataProvider>(x => x.Strict());
+            memberCopierBuilder = A.Fake<IMemberCopierBuilder>(x => x.Strict());
+        }
+
+        private ObjectReplicator<TType> BuildObjectReplicator<TType>()
+        {
+            return new ObjectReplicator<TType>(metadataProvider, memberCopierBuilder);
+        }
+
+        public struct Structure
+        {
+        }
+
+        [Test]
+        public void CreateObjectReplicatorForValueType_ExceptionIsThrown()
+        {
+            Assert.Throws<ArgumentException>(() => BuildObjectReplicator<Structure>());
         }
 
         public class ClassWithCtor
@@ -30,44 +48,63 @@ namespace NClone.Tests.TypeReplication
         }
 
         [Test]
-        public void ReplicateClassWithDefaultCtor_CtorIsNotCalled()
+        public void ReplicateEntityWithDefaultCtor_CtorIsNotCalled()
         {
-            var objectReplicator = BuildReplicator(_ => A.Fake<IMemberCopier<ClassWithCtor>>());
-            var source = new ClassWithCtor();
+            metadataProvider
+                .Configure()
+                .CallsTo(x => x.GetReplicatingMembers(typeof (ClassWithCtor)))
+                .Returns(new FieldInfo[0]);
+            var objectReplicator = BuildObjectReplicator<ClassWithCtor>();
 
-            var result = objectReplicator.Replicate(source);
+            var result = objectReplicator.Replicate(new ClassWithCtor());
 
             Assert.That(result.ctorCalled, Is.False);
         }
 
-        [Test]
-        public void ReplicateClassWithPublicField_FieldBuilderIsCreatedAndCalled()
+        public class Class
         {
-            Assert.Fail();
+            public object field;
         }
 
         [Test]
-        public void ReplicateClassWithPrivateField_FieldBuilderIsCreatedAndCalled()
+        public void ReplicateEntity_MemberCopierBuildAndCalledForEachReplicatingField()
         {
-            Assert.Fail();
+            var fakeMember = typeof (Class).GetFields().Single();
+            var fakeCopier = A.Fake<IMemberCopier<Class>>();
+            metadataProvider
+                .Configure()
+                .CallsTo(x => x.GetReplicatingMembers(typeof (Class)))
+                .Returns(new[] { fakeMember });
+            memberCopierBuilder
+                .Configure()
+                .CallsTo(x => x.BuildFor<Class>(fakeMember))
+                .Returns(fakeCopier);
+
+            var objectReplicator = BuildObjectReplicator<Class>();
+
+            objectReplicator.Replicate(new Class());
         }
 
         [Test]
-        public void ReplicateClassWithProperty_NoFieldBuildersCreated()
+        public void ReplicateTwice_MetadataReadedOnceAndCopiersBuildedOnce()
         {
-            Assert.Fail();
-        }
+            var fakeMember = typeof(Class).GetFields().Single();
+            var fakeCopier = A.Fake<IMemberCopier<Class>>();
+            metadataProvider
+                .Configure()
+                .CallsTo(x => x.GetReplicatingMembers(typeof(Class)))
+                .Returns(new[] { fakeMember })
+                .NumberOfTimes(1);
+            memberCopierBuilder
+                .Configure()
+                .CallsTo(x => x.BuildFor<Class>(fakeMember))
+                .Returns(fakeCopier)
+                .NumberOfTimes(1);
 
-        [Test]
-        public void ReplicateClassWithNewField_TwoFieldBuilderCreatedAndCalled()
-        {
-            Assert.Fail();
-        }
+            var objectReplicator = BuildObjectReplicator<Class>();
 
-        [Test]
-        public void ReplicateTwice_FieldBuilderCalledOnce()
-        {
-            Assert.Fail();
+            objectReplicator.Replicate(new Class());
+            objectReplicator.Replicate(new Class());
         }
     }
 }

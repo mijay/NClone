@@ -16,9 +16,9 @@ namespace NClone.TypeReplication
 
         public ObjectReplicator(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
         {
-            Guard.Check(!typeof (TType).IsValueType, "ObjectReplicator can be applied only to reference types");
-            Guard.NotNull(metadataProvider, "metadataProvider");
-            Guard.NotNull(memberCopierBuilder, "memberCopierBuilder");
+            Guard.AgainstFalse(!typeof (TType).IsValueType, "ObjectReplicator can be applied only to reference types");
+            Guard.AgainstNull(metadataProvider, "metadataProvider");
+            Guard.AgainstNull(memberCopierBuilder, "memberCopierBuilder");
             this.metadataProvider = metadataProvider;
             this.memberCopierBuilder = memberCopierBuilder;
         }

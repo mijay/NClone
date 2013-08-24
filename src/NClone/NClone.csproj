@@ -50,7 +50,7 @@
     <Compile Include="TypeReplication\TrivialReplicator.cs" />
     <Compile Include="TypeReplication\StructureReplicator.cs" />
     <Compile Include="MemberCopying\MemberCopierBuilder.cs" />
-    <Compile Include="TypeReplication\TypeReplicatorBuilder.cs" />
+    <Compile Include="TypeReplication\EntityReplicatorBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

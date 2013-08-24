@@ -4,19 +4,25 @@ using NClone.Shared;
 
 namespace NClone.TypeReplication
 {
-    internal class TypeReplicatorBuilder
+    /// <summary>
+    /// Builds <see cref="IEntityReplicator{TType}"/> for a given type.
+    /// </summary>
+    internal class EntityReplicatorBuilder
     {
         private readonly IMetadataProvider metadataProvider;
         private readonly IMemberCopierBuilder memberCopierBuilder;
 
-        public TypeReplicatorBuilder(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
+        public EntityReplicatorBuilder(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
         {
-            Guard.NotNull(metadataProvider, "metadataProvider");
-            Guard.NotNull(memberCopierBuilder, "memberCopierBuilder");
+            Guard.AgainstNull(metadataProvider, "metadataProvider");
+            Guard.AgainstNull(memberCopierBuilder, "memberCopierBuilder");
             this.memberCopierBuilder = memberCopierBuilder;
             this.metadataProvider = metadataProvider;
         }
 
+        /// <summary>
+        /// Builds <see cref="IEntityReplicator{TType}"/> for the given <typeparamref name="TType"/>.
+        /// </summary>
         public IEntityReplicator<TType> BuildFor<TType>()
         {
             var type = typeof (TType);

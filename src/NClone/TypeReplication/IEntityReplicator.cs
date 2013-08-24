@@ -12,8 +12,8 @@
 
         /// <summary>
         /// Indicates, whether current <see cref="IEntityReplicator{TType}"/> is trivial,
-        /// i.e. whether its <see cref="Replicate"/> just returns provided result,
-        /// because deep copying can be omitted.
+        /// i.e. whether its <see cref="Replicate"/> just returns given source,
+        /// because copying can be omitted.
         /// </summary>
         /// <remarks><see cref="IsTrivial"/> is true for immutable entities.</remarks>
         bool IsTrivial { get; }

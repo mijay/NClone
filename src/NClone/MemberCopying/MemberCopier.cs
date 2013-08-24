@@ -1,26 +1,20 @@
 ﻿using System;
-using System.Reflection;
 
 namespace NClone.MemberCopying
 {
     /// <summary>
-    /// Default implementation of <see cref="IMemberCopier{TContainer}"/>
+    /// Implementation of <see cref="IMemberCopier{TContainer}"/>
     /// </summary>
-    internal class MemberCopier<TContainer>: IMemberCopier<TContainer>
+    internal class MemberCopier<TEntity>: IMemberCopier<TEntity>
     {
-        public MemberCopier(FieldInfo field, bool performsReplication)
-        {
-            Field = field;
-            PerformsReplication = performsReplication;
-        }
-
-        public FieldInfo Field { get; private set; }
-
-        public TContainer Copy(TContainer source, TContainer destination)
+        public TEntity Copy(TEntity source, TEntity destination)
         {
             throw new NotImplementedException();
         }
 
-        public bool PerformsReplication { get; private set; }
+        public bool Replicate
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

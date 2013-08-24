@@ -43,7 +43,7 @@
     <Compile Include="TestBase.cs" />
     <Compile Include="TypeReplication\ObjectReplicatorTest.cs" />
     <Compile Include="TypeReplication\StructureReplicatorTest.cs" />
-    <Compile Include="TypeReplication\TypeReplicatorBuilderTest.cs" />
+    <Compile Include="TypeReplication\EntityReplicatorBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

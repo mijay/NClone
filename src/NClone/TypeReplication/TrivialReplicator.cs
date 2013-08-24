@@ -1,7 +1,7 @@
 ﻿namespace NClone.TypeReplication
 {
     /// <summary>
-    /// Trivial implementation of <see cref="IEntityReplicator{TType}"/>, which always omit deep copying.
+    /// Trivial implementation of <see cref="IEntityReplicator{TType}"/>, which always omit copying.
     /// </summary>
     internal class TrivialReplicator<TType>: IEntityReplicator<TType>
     {

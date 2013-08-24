@@ -7,18 +7,18 @@ using NClone.Shared;
 namespace NClone.TypeReplication
 {
     /// <summary>
-    /// Implementation of <see cref="IEntityReplicator{TType}"/> for value type <typeparamref name="TType"/>.
+    /// Implementation of <see cref="IEntityReplicator{TType}"/> for value type <typeparamref name="TEntity"/>.
     /// </summary>
-    internal class StructureReplicator<TType>: IEntityReplicator<TType>
+    internal class StructureReplicator<TEntity>: IEntityReplicator<TEntity>
     {
         private readonly IMetadataProvider metadataProvider;
         private readonly IMemberCopierBuilder memberCopierBuilder;
 
         public StructureReplicator(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
         {
-            Guard.Check(typeof (TType).IsValueType, "StructureReplicator can be applied only to value types");
-            Guard.NotNull(metadataProvider, "metadataProvider");
-            Guard.NotNull(memberCopierBuilder, "memberCopierBuilder");
+            Guard.AgainstFalse(typeof (TEntity).IsValueType, "StructureReplicator can be applied only to value types");
+            Guard.AgainstNull(metadataProvider, "metadataProvider");
+            Guard.AgainstNull(memberCopierBuilder, "memberCopierBuilder");
             this.metadataProvider = metadataProvider;
             this.memberCopierBuilder = memberCopierBuilder;
         }
@@ -28,7 +28,7 @@ namespace NClone.TypeReplication
             get { return GetMemberReplicators().IsEmpty(); }
         }
 
-        public TType Replicate(TType source)
+        public TEntity Replicate(TEntity source)
         {
             var result = source;
             foreach (var memberCopier in GetMemberReplicators())
@@ -36,12 +36,12 @@ namespace NClone.TypeReplication
             return result;
         }
 
-        private IEnumerable<IMemberCopier<TType>> GetMemberReplicators()
+        private IEnumerable<IMemberCopier<TEntity>> GetMemberReplicators()
         {
             return metadataProvider
-                .GetReplicatingMembers(typeof (TType))
-                .Select(memberCopierBuilder.BuildFor<TType>)
-                .Where(x => x.PerformsReplication);
+                .GetReplicatingMembers(typeof (TEntity))
+                .Select(memberCopierBuilder.BuildFor<TEntity>)
+                .Where(x => x.Replicate);
             //todo: memorization
         }
     }

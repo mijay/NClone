@@ -37,6 +37,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotation\DefaultMetadataProvider.cs" />
     <Compile Include="Annotation\IMetadataProvider.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilder.cs" />
     <Compile Include="MemberAccess\IMemberAccessor.cs" />

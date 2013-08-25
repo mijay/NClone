@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using NClone.Annotation;
 using NClone.MemberCopying;
@@ -16,7 +17,7 @@ namespace NClone.TypeReplication
 
         public ObjectReplicator(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
         {
-            Guard.AgainstFalse(!typeof (TType).IsValueType, "ObjectReplicator can be applied only to reference types");
+            Guard.AgainstViolation(!typeof (TType).IsValueType, "ObjectReplicator can be applied only to reference types");
             Guard.AgainstNull(metadataProvider, "metadataProvider");
             Guard.AgainstNull(memberCopierBuilder, "memberCopierBuilder");
             this.metadataProvider = metadataProvider;
@@ -30,6 +31,10 @@ namespace NClone.TypeReplication
 
         public TType Replicate(TType source)
         {
+            if (ReferenceEquals(source, null))
+                return source;
+            Guard.AgainstViolation<InvalidCastException>(source.GetType() == typeof (TType));
+
             var result = (TType) FormatterServices.GetUninitializedObject(typeof (TType));
             metadataProvider
                 .GetReplicatingMembers(typeof (TType))

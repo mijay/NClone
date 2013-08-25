@@ -24,10 +24,10 @@ namespace NClone.MemberAccess
         public static IMemberAccessor<TEntity, TMember> BuildFor<TEntity, TMember>(FieldInfo field, bool skipAccessibility = false)
         {
             Guard.AgainstNull(field, "field");
-            Guard.AgainstFalse(field.FieldType == typeof (TMember),
+            Guard.AgainstViolation(field.FieldType == typeof (TMember),
                 "IMemberAccessor for field of type [{0}] can't access field of type [{1}]",
                 typeof (TMember).FullName, field.FieldType.FullName);
-            Guard.AgainstFalse(field.DeclaringType.IsAssignableFrom(typeof (TEntity)),
+            Guard.AgainstViolation(field.DeclaringType.IsAssignableFrom(typeof (TEntity)),
                 "IMemberAccessor for entity [{0}] can't access field from entity [{1}]",
                 typeof (TEntity).FullName, field.DeclaringType.FullName);
 

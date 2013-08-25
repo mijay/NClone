@@ -9,7 +9,7 @@ namespace NClone.MemberCopying
         /// <summary>
         /// Copies a value of a single field from <paramref name="source"/> to <paramref name="destination"/>
         /// and return modified <paramref name="destination"/>.
-        /// Value of a field is replicated (deep copied) during copying if <see cref="Replicate"/> is <c>true</c>.
+        /// Value of a field is replicated (deep copied) during copying if <see cref="Replicating"/> is <c>true</c>.
         /// </summary>
         TEntity Copy(TEntity source, TEntity destination);
 
@@ -17,6 +17,6 @@ namespace NClone.MemberCopying
         /// Indicates whether this <see cref="IMemberCopier{TContainer}"/> performs replication (deep copying) of field value
         /// during <see cref="Copy"/>.
         /// </summary>
-        bool Replicate { get; }
+        bool Replicating { get; }
     }
 }

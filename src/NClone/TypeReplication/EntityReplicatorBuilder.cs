@@ -5,9 +5,9 @@ using NClone.Shared;
 namespace NClone.TypeReplication
 {
     /// <summary>
-    /// Builds <see cref="IEntityReplicator{TType}"/> for a given type.
+    /// Implementation of <see cref="IEntityReplicatorBuilder"/>.
     /// </summary>
-    internal class EntityReplicatorBuilder
+    internal class EntityReplicatorBuilder: IEntityReplicatorBuilder
     {
         private readonly IMetadataProvider metadataProvider;
         private readonly IMemberCopierBuilder memberCopierBuilder;
@@ -20,9 +20,6 @@ namespace NClone.TypeReplication
             this.metadataProvider = metadataProvider;
         }
 
-        /// <summary>
-        /// Builds <see cref="IEntityReplicator{TType}"/> for the given <typeparamref name="TType"/>.
-        /// </summary>
         public IEntityReplicator<TType> BuildFor<TType>()
         {
             var type = typeof (TType);

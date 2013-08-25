@@ -12,6 +12,29 @@ namespace NClone.Tests.TypeReplication
 {
     public class ObjectReplicatorTest: TestBase
     {
+        #region Test data
+
+        public struct Structure { }
+
+        public class ClassWithCtor
+        {
+            public bool ctorCalled;
+
+            public ClassWithCtor()
+            {
+                ctorCalled = false;
+            }
+        }
+
+        public class Class
+        {
+            public object field;
+        }
+
+        public class InheritedClass: Class { }
+
+        #endregion
+
         private IMetadataProvider metadataProvider;
         private IMemberCopierBuilder memberCopierBuilder;
 
@@ -27,24 +50,10 @@ namespace NClone.Tests.TypeReplication
             return new ObjectReplicator<TType>(metadataProvider, memberCopierBuilder);
         }
 
-        public struct Structure
-        {
-        }
-
         [Test]
         public void CreateObjectReplicatorForValueType_ExceptionIsThrown()
         {
             Assert.Throws<ArgumentException>(() => BuildObjectReplicator<Structure>());
-        }
-
-        public class ClassWithCtor
-        {
-            public bool ctorCalled;
-
-            public ClassWithCtor()
-            {
-                ctorCalled = false;
-            }
         }
 
         [Test]
@@ -59,11 +68,6 @@ namespace NClone.Tests.TypeReplication
             var result = objectReplicator.Replicate(new ClassWithCtor());
 
             Assert.That(result.ctorCalled, Is.False);
-        }
-
-        public class Class
-        {
-            public object field;
         }
 
         [Test]
@@ -91,11 +95,11 @@ namespace NClone.Tests.TypeReplication
         [Test]
         public void ReplicateTwice_MetadataReadOnceAndCopiersBuiltOnce()
         {
-            var fakeMember = typeof(Class).GetFields().Single();
+            var fakeMember = typeof (Class).GetFields().Single();
             var fakeCopier = A.Fake<IMemberCopier<Class>>();
             metadataProvider
                 .Configure()
-                .CallsTo(x => x.GetReplicatingMembers(typeof(Class)))
+                .CallsTo(x => x.GetReplicatingMembers(typeof (Class)))
                 .Returns(new[] { fakeMember })
                 .NumberOfTimes(1);
             memberCopierBuilder
@@ -108,6 +112,30 @@ namespace NClone.Tests.TypeReplication
 
             objectReplicator.Replicate(new Class());
             objectReplicator.Replicate(new Class());
+        }
+
+        [Test]
+        public void ReplicateEntityOfInheritedType_Exception()
+        {
+            metadataProvider
+                .Configure()
+                .CallsTo(x => x.GetReplicatingMembers(typeof (Class)))
+                .Returns(new FieldInfo[0]);
+            var objectReplicator = BuildObjectReplicator<Class>();
+
+            Assert.Throws<InvalidCastException>(() => objectReplicator.Replicate(new InheritedClass()));
+        }
+
+        [Test]
+        public void ReplicateNull_NullReturned()
+        {
+            metadataProvider
+                .Configure()
+                .CallsTo(x => x.GetReplicatingMembers(typeof (Class)))
+                .Returns(new FieldInfo[0]);
+            var objectReplicator = BuildObjectReplicator<Class>();
+
+            Assert.That(objectReplicator.Replicate(null), Is.Null);
         }
     }
 }

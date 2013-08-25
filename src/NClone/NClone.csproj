@@ -51,6 +51,7 @@
     <Compile Include="Shared\Repeat.cs" />
     <Compile Include="TypeReplication\IEntityReplicator.cs" />
     <Compile Include="MemberCopying\MemberCopier.cs" />
+    <Compile Include="TypeReplication\IEntityReplicatorBuilder.cs" />
     <Compile Include="TypeReplication\ObjectReplicator.cs" />
     <Compile Include="TypeReplication\TrivialReplicator.cs" />
     <Compile Include="TypeReplication\StructureReplicator.cs" />

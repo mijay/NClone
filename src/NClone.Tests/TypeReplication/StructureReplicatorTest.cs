@@ -61,10 +61,10 @@ namespace NClone.Tests.TypeReplication
                 .ReturnsLazily((FieldInfo fieldInfo) => fakeCopiers[Array.IndexOf(fakeMembers, fieldInfo)]);
             fakeCopiers[0]
                 .Configure()
-                .CallsTo(x => x.Replicate)
+                .CallsTo(x => x.Replicating)
                 .Returns(false);
             fakeCopiers[1]
-                .CallsTo(x => x.Replicate)
+                .CallsTo(x => x.Replicating)
                 .Returns(true);
             fakeCopiers[1]
                 .CallsTo(x => x.Copy(A<Structure>.Ignored, A<Structure>.Ignored))

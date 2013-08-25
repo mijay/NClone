@@ -16,7 +16,7 @@ namespace NClone.TypeReplication
 
         public StructureReplicator(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
         {
-            Guard.AgainstFalse(typeof (TEntity).IsValueType, "StructureReplicator can be applied only to value types");
+            Guard.AgainstViolation(typeof (TEntity).IsValueType, "StructureReplicator can be applied only to value types");
             Guard.AgainstNull(metadataProvider, "metadataProvider");
             Guard.AgainstNull(memberCopierBuilder, "memberCopierBuilder");
             this.metadataProvider = metadataProvider;
@@ -41,7 +41,7 @@ namespace NClone.TypeReplication
             return metadataProvider
                 .GetReplicatingMembers(typeof (TEntity))
                 .Select(memberCopierBuilder.BuildFor<TEntity>)
-                .Where(x => x.Replicate);
+                .Where(x => x.Replicating);
             //todo: memorization
         }
     }

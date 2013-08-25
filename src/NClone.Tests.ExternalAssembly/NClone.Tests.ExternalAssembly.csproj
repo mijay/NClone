@@ -33,6 +33,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassWithInternalField.cs" />
     <Compile Include="ClassWithInternalReadonlyField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -37,6 +37,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotation\IMetadataProvider.cs" />
+    <Compile Include="MemberAccess\FieldAccessorBuilder.cs" />
+    <Compile Include="MemberAccess\IMemberAccessor.cs" />
+    <Compile Include="MemberAccess\MemberAccessor.cs" />
     <Compile Include="MemberCopying\IMemberCopier.cs" />
     <Compile Include="MemberCopying\IMemberCopierBuilder.cs" />
     <Compile Include="ObjectReplicator.cs" />

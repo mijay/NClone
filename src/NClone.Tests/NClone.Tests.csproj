@@ -39,6 +39,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmark.cs" />
+    <Compile Include="MemberAccess\FieldAccessorBuilderTest.cs" />
     <Compile Include="MemberCopying\MemberCopyingBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBase.cs" />

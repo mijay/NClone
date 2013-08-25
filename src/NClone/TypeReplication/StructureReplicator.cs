@@ -31,8 +31,8 @@ namespace NClone.TypeReplication
         public TEntity Replicate(TEntity source)
         {
             var result = source;
-            foreach (var memberCopier in GetMemberReplicators())
-                result = memberCopier.Copy(source, result);
+            foreach (var fieldCopier in GetMemberReplicators())
+                result = fieldCopier.Copy(source, result);
             return result;
         }
 

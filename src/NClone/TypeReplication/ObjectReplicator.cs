@@ -40,7 +40,7 @@ namespace NClone.TypeReplication
                 .GetReplicatingMembers(typeof (TType))
                 .Select(fieldCopiersBuilder.BuildFor<TType>)
                 // todo: memorization
-                .ForEach(memberCopier => memberCopier.Copy(source, result));
+                .ForEach(fieldCopier => fieldCopier.Copy(source, result));
             return result;
         }
     }

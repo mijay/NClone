@@ -46,7 +46,7 @@ namespace NClone.Tests.TypeReplication
         }
 
         [Test]
-        public void ReplicateEntity_MemberCopierBuildAndCalledForEachReplicatingField()
+        public void ReplicateEntity_FieldCopierBuildAndCalledForEachReplicatingField()
         {
             var fakeMembers = typeof (Structure).GetFields();
             var fakeCopiers = Repeat.Twice(() => A.Fake<IFieldCopier<Structure>>(x => x.Strict()));

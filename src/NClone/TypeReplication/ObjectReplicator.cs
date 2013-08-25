@@ -36,10 +36,11 @@ namespace NClone.TypeReplication
             Guard.AgainstViolation<InvalidCastException>(source.GetType() == typeof (TType));
 
             var result = (TType) FormatterServices.GetUninitializedObject(typeof (TType));
-            metadataProvider
-                .GetReplicatingMembers(typeof (TType))
-                .Select(fieldCopiersBuilder.BuildFor<TType>)
-                // todo: memorization
+            Memoized
+                .Delegate(() => metadataProvider
+                    .GetReplicatingMembers(typeof (TType))
+                    .Select(fieldCopiersBuilder.BuildFor<TType>)
+                    .ToArray())
                 .ForEach(fieldCopier => fieldCopier.Copy(source, result));
             return result;
         }

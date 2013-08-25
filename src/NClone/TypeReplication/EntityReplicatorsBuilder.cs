@@ -22,13 +22,14 @@ namespace NClone.TypeReplication
 
         public IEntityReplicator<TType> BuildFor<TType>()
         {
-            var type = typeof (TType);
-            if (type == typeof (string) || type.IsEnum || type.IsPrimitive)
-                return new TrivialReplicator<TType>();
-            return type.IsValueType
-                ? (IEntityReplicator<TType>) new StructureReplicator<TType>(metadataProvider, fieldCopiersBuilder)
-                : new ObjectReplicator<TType>(metadataProvider, fieldCopiersBuilder);
-            //todo: memorization
+            return Memoized.Delegate(delegate {
+                var type = typeof (TType);
+                if (type == typeof (string) || type.IsEnum || type.IsPrimitive)
+                    return new TrivialReplicator<TType>();
+                return type.IsValueType
+                    ? (IEntityReplicator<TType>) new StructureReplicator<TType>(metadataProvider, fieldCopiersBuilder)
+                    : new ObjectReplicator<TType>(metadataProvider, fieldCopiersBuilder);
+            });
         }
     }
 }

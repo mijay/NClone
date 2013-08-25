@@ -77,8 +77,10 @@ namespace NClone.Tests.TypeReplication
         {
             var result1 = entityReplicatorsBuilder.BuildFor<TestObject>();
             var result2 = entityReplicatorsBuilder.BuildFor<TestObject>();
+            var result3 = entityReplicatorsBuilder.BuildFor<TestEnum>();
 
             Assert.That(result2, Is.SameAs(result1));
+            Assert.That(result3, Is.Not.SameAs(result1));
         }
     }
 }

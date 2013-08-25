@@ -38,11 +38,12 @@ namespace NClone.TypeReplication
 
         private IEnumerable<IFieldCopier<TEntity>> GetMemberReplicators()
         {
-            return metadataProvider
-                .GetReplicatingMembers(typeof (TEntity))
-                .Select(fieldCopiersBuilder.BuildFor<TEntity>)
-                .Where(x => x.Replicating);
-            //todo: memorization
+            return Memoized.Delegate(() =>
+                metadataProvider
+                    .GetReplicatingMembers(typeof (TEntity))
+                    .Select(fieldCopiersBuilder.BuildFor<TEntity>)
+                    .Where(x => x.Replicating)
+                    .ToArray());
         }
     }
 }

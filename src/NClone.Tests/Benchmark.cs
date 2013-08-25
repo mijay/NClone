@@ -36,10 +36,11 @@ namespace NClone.Tests
 
             var getViaExpression = Expression.Lambda<Func<ClassWithPrivateField, int>>(
                 Expression.Field(xEntity, field), xEntity)
-                .Compile();
+                                             .Compile();
 
             var method = new DynamicMethod(
-                string.Format("getMember_[{0}.{1}]_From_[{2}]", field.DeclaringType.FullName, field.Name, typeof (ClassWithPrivateField).FullName),
+                string.Format("getMember_[{0}.{1}]_From_[{2}]", field.DeclaringType.FullName, field.Name,
+                    typeof (ClassWithPrivateField).FullName),
                 typeof (int), new[] { typeof (ClassWithPrivateField) },
                 typeof (ClassWithPrivateField), true);
             var ilGenerator = method.GetILGenerator();
@@ -52,8 +53,7 @@ namespace NClone.Tests
 
             var source = new ClassWithPrivateField(RandomInt());
             var timer = Stopwatch.StartNew();
-            for (var i = 0; i < 10000; i++)
-            {
+            for (var i = 0; i < 10000; i++) {
                 var result = getViaExpression(source);
                 if (result != source.GetField())
                     throw new Exception();
@@ -64,8 +64,7 @@ namespace NClone.Tests
             Debug.WriteLine(timer.ElapsedTicks);
 
             timer.Restart();
-            for (var i = 0; i < 10000; i++)
-            {
+            for (var i = 0; i < 10000; i++) {
                 var result = getViaMethod(source);
                 if (result != source.GetField())
                     throw new Exception();
@@ -91,10 +90,11 @@ namespace NClone.Tests
                         xMember),
                     xEntity),
                 xEntity, xMember)
-                .Compile();
+                                             .Compile();
 
             var method = new DynamicMethod(
-                string.Format("setMember_[{0}.{1}]_From_[{2}]", field.DeclaringType.FullName, field.Name, typeof (ClassWithPrivateField).FullName),
+                string.Format("setMember_[{0}.{1}]_From_[{2}]", field.DeclaringType.FullName, field.Name,
+                    typeof (ClassWithPrivateField).FullName),
                 typeof (ClassWithPrivateField), new[] { typeof (ClassWithPrivateField), typeof (int) },
                 typeof (ClassWithPrivateField), true);
             var ilGenerator = method.GetILGenerator();
@@ -111,8 +111,7 @@ namespace NClone.Tests
             var entity = new ClassWithPrivateField(RandomInt());
             var value = RandomInt();
             var timer = Stopwatch.StartNew();
-            for (var i = 0; i < 10000; i++)
-            {
+            for (var i = 0; i < 10000; i++) {
                 entity = setViaExpression(entity, value);
                 if (entity.GetField() != value)
                     throw new Exception();
@@ -123,8 +122,7 @@ namespace NClone.Tests
             Debug.WriteLine(timer.ElapsedTicks);
 
             timer.Restart();
-            for (var i = 0; i < 10000; i++)
-            {
+            for (var i = 0; i < 10000; i++) {
                 entity = setViaMethod(entity, value);
                 if (entity.GetField() != value)
                     throw new Exception();
@@ -134,5 +132,21 @@ namespace NClone.Tests
             Debug.WriteLine(timer.ElapsedMilliseconds);
             Debug.WriteLine(timer.ElapsedTicks);
         }
+
+        [Test]
+        public void BenchmarkReflection()
+        {
+            var method = typeof (Benchmark).GetMethod("GenericMethod", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            var timer = Stopwatch.StartNew();
+            for (var i = 0; i < 10000; i++)
+                method.MakeGenericMethod(typeof (string)).Invoke(this, new object[] { "test" });
+            timer.Stop();
+
+            Debug.WriteLine(timer.ElapsedMilliseconds);
+            Debug.WriteLine(timer.ElapsedTicks);
+        }
+
+        private void GenericMethod<T>(T argument) { }
     }
 }

@@ -14,7 +14,7 @@ namespace NClone.FieldCopying
     {
         private readonly Lazy<IEntityReplicatorsBuilder> entityReplicatorBuilder;
 
-        private static readonly MethodInfo typedBuilder =
+        private static readonly MethodInfo typedBuildMethod =
             typeof (FieldCopiersBuilder).GetMethod("BuildFor", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public FieldCopiersBuilder(Lazy<IEntityReplicatorsBuilder> entityReplicatorBuilder)
@@ -29,7 +29,7 @@ namespace NClone.FieldCopying
             Guard.AgainstViolation(field.DeclaringType.IsAssignableFrom(typeof (TEntity)),
                 "Only fields of {0} can be copied", typeof (TEntity));
 
-            return typedBuilder
+            return typedBuildMethod
                 .MakeGenericMethod(typeof (TEntity), field.FieldType)
                 .Invoke(this, new object[] { field })
                 .As<IFieldCopier<TEntity>>();

@@ -1,4 +1,6 @@
-﻿using NClone.MemberAccess;
+﻿using System.Reflection;
+using JetBrains.Annotations;
+using NClone.MemberAccess;
 using NClone.Shared;
 using NClone.TypeReplication;
 
@@ -9,8 +11,12 @@ namespace NClone.FieldCopying
     /// </summary>
     internal class FieldCopier<TEntity, TMember>: IFieldCopier<TEntity>
     {
+        private static readonly MethodInfo typedReplicateMethod = typeof (FieldCopier<TEntity, TMember>)
+            .GetMethod("Replicate", BindingFlags.Instance | BindingFlags.NonPublic);
+
         private readonly IEntityReplicatorsBuilder entityReplicatorBuilder;
         private readonly IMemberAccessor<TEntity, TMember> memberAccessor;
+        private IEntityReplicator<TMember> defaultReplicator;
 
         public FieldCopier(IEntityReplicatorsBuilder entityReplicatorBuilder, IMemberAccessor<TEntity, TMember> memberAccessor)
         {
@@ -18,21 +24,29 @@ namespace NClone.FieldCopying
             Guard.AgainstNull(entityReplicatorBuilder, "entityReplicatorBuilder");
             this.entityReplicatorBuilder = entityReplicatorBuilder;
             this.memberAccessor = memberAccessor;
-            Replicating = !entityReplicatorBuilder.BuildFor<TMember>().IsTrivial;
+            defaultReplicator = entityReplicatorBuilder.BuildFor<TMember>();
+            Replicating = !defaultReplicator.IsTrivial;
         }
 
         public TEntity Copy(TEntity source, TEntity destination)
         {
             var value = memberAccessor.GetMember(source);
-            //if (value != null && Replicating) //todo: test for null
-            //{
-            //    var entityReplicator = entityReplicatorBuilder.BuildFor<TMember>(value.GetType());
-            //    if (!entityReplicator.IsTrivial)
-            //        value = entityReplicator.Replicate(value);
-            //}
+            if (value != null && Replicating) {
+                var actualType = value.GetType();
+                value = actualType == typeof (TMember)
+                    ? defaultReplicator.Replicate(value)
+                    : typedReplicateMethod.MakeGenericMethod(actualType).Invoke(this, new object[] { value }).As<TMember>();
+            }
             return memberAccessor.SetMember(destination, value);
         }
 
         public bool Replicating { get; private set; }
+
+        [UsedImplicitly]
+        private TMember Replicate<TActualMemberType>(TActualMemberType value)
+            where TActualMemberType: TMember
+        {
+            return entityReplicatorBuilder.BuildFor<TActualMemberType>().Replicate(value);
+        }
     }
 }

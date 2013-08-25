@@ -1,10 +1,10 @@
-namespace NClone.MemberCopying
+namespace NClone.FieldCopying
 {
     /// <summary>
     /// Object which is able to copy value of a single field between entities of type <typeparamref name="TEntity"/>.
     /// Value is optionally replicated (deep copied) during copying.
     /// </summary>
-    internal interface IMemberCopier<TEntity>
+    internal interface IFieldCopier<TEntity>
     {
         /// <summary>
         /// Copies a value of a single field from <paramref name="source"/> to <paramref name="destination"/>
@@ -14,7 +14,7 @@ namespace NClone.MemberCopying
         TEntity Copy(TEntity source, TEntity destination);
 
         /// <summary>
-        /// Indicates whether this <see cref="IMemberCopier{TContainer}"/> performs replication (deep copying) of field value
+        /// Indicates whether this <see cref="IFieldCopier{TEntity}"/> performs replication (deep copying) of field value
         /// during <see cref="Copy"/>.
         /// </summary>
         bool Replicating { get; }

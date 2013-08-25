@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,8 +41,8 @@
     <Compile Include="MemberAccess\FieldAccessorBuilder.cs" />
     <Compile Include="MemberAccess\IMemberAccessor.cs" />
     <Compile Include="MemberAccess\MemberAccessor.cs" />
-    <Compile Include="MemberCopying\IMemberCopier.cs" />
-    <Compile Include="MemberCopying\IMemberCopierBuilder.cs" />
+    <Compile Include="FieldCopying\IFieldCopier.cs" />
+    <Compile Include="FieldCopying\IFieldCopiersBuilder.cs" />
     <Compile Include="ObjectReplicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\EnumerableExtensions.cs" />
@@ -50,12 +51,12 @@
     <Compile Include="Shared\ObjectExtensions.cs" />
     <Compile Include="Shared\Repeat.cs" />
     <Compile Include="TypeReplication\IEntityReplicator.cs" />
-    <Compile Include="MemberCopying\MemberCopier.cs" />
+    <Compile Include="FieldCopying\FieldCopier.cs" />
     <Compile Include="TypeReplication\IEntityReplicatorBuilder.cs" />
     <Compile Include="TypeReplication\ObjectReplicator.cs" />
     <Compile Include="TypeReplication\TrivialReplicator.cs" />
     <Compile Include="TypeReplication\StructureReplicator.cs" />
-    <Compile Include="MemberCopying\MemberCopierBuilder.cs" />
+    <Compile Include="FieldCopying\FieldCopiersBuilder.cs" />
     <Compile Include="TypeReplication\EntityReplicatorBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

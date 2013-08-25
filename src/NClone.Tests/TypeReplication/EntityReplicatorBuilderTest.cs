@@ -1,6 +1,6 @@
 ﻿using FakeItEasy;
 using NClone.Annotation;
-using NClone.MemberCopying;
+using NClone.FieldCopying;
 using NClone.TypeReplication;
 using NUnit.Framework;
 
@@ -13,7 +13,7 @@ namespace NClone.Tests.TypeReplication
         protected override void SetUp()
         {
             base.SetUp();
-            entityReplicatorBuilder = new EntityReplicatorBuilder(A.Fake<IMetadataProvider>(), A.Fake<IMemberCopierBuilder>());
+            entityReplicatorBuilder = new EntityReplicatorBuilder(A.Fake<IMetadataProvider>(), A.Fake<IFieldCopiersBuilder>());
         }
 
         [Test]

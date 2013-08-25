@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 
 namespace NClone.Shared
 {
+    [DebuggerStepThrough]
     public static class EnumerableExtensions
     {
         public static bool IsEmpty<T>(this IEnumerable<T> source)

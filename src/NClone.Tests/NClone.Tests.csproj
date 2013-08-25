@@ -41,7 +41,8 @@
   <ItemGroup>
     <Compile Include="Benchmark.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilderTest.cs" />
-    <Compile Include="MemberCopying\MemberCopyingBuilderTest.cs" />
+    <Compile Include="FieldCopying\FieldCopiersBuilderTest.cs" />
+    <Compile Include="FieldCopying\FieldCopierTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="TypeReplication\ObjectReplicatorTest.cs" />

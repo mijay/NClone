@@ -4,7 +4,7 @@ using System.Reflection;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax;
 using NClone.Annotation;
-using NClone.MemberCopying;
+using NClone.FieldCopying;
 using NClone.TypeReplication;
 using NUnit.Framework;
 
@@ -36,18 +36,18 @@ namespace NClone.Tests.TypeReplication
         #endregion
 
         private IMetadataProvider metadataProvider;
-        private IMemberCopierBuilder memberCopierBuilder;
+        private IFieldCopiersBuilder fieldCopiersBuilder;
 
         protected override void SetUp()
         {
             base.SetUp();
             metadataProvider = A.Fake<IMetadataProvider>(x => x.Strict());
-            memberCopierBuilder = A.Fake<IMemberCopierBuilder>(x => x.Strict());
+            fieldCopiersBuilder = A.Fake<IFieldCopiersBuilder>(x => x.Strict());
         }
 
         private ObjectReplicator<TType> BuildObjectReplicator<TType>()
         {
-            return new ObjectReplicator<TType>(metadataProvider, memberCopierBuilder);
+            return new ObjectReplicator<TType>(metadataProvider, fieldCopiersBuilder);
         }
 
         [Test]
@@ -74,12 +74,12 @@ namespace NClone.Tests.TypeReplication
         public void ReplicateEntity_MemberCopierBuildAndCalledForEachField()
         {
             var fakeMember = typeof (Class).GetFields().Single();
-            var fakeCopier = A.Fake<IMemberCopier<Class>>(x => x.Strict());
+            var fakeCopier = A.Fake<IFieldCopier<Class>>(x => x.Strict());
             metadataProvider
                 .Configure()
                 .CallsTo(x => x.GetReplicatingMembers(typeof (Class)))
                 .Returns(new[] { fakeMember });
-            memberCopierBuilder
+            fieldCopiersBuilder
                 .Configure()
                 .CallsTo(x => x.BuildFor<Class>(fakeMember))
                 .Returns(fakeCopier);
@@ -96,13 +96,13 @@ namespace NClone.Tests.TypeReplication
         public void ReplicateTwice_MetadataReadOnceAndCopiersBuiltOnce()
         {
             var fakeMember = typeof (Class).GetFields().Single();
-            var fakeCopier = A.Fake<IMemberCopier<Class>>();
+            var fakeCopier = A.Fake<IFieldCopier<Class>>();
             metadataProvider
                 .Configure()
                 .CallsTo(x => x.GetReplicatingMembers(typeof (Class)))
                 .Returns(new[] { fakeMember })
                 .NumberOfTimes(1);
-            memberCopierBuilder
+            fieldCopiersBuilder
                 .Configure()
                 .CallsTo(x => x.BuildFor<Class>(fakeMember))
                 .Returns(fakeCopier)

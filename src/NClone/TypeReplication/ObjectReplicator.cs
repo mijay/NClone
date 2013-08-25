@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using NClone.Annotation;
-using NClone.MemberCopying;
+using NClone.FieldCopying;
 using NClone.Shared;
 
 namespace NClone.TypeReplication
@@ -13,15 +13,15 @@ namespace NClone.TypeReplication
     internal class ObjectReplicator<TType>: IEntityReplicator<TType>
     {
         private readonly IMetadataProvider metadataProvider;
-        private readonly IMemberCopierBuilder memberCopierBuilder;
+        private readonly IFieldCopiersBuilder fieldCopiersBuilder;
 
-        public ObjectReplicator(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
+        public ObjectReplicator(IMetadataProvider metadataProvider, IFieldCopiersBuilder fieldCopiersBuilder)
         {
             Guard.AgainstViolation(!typeof (TType).IsValueType, "ObjectReplicator can be applied only to reference types");
             Guard.AgainstNull(metadataProvider, "metadataProvider");
-            Guard.AgainstNull(memberCopierBuilder, "memberCopierBuilder");
+            Guard.AgainstNull(fieldCopiersBuilder, "fieldCopiersBuilder");
             this.metadataProvider = metadataProvider;
-            this.memberCopierBuilder = memberCopierBuilder;
+            this.fieldCopiersBuilder = fieldCopiersBuilder;
         }
 
         public bool IsTrivial
@@ -38,7 +38,7 @@ namespace NClone.TypeReplication
             var result = (TType) FormatterServices.GetUninitializedObject(typeof (TType));
             metadataProvider
                 .GetReplicatingMembers(typeof (TType))
-                .Select(memberCopierBuilder.BuildFor<TType>)
+                .Select(fieldCopiersBuilder.BuildFor<TType>)
                 // todo: memorization
                 .ForEach(memberCopier => memberCopier.Copy(source, result));
             return result;

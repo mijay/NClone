@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NClone.Annotation;
-using NClone.MemberCopying;
+using NClone.FieldCopying;
 using NClone.Shared;
 
 namespace NClone.TypeReplication
@@ -12,15 +12,15 @@ namespace NClone.TypeReplication
     internal class StructureReplicator<TEntity>: IEntityReplicator<TEntity>
     {
         private readonly IMetadataProvider metadataProvider;
-        private readonly IMemberCopierBuilder memberCopierBuilder;
+        private readonly IFieldCopiersBuilder fieldCopiersBuilder;
 
-        public StructureReplicator(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
+        public StructureReplicator(IMetadataProvider metadataProvider, IFieldCopiersBuilder fieldCopiersBuilder)
         {
             Guard.AgainstViolation(typeof (TEntity).IsValueType, "StructureReplicator can be applied only to value types");
             Guard.AgainstNull(metadataProvider, "metadataProvider");
-            Guard.AgainstNull(memberCopierBuilder, "memberCopierBuilder");
+            Guard.AgainstNull(fieldCopiersBuilder, "fieldCopiersBuilder");
             this.metadataProvider = metadataProvider;
-            this.memberCopierBuilder = memberCopierBuilder;
+            this.fieldCopiersBuilder = fieldCopiersBuilder;
         }
 
         public bool IsTrivial
@@ -36,11 +36,11 @@ namespace NClone.TypeReplication
             return result;
         }
 
-        private IEnumerable<IMemberCopier<TEntity>> GetMemberReplicators()
+        private IEnumerable<IFieldCopier<TEntity>> GetMemberReplicators()
         {
             return metadataProvider
                 .GetReplicatingMembers(typeof (TEntity))
-                .Select(memberCopierBuilder.BuildFor<TEntity>)
+                .Select(fieldCopiersBuilder.BuildFor<TEntity>)
                 .Where(x => x.Replicating);
             //todo: memorization
         }

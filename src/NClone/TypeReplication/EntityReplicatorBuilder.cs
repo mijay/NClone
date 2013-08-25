@@ -1,5 +1,5 @@
 ﻿using NClone.Annotation;
-using NClone.MemberCopying;
+using NClone.FieldCopying;
 using NClone.Shared;
 
 namespace NClone.TypeReplication
@@ -10,13 +10,13 @@ namespace NClone.TypeReplication
     internal class EntityReplicatorBuilder: IEntityReplicatorBuilder
     {
         private readonly IMetadataProvider metadataProvider;
-        private readonly IMemberCopierBuilder memberCopierBuilder;
+        private readonly IFieldCopiersBuilder fieldCopiersBuilder;
 
-        public EntityReplicatorBuilder(IMetadataProvider metadataProvider, IMemberCopierBuilder memberCopierBuilder)
+        public EntityReplicatorBuilder(IMetadataProvider metadataProvider, IFieldCopiersBuilder fieldCopiersBuilder)
         {
             Guard.AgainstNull(metadataProvider, "metadataProvider");
-            Guard.AgainstNull(memberCopierBuilder, "memberCopierBuilder");
-            this.memberCopierBuilder = memberCopierBuilder;
+            Guard.AgainstNull(fieldCopiersBuilder, "fieldCopiersBuilder");
+            this.fieldCopiersBuilder = fieldCopiersBuilder;
             this.metadataProvider = metadataProvider;
         }
 
@@ -26,8 +26,8 @@ namespace NClone.TypeReplication
             if (type == typeof (string) || type.IsEnum || type.IsPrimitive)
                 return new TrivialReplicator<TType>();
             return type.IsValueType
-                ? (IEntityReplicator<TType>) new StructureReplicator<TType>(metadataProvider, memberCopierBuilder)
-                : new ObjectReplicator<TType>(metadataProvider, memberCopierBuilder);
+                ? (IEntityReplicator<TType>) new StructureReplicator<TType>(metadataProvider, fieldCopiersBuilder)
+                : new ObjectReplicator<TType>(metadataProvider, fieldCopiersBuilder);
             //todo: memorization
         }
     }

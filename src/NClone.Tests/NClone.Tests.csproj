@@ -33,6 +33,9 @@
     <Reference Include="FakeItEasy">
       <HintPath>..\packages\FakeItEasy.1.13.1\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
+    <Reference Include="GeorgeCloney">
+      <HintPath>..\packages\GeorgeCloney.1.0.0.10\lib\net40\GeorgeCloney.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\NClone\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -40,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmark.cs" />
+    <Compile Include="Compare.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilderTest.cs" />
     <Compile Include="FieldCopying\FieldCopiersBuilderTest.cs" />
     <Compile Include="FieldCopying\FieldCopierTest.cs" />

@@ -49,7 +49,6 @@
     <Compile Include="Shared\Guard.cs" />
     <Compile Include="Shared\ILGeneratorExtensions.cs" />
     <Compile Include="Shared\ObjectExtensions.cs" />
-    <Compile Include="Shared\Repeat.cs" />
     <Compile Include="TypeReplication\IEntityReplicator.cs" />
     <Compile Include="FieldCopying\FieldCopier.cs" />
     <Compile Include="TypeReplication\IEntityReplicatorsBuilder.cs" />

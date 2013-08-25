@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NClone.Shared
+namespace NClone.Tests
 {
     public static class Repeat
     {

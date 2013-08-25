@@ -6,20 +6,20 @@ using NUnit.Framework;
 
 namespace NClone.Tests.TypeReplication
 {
-    public class EntityReplicatorBuilderTest: TestBase
+    public class EntityReplicatorsBuilderTest: TestBase
     {
-        private EntityReplicatorBuilder entityReplicatorBuilder;
+        private EntityReplicatorsBuilder entityReplicatorsBuilder;
 
         protected override void SetUp()
         {
             base.SetUp();
-            entityReplicatorBuilder = new EntityReplicatorBuilder(A.Fake<IMetadataProvider>(), A.Fake<IFieldCopiersBuilder>());
+            entityReplicatorsBuilder = new EntityReplicatorsBuilder(A.Fake<IMetadataProvider>(), A.Fake<IFieldCopiersBuilder>());
         }
 
         [Test]
         public void BuildReplicatorForString_GetTrivial()
         {
-            var result = entityReplicatorBuilder.BuildFor<string>();
+            var result = entityReplicatorsBuilder.BuildFor<string>();
 
             Assert.That(result, Is.TypeOf<TrivialReplicator<string>>());
         }
@@ -35,7 +35,7 @@ namespace NClone.Tests.TypeReplication
         [Test]
         public void BuildReplicatorForEnum_GetTrivial()
         {
-            var result = entityReplicatorBuilder.BuildFor<TestEnum>();
+            var result = entityReplicatorsBuilder.BuildFor<TestEnum>();
 
             Assert.That(result, Is.TypeOf<TrivialReplicator<TestEnum>>());
         }
@@ -43,7 +43,7 @@ namespace NClone.Tests.TypeReplication
         [Test]
         public void BuildReplicatorForInt_GetTrivial()
         {
-            var result = entityReplicatorBuilder.BuildFor<int>();
+            var result = entityReplicatorsBuilder.BuildFor<int>();
 
             Assert.That(result, Is.TypeOf<TrivialReplicator<int>>());
         }
@@ -55,7 +55,7 @@ namespace NClone.Tests.TypeReplication
         [Test]
         public void BuildReplicatorForStructure_GetStructureReplicator()
         {
-            var result = entityReplicatorBuilder.BuildFor<TestStructure>();
+            var result = entityReplicatorsBuilder.BuildFor<TestStructure>();
 
             Assert.That(result, Is.TypeOf<StructureReplicator<TestStructure>>());
         }
@@ -67,7 +67,7 @@ namespace NClone.Tests.TypeReplication
         [Test]
         public void BuildReplicatorForObject_GetObjectReplicator()
         {
-            var result = entityReplicatorBuilder.BuildFor<TestObject>();
+            var result = entityReplicatorsBuilder.BuildFor<TestObject>();
 
             Assert.That(result, Is.TypeOf<ObjectReplicator<TestObject>>());
         }
@@ -75,8 +75,8 @@ namespace NClone.Tests.TypeReplication
         [Test]
         public void BuildReplicatorForSameTypeTwice_GetSameReplicator()
         {
-            var result1 = entityReplicatorBuilder.BuildFor<TestObject>();
-            var result2 = entityReplicatorBuilder.BuildFor<TestObject>();
+            var result1 = entityReplicatorsBuilder.BuildFor<TestObject>();
+            var result2 = entityReplicatorsBuilder.BuildFor<TestObject>();
 
             Assert.That(result2, Is.SameAs(result1));
         }

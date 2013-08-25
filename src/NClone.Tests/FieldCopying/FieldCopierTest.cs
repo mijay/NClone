@@ -25,12 +25,12 @@ namespace NClone.Tests.FieldCopying
 
         #endregion
 
-        private IEntityReplicatorBuilder entityReplicatorBuilder;
+        private IEntityReplicatorsBuilder entityReplicatorBuilder;
 
         protected override void SetUp()
         {
             base.SetUp();
-            entityReplicatorBuilder = A.Fake<IEntityReplicatorBuilder>(x => x.Strict());
+            entityReplicatorBuilder = A.Fake<IEntityReplicatorsBuilder>(x => x.Strict());
         }
 
         private FieldCopier<TEntity, TMember> BuildMemberCopier<TEntity, TMember>()

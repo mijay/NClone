@@ -12,12 +12,12 @@ namespace NClone.FieldCopying
     /// </summary>
     internal class FieldCopiersBuilder: IFieldCopiersBuilder
     {
-        private readonly Lazy<IEntityReplicatorBuilder> entityReplicatorBuilder;
+        private readonly Lazy<IEntityReplicatorsBuilder> entityReplicatorBuilder;
 
         private static readonly MethodInfo typedBuilder =
             typeof (FieldCopiersBuilder).GetMethod("BuildFor", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public FieldCopiersBuilder(Lazy<IEntityReplicatorBuilder> entityReplicatorBuilder)
+        public FieldCopiersBuilder(Lazy<IEntityReplicatorsBuilder> entityReplicatorBuilder)
         {
             Guard.AgainstNull(entityReplicatorBuilder, "entityReplicatorBuilder");
             this.entityReplicatorBuilder = entityReplicatorBuilder;

@@ -9,10 +9,10 @@ namespace NClone.FieldCopying
     /// </summary>
     internal class FieldCopier<TEntity, TMember>: IFieldCopier<TEntity>
     {
-        private readonly IEntityReplicatorBuilder entityReplicatorBuilder;
+        private readonly IEntityReplicatorsBuilder entityReplicatorBuilder;
         private readonly IMemberAccessor<TEntity, TMember> memberAccessor;
 
-        public FieldCopier(IEntityReplicatorBuilder entityReplicatorBuilder, IMemberAccessor<TEntity, TMember> memberAccessor)
+        public FieldCopier(IEntityReplicatorsBuilder entityReplicatorBuilder, IMemberAccessor<TEntity, TMember> memberAccessor)
         {
             Guard.AgainstNull(memberAccessor, "memberAccessor");
             Guard.AgainstNull(entityReplicatorBuilder, "entityReplicatorBuilder");

@@ -52,12 +52,12 @@
     <Compile Include="Shared\Repeat.cs" />
     <Compile Include="TypeReplication\IEntityReplicator.cs" />
     <Compile Include="FieldCopying\FieldCopier.cs" />
-    <Compile Include="TypeReplication\IEntityReplicatorBuilder.cs" />
+    <Compile Include="TypeReplication\IEntityReplicatorsBuilder.cs" />
     <Compile Include="TypeReplication\ObjectReplicator.cs" />
     <Compile Include="TypeReplication\TrivialReplicator.cs" />
     <Compile Include="TypeReplication\StructureReplicator.cs" />
     <Compile Include="FieldCopying\FieldCopiersBuilder.cs" />
-    <Compile Include="TypeReplication\EntityReplicatorBuilder.cs" />
+    <Compile Include="TypeReplication\EntityReplicatorsBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

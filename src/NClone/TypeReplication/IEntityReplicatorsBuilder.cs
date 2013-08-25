@@ -3,7 +3,7 @@
     /// <summary>
     /// Builds <see cref="IEntityReplicator{TType}"/> for a given actualType.
     /// </summary>
-    internal interface IEntityReplicatorBuilder
+    internal interface IEntityReplicatorsBuilder
     {
         /// <summary>
         /// Builds <see cref="IEntityReplicator{TType}"/> for the given <typeparamref name="TType"/>.

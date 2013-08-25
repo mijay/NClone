@@ -24,14 +24,14 @@ namespace NClone.Tests.FieldCopying
         #endregion
 
         private FieldCopiersBuilder fieldCopiersBuilder;
-        private IEntityReplicatorBuilder entityReplicatorBuilder;
+        private IEntityReplicatorsBuilder entityReplicatorBuilder;
         private readonly FieldInfo field = typeof (ClassWithField).GetFields().Single();
 
         protected override void SetUp()
         {
             base.SetUp();
-            entityReplicatorBuilder = A.Fake<IEntityReplicatorBuilder>();
-            fieldCopiersBuilder = new FieldCopiersBuilder(new Lazy<IEntityReplicatorBuilder>(() => entityReplicatorBuilder));
+            entityReplicatorBuilder = A.Fake<IEntityReplicatorsBuilder>();
+            fieldCopiersBuilder = new FieldCopiersBuilder(new Lazy<IEntityReplicatorsBuilder>(() => entityReplicatorBuilder));
         }
 
         [Test]

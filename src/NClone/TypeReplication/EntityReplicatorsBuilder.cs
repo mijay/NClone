@@ -5,14 +5,14 @@ using NClone.Shared;
 namespace NClone.TypeReplication
 {
     /// <summary>
-    /// Implementation of <see cref="IEntityReplicatorBuilder"/>.
+    /// Implementation of <see cref="IEntityReplicatorsBuilder"/>.
     /// </summary>
-    internal class EntityReplicatorBuilder: IEntityReplicatorBuilder
+    internal class EntityReplicatorsBuilder: IEntityReplicatorsBuilder
     {
         private readonly IMetadataProvider metadataProvider;
         private readonly IFieldCopiersBuilder fieldCopiersBuilder;
 
-        public EntityReplicatorBuilder(IMetadataProvider metadataProvider, IFieldCopiersBuilder fieldCopiersBuilder)
+        public EntityReplicatorsBuilder(IMetadataProvider metadataProvider, IFieldCopiersBuilder fieldCopiersBuilder)
         {
             Guard.AgainstNull(metadataProvider, "metadataProvider");
             Guard.AgainstNull(fieldCopiersBuilder, "fieldCopiersBuilder");

@@ -5,9 +5,23 @@ using NClone.Shared;
 
 namespace NClone.MemberAccess
 {
+    /// <summary>
+    /// Factory for <see cref="IMemberAccessor{TEntity,TMember}"/> for members of type <see cref="MemberTypes.Field"/>.
+    /// </summary>
     public static class FieldAccessorBuilder
     {
-        public static IMemberAccessor<TEntity, TMember> BuildFor<TEntity, TMember>(FieldInfo field, bool skipRestrictions = false)
+        /// <summary>
+        /// Build <see cref="IMemberAccessor{TEntity,TMember}"/> to access field <paramref name="field"/>,
+        /// in entity <typeparamref name="TEntity"/>. Type of the field is <typeparamref name="TMember"/>.
+        /// </summary>
+        /// <param name="field">
+        /// Field of <typeparamref name="TEntity"/> or its base classes, for which <see cref="IMemberAccessor{TEntity,TMember}"/> is built.
+        /// </param>
+        /// <param name="skipAccessibility">
+        /// Flag that indicates, whether returned <see cref="IMemberAccessor{TEntity,TMember}"/> should ignore 
+        /// visibility and <c>readonly</c> checks.
+        /// </param>
+        public static IMemberAccessor<TEntity, TMember> BuildFor<TEntity, TMember>(FieldInfo field, bool skipAccessibility = false)
         {
             Guard.AgainstNull(field, "field");
             Guard.AgainstFalse(field.FieldType == typeof (TMember),
@@ -17,8 +31,8 @@ namespace NClone.MemberAccess
                 "IMemberAccessor for entity [{0}] can't access field from entity [{1}]",
                 typeof (TEntity).FullName, field.DeclaringType.FullName);
 
-            var getMethod = skipRestrictions || CanGet(field, typeof (TEntity)) ? CreateGetMethod<TEntity, TMember>(field) : null;
-            var setMethod = skipRestrictions || CanSet(field, typeof (TEntity)) ? CreateSetMethod<TEntity, TMember>(field) : null;
+            var getMethod = skipAccessibility || CanGet(field, typeof (TEntity)) ? CreateGetMethod<TEntity, TMember>(field) : null;
+            var setMethod = skipAccessibility || CanSet(field, typeof (TEntity)) ? CreateSetMethod<TEntity, TMember>(field) : null;
 
             return new MemberAccessor<TEntity, TMember>(getMethod, setMethod);
         }
@@ -62,7 +76,7 @@ namespace NClone.MemberAccess
 
         private static bool CanGet(FieldInfo field, Type containerType)
         {
-            if(field.IsPublic || field.IsFamily)
+            if (field.IsPublic || field.IsFamily)
                 return true;
             if (field.IsAssembly && field.DeclaringType.Assembly == containerType.Assembly)
                 return true;

@@ -20,13 +20,13 @@ namespace NClone.MemberAccess
 
         public TEntity SetMember(TEntity entity, TMember memberValue)
         {
-            Guard.AgainstFalse(setMethod != null, "Can not set member when CanSet is false");
+            Guard.AgainstFalse<InvalidOperationException>(setMethod != null, "Can not set member when CanSet is false");
             return setMethod(entity, memberValue);
         }
 
         public TMember GetMember(TEntity entity)
         {
-            Guard.AgainstFalse(getMethod != null, "Can not get member when CanGet is false");
+            Guard.AgainstFalse<InvalidOperationException>(getMethod != null, "Can not get member when CanGet is false");
             return getMethod(entity);
         }
 

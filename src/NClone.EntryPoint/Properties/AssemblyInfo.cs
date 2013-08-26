@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NClone")]
-[assembly: AssemblyDescription("NClone - implementation of deep clone for generic .NET objects")]
+[assembly: AssemblyTitle("NClone.EntryPoint")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dmitry Kononchuk")]
-[assembly: AssemblyProduct("NClone")]
-[assembly: AssemblyCopyright("Copyright © Dmitry Kononchuk 2013")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("NClone.EntryPoint")]
+[assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,10 +20,17 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ba9971b4-5737-44e6-8670-e67e7674ece8")]
-[assembly: AssemblyVersion("1.0.0")]
-[assembly: AssemblyFileVersion("1.0.0")]
+[assembly: Guid("7ae50cdf-298b-49e0-b84a-8a06d2bc1158")]
 
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: InternalsVisibleTo("NClone.Tests")]
-[assembly: InternalsVisibleTo("NClone.EntryPoint")]
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

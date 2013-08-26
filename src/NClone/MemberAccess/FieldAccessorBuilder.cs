@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using NClone.Shared;
@@ -40,7 +41,7 @@ namespace NClone.MemberAccess
         {
             var method = new DynamicMethod(
                 BuildDynamicMethodName("getMember", containerType, field),
-                typeof (object), new[] { typeof (object) },
+                typeof(object), new[] { typeof(object) },
                 containerType, true);
             var ilGenerator = method.GetILGenerator();
 
@@ -50,7 +51,7 @@ namespace NClone.MemberAccess
                        .Box(field.FieldType)
                        .Return();
 
-            return (Func<object, object>) method.CreateDelegate(typeof (Func<object, object>));
+            return (Func<object, object>)method.CreateDelegate(typeof(Func<object, object>));
         }
 
         private static Func<object, object, object> CreateSetMethod(Type containerType, FieldInfo field)

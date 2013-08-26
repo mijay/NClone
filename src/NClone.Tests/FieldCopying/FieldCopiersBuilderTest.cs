@@ -31,7 +31,7 @@ namespace NClone.Tests.FieldCopying
         {
             base.SetUp();
             entityReplicatorBuilder = A.Fake<IEntityReplicatorsBuilder>();
-            fieldCopiersBuilder = new FieldCopiersBuilder(new Lazy<IEntityReplicatorsBuilder>(() => entityReplicatorBuilder));
+            fieldCopiersBuilder = new FieldCopiersBuilder(() => entityReplicatorBuilder);
         }
 
         [Test]

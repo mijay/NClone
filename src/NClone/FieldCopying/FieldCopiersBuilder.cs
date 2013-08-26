@@ -10,9 +10,9 @@ namespace NClone.FieldCopying
     /// </summary>
     internal class FieldCopiersBuilder: IFieldCopiersBuilder
     {
-        private readonly Lazy<IEntityReplicatorsBuilder> entityReplicatorBuilder;
+        private readonly Func<IEntityReplicatorsBuilder> entityReplicatorBuilder;
 
-        public FieldCopiersBuilder(Lazy<IEntityReplicatorsBuilder> entityReplicatorBuilder)
+        public FieldCopiersBuilder(Func<IEntityReplicatorsBuilder> entityReplicatorBuilder)
         {
             Guard.AgainstNull(entityReplicatorBuilder, "entityReplicatorBuilder");
             this.entityReplicatorBuilder = entityReplicatorBuilder;
@@ -24,7 +24,7 @@ namespace NClone.FieldCopying
             Guard.AgainstViolation(field.DeclaringType.IsAssignableFrom(container),
                 "Only fields of {0} can be copied", container);
 
-            return new FieldCopier(entityReplicatorBuilder.Value, container, field);
+            return new FieldCopier(entityReplicatorBuilder(), container, field);
         }
     }
 }

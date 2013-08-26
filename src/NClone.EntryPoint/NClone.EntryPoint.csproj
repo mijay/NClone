@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{28CAA240-65C7-46ED-8E73-B9AA1B3DD535}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{E86E7527-AF3A-4324-B273-58BBD28624E8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NClone</RootNamespace>
-    <AssemblyName>NClone</AssemblyName>
+    <RootNamespace>NClone.EntryPoint</RootNamespace>
+    <AssemblyName>NClone.EntryPoint</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -20,48 +21,28 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations">
-      <HintPath>packages\JetBrains.Annotations.7.0\lib\net45\JetBrains.Annotations.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Annotation\DefaultMetadataProvider.cs" />
-    <Compile Include="Annotation\IMetadataProvider.cs" />
-    <Compile Include="MemberAccess\FieldAccessorBuilder.cs" />
-    <Compile Include="MemberAccess\IMemberAccessor.cs" />
-    <Compile Include="MemberAccess\MemberAccessor.cs" />
-    <Compile Include="FieldCopying\IFieldCopier.cs" />
-    <Compile Include="FieldCopying\IFieldCopiersBuilder.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shared\EnumerableExtensions.cs" />
-    <Compile Include="Shared\Guard.cs" />
-    <Compile Include="Shared\ILGeneratorExtensions.cs" />
-    <Compile Include="Shared\Memoized.cs" />
-    <Compile Include="Shared\ObjectExtensions.cs" />
-    <Compile Include="TypeReplication\IEntityReplicator.cs" />
-    <Compile Include="FieldCopying\FieldCopier.cs" />
-    <Compile Include="TypeReplication\IEntityReplicatorsBuilder.cs" />
-    <Compile Include="TypeReplication\ObjectReplicator.cs" />
-    <Compile Include="TypeReplication\TrivialReplicator.cs" />
-    <Compile Include="TypeReplication\StructureReplicator.cs" />
-    <Compile Include="FieldCopying\FieldCopiersBuilder.cs" />
-    <Compile Include="TypeReplication\EntityReplicatorsBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\NClone\NClone.csproj">
+      <Project>{28caa240-65c7-46ed-8e73-b9aa1b3dd535}</Project>
+      <Name>NClone</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

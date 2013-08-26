@@ -42,6 +42,13 @@ namespace NClone.Tests
             CompareImplementations(source);
         }
 
+        [Test]
+        public void ImmutableObjectCase()
+        {
+            var source = DateTime.Now;
+            CompareImplementations(source);
+        }
+
         private static void CompareImplementations<T>(T source)
         {
             var timer = new Stopwatch();
@@ -62,7 +69,7 @@ namespace NClone.Tests
 
             EntityReplicatorsBuilder entityReplicatorsBuilder = null;
             entityReplicatorsBuilder = new EntityReplicatorsBuilder(new DefaultMetadataProvider(),
-                new FieldCopiersBuilder(new Lazy<IEntityReplicatorsBuilder>(() => entityReplicatorsBuilder)));
+                new FieldCopiersBuilder(() => entityReplicatorsBuilder));
 
             Debug.WriteLine("Mine first run");
             timer.Restart();

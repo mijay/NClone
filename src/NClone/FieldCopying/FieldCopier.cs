@@ -12,7 +12,9 @@ namespace NClone.FieldCopying
     internal class FieldCopier: IFieldCopier
     {
         private readonly IEntityReplicatorsBuilder entityReplicatorsBuilder;
-        private readonly IMemberAccessor memberAccessor;
+        private readonly Type containerType;
+        private readonly FieldInfo field;
+        private IMemberAccessor memberAccessor;
 
         public FieldCopier(IEntityReplicatorsBuilder entityReplicatorsBuilder, Type containerType, FieldInfo field)
         {
@@ -20,12 +22,16 @@ namespace NClone.FieldCopying
             Guard.AgainstNull(containerType, "containerType");
             Guard.AgainstNull(field, "field");
             this.entityReplicatorsBuilder = entityReplicatorsBuilder;
+            this.containerType = containerType;
+            this.field = field;
             Replicating = !entityReplicatorsBuilder.BuildFor(field.FieldType).IsTrivial;
-            memberAccessor = FieldAccessorBuilder.BuildFor(containerType, field);
         }
 
         public object Copy(object source, object destination)
         {
+            if (memberAccessor == null)
+                memberAccessor = FieldAccessorBuilder.BuildFor(containerType, field);
+
             var value = memberAccessor.GetMember(source);
             if (value != null && Replicating) {
                 var actualType = value.GetType();

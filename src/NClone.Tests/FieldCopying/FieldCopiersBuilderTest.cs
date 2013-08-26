@@ -37,13 +37,13 @@ namespace NClone.Tests.FieldCopying
         [Test]
         public void BuildCopierForFieldFromDifferentClass_Exception()
         {
-            Assert.Throws<ArgumentException>(() => fieldCopiersBuilder.BuildFor<EmptyClass>(field));
+            Assert.Throws<ArgumentException>(() => fieldCopiersBuilder.BuildFor(typeof(EmptyClass), field));
         }
 
         [Test]
         public void BuildCopierForFieldFromParentClass_NoException()
         {
-            Assert.DoesNotThrow(() => fieldCopiersBuilder.BuildFor<InheritedClass>(field));
+            Assert.DoesNotThrow(() => fieldCopiersBuilder.BuildFor(typeof(InheritedClass), field));
         }
     }
 }

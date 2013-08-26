@@ -6,67 +6,74 @@ using NClone.Shared;
 namespace NClone.MemberAccess
 {
     /// <summary>
-    /// Factory for <see cref="IMemberAccessor{TEntity,TMember}"/> for members of type <see cref="MemberTypes.Field"/>.
+    /// Factory for <see cref="IMemberAccessor"/> for members of type <see cref="MemberTypes.Field"/>.
     /// </summary>
     public static class FieldAccessorBuilder
     {
         /// <summary>
-        /// Build <see cref="IMemberAccessor{TEntity,TMember}"/> to access field <paramref name="field"/>,
-        /// in entity <typeparamref name="TEntity"/>. Type of the field is <typeparamref name="TMember"/>.
+        /// Build <see cref="IMemberAccessor"/> to access field <paramref name="field"/> in container <paramref name="containerType"/>.
         /// </summary>
+        /// <param name="containerType">
+        /// Type of entity, in which <see cref="IMemberAccessor"/> will get and/or set field value.
+        /// </param>
         /// <param name="field">
-        /// Field of <typeparamref name="TEntity"/> or its base classes, for which <see cref="IMemberAccessor{TEntity,TMember}"/> is built.
+        /// Field of <paramref name="containerType"/> or its base classes, for which <see cref="IMemberAccessor"/> is built.
         /// </param>
         /// <param name="skipAccessibility">
-        /// Flag that indicates, whether returned <see cref="IMemberAccessor{TEntity,TMember}"/> should ignore 
-        /// visibility and <c>readonly</c> checks.
+        /// Flag that indicates, whether returned <see cref="IMemberAccessor"/> should ignore visibility and <c>readonly</c> checks.
         /// </param>
-        public static IMemberAccessor<TEntity, TMember> BuildFor<TEntity, TMember>(FieldInfo field, bool skipAccessibility = false)
+        public static IMemberAccessor BuildFor(Type containerType, FieldInfo field, bool skipAccessibility = false)
         {
+            Guard.AgainstNull(containerType, "containerType");
             Guard.AgainstNull(field, "field");
-            Guard.AgainstViolation(field.FieldType == typeof (TMember),
-                "IMemberAccessor for field of type [{0}] can't access field of type [{1}]",
-                typeof (TMember).FullName, field.FieldType.FullName);
-            Guard.AgainstViolation(field.DeclaringType.IsAssignableFrom(typeof (TEntity)),
+            Guard.AgainstViolation(field.DeclaringType.IsAssignableFrom(containerType),
                 "IMemberAccessor for entity [{0}] can't access field from entity [{1}]",
-                typeof (TEntity).FullName, field.DeclaringType.FullName);
+                containerType.FullName, field.DeclaringType.FullName);
 
-            var getMethod = skipAccessibility || CanGet(field, typeof (TEntity)) ? CreateGetMethod<TEntity, TMember>(field) : null;
-            var setMethod = skipAccessibility || CanSet(field, typeof (TEntity)) ? CreateSetMethod<TEntity, TMember>(field) : null;
+            var getMethod = skipAccessibility || CanGet(field, containerType) ? CreateGetMethod(containerType, field) : null;
+            var setMethod = skipAccessibility || CanSet(field, containerType) ? CreateSetMethod(containerType, field) : null;
 
-            return new MemberAccessor<TEntity, TMember>(getMethod, setMethod);
+            return new MemberAccessor(getMethod, setMethod);
         }
 
-        private static Func<TEntity, TMember> CreateGetMethod<TEntity, TMember>(FieldInfo field)
+        private static Func<object, object> CreateGetMethod(Type containerType, FieldInfo field)
         {
             var method = new DynamicMethod(
-                BuildDynamicMethodName("getMember", typeof (TEntity), field),
-                typeof (TMember), new[] { typeof (TEntity) },
-                typeof (TEntity), true);
+                BuildDynamicMethodName("getMember", containerType, field),
+                typeof (object), new[] { typeof (object) },
+                containerType, true);
             var ilGenerator = method.GetILGenerator();
 
-            ilGenerator.EmitLoadArgumentAddress(typeof (TEntity), 0);
-            ilGenerator.EmitLoadFieldValue(field);
-            ilGenerator.Emit(OpCodes.Ret);
+            ilGenerator.LoadArgument(0)
+                       .CastDown(containerType)
+                       .LoadFieldValue(field)
+                       .Box(field.FieldType)
+                       .Return();
 
-            return (Func<TEntity, TMember>) method.CreateDelegate(typeof (Func<TEntity, TMember>));
+            return (Func<object, object>) method.CreateDelegate(typeof (Func<object, object>));
         }
 
-        private static Func<TEntity, TMember, TEntity> CreateSetMethod<TEntity, TMember>(FieldInfo field)
+        private static Func<object, object, object> CreateSetMethod(Type containerType, FieldInfo field)
         {
             var method = new DynamicMethod(
-                BuildDynamicMethodName("setMember", typeof (TEntity), field),
-                typeof (TEntity), new[] { typeof (TEntity), typeof (TMember) },
-                typeof (TEntity), true);
+                BuildDynamicMethodName("setMember", containerType, field),
+                typeof (object), new[] { typeof (object), typeof (object) },
+                containerType, true);
             var ilGenerator = method.GetILGenerator();
+            ilGenerator.DeclareLocal(containerType);
 
-            ilGenerator.EmitLoadArgumentAddress(typeof (TEntity), 0);
-            ilGenerator.EmitLoadArgument(1);
-            ilGenerator.EmitStoreFieldValue(field);
-            ilGenerator.EmitLoadArgument(0);
-            ilGenerator.Emit(OpCodes.Ret);
+            ilGenerator.LoadArgument(0)
+                       .CastDown(containerType)
+                       .StoreInLocal(0)
+                       .LoadAddressOfLocal(0, containerType)
+                       .LoadArgument(1)
+                       .CastDown(field.FieldType)
+                       .StoreFieldValue(field)
+                       .LoadLocal(0)
+                       .Box(containerType)
+                       .Return();
 
-            return (Func<TEntity, TMember, TEntity>) method.CreateDelegate(typeof (Func<TEntity, TMember, TEntity>));
+            return (Func<object, object, object>) method.CreateDelegate(typeof (Func<object, object, object>));
         }
 
         private static string BuildDynamicMethodName(string action, Type container, FieldInfo field)

@@ -1,4 +1,5 @@
-﻿using NClone.Annotation;
+﻿using System;
+using NClone.Annotation;
 using NClone.FieldCopying;
 using NClone.Shared;
 
@@ -20,16 +21,15 @@ namespace NClone.TypeReplication
             this.metadataProvider = metadataProvider;
         }
 
-        public IEntityReplicator<TType> BuildFor<TType>()
+        public IEntityReplicator BuildFor(Type entityType)
         {
-            return Memoized.Delegate(delegate {
-                var type = typeof (TType);
+            return Memoized.Delegate(delegate(Type type) {
                 if (type == typeof (string) || type.IsEnum || type.IsPrimitive)
-                    return new TrivialReplicator<TType>();
+                    return new TrivialReplicator(type);
                 return type.IsValueType
-                    ? (IEntityReplicator<TType>) new StructureReplicator<TType>(metadataProvider, fieldCopiersBuilder)
-                    : new ObjectReplicator<TType>(metadataProvider, fieldCopiersBuilder);
-            });
+                    ? (IEntityReplicator) new StructureReplicator(metadataProvider, fieldCopiersBuilder, type)
+                    : new ObjectReplicator(metadataProvider, fieldCopiersBuilder, type);
+            }, entityType);
         }
     }
 }

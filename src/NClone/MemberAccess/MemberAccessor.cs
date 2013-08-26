@@ -4,30 +4,29 @@ using NClone.Shared;
 namespace NClone.MemberAccess
 {
     /// <summary>
-    /// Implementation of <see cref="IMemberAccessor{TEntity,TMember}"/>
+    /// Implementation of <see cref="IMemberAccessor"/>
     /// </summary>
-    internal class MemberAccessor<TEntity, TMember>: IMemberAccessor<TEntity, TMember>
+    internal class MemberAccessor: IMemberAccessor
     {
-        private readonly Func<TEntity, TMember, TEntity> setMethod;
-        private readonly Func<TEntity, TMember> getMethod;
+        private readonly Func<object, object, object> setMethod;
+        private readonly Func<object, object> getMethod;
 
-        public MemberAccessor(Func<TEntity, TMember> getMethod, Func<TEntity, TMember, TEntity> setMethod)
+        public MemberAccessor(Func<object, object> getMethod, Func<object, object, object> setMethod)
         {
             this.setMethod = setMethod;
             this.getMethod = getMethod;
         }
 
-
-        public TEntity SetMember(TEntity entity, TMember memberValue)
+        public object SetMember(object container, object memberValue)
         {
             Guard.AgainstViolation<InvalidOperationException>(setMethod != null, "Can not set member when CanSet is false");
-            return setMethod(entity, memberValue);
+            return setMethod(container, memberValue);
         }
 
-        public TMember GetMember(TEntity entity)
+        public object GetMember(object container)
         {
             Guard.AgainstViolation<InvalidOperationException>(getMethod != null, "Can not get member when CanGet is false");
-            return getMethod(entity);
+            return getMethod(container);
         }
 
         public bool CanGet

@@ -44,7 +44,6 @@
     <Compile Include="MemberAccess\MemberAccessor.cs" />
     <Compile Include="FieldCopying\IFieldCopier.cs" />
     <Compile Include="FieldCopying\IFieldCopiersBuilder.cs" />
-    <Compile Include="ObjectReplicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\EnumerableExtensions.cs" />
     <Compile Include="Shared\Guard.cs" />

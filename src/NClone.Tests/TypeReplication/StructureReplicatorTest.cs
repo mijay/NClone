@@ -6,7 +6,6 @@ using FakeItEasy.ExtensionSyntax;
 using FakeItEasy.ExtensionSyntax.Full;
 using NClone.Annotation;
 using NClone.FieldCopying;
-using NClone.Shared;
 using NClone.TypeReplication;
 using NUnit.Framework;
 
@@ -24,14 +23,12 @@ namespace NClone.Tests.TypeReplication
             fieldCopiersBuilder = A.Fake<IFieldCopiersBuilder>(x => x.Strict());
         }
 
-        private StructureReplicator<TType> BuildReplicator<TType>()
+        private StructureReplicator BuildReplicator<TType>()
         {
-            return new StructureReplicator<TType>(metadataProvider, fieldCopiersBuilder);
+            return new StructureReplicator(metadataProvider, fieldCopiersBuilder, typeof (TType));
         }
 
-        public class Class
-        {
-        }
+        public class Class { }
 
         [Test]
         public void CreateStructureReplicatorForReferenceType_ExceptionIsThrown()
@@ -49,7 +46,7 @@ namespace NClone.Tests.TypeReplication
         public void ReplicateEntity_FieldCopierBuildAndCalledForEachReplicatingField()
         {
             var fakeMembers = typeof (Structure).GetFields();
-            var fakeCopiers = Repeat.Twice(() => A.Fake<IFieldCopier<Structure>>(x => x.Strict()));
+            var fakeCopiers = Repeat.Twice(() => A.Fake<IFieldCopier>(x => x.Strict()));
             var fakeResult = new Structure { field1 = RandomInt() };
             metadataProvider
                 .Configure()
@@ -57,8 +54,8 @@ namespace NClone.Tests.TypeReplication
                 .Returns(fakeMembers);
             fieldCopiersBuilder
                 .Configure()
-                .CallsTo(x => x.BuildFor<Structure>(A<FieldInfo>.Ignored))
-                .ReturnsLazily((FieldInfo fieldInfo) => fakeCopiers[Array.IndexOf(fakeMembers, fieldInfo)]);
+                .CallsTo(x => x.BuildFor(typeof (Structure), A<FieldInfo>.Ignored))
+                .ReturnsLazily((Type _, FieldInfo fieldInfo) => fakeCopiers[Array.IndexOf(fakeMembers, fieldInfo)]);
             fakeCopiers[0]
                 .Configure()
                 .CallsTo(x => x.Replicating)
@@ -67,8 +64,8 @@ namespace NClone.Tests.TypeReplication
                 .CallsTo(x => x.Replicating)
                 .Returns(true);
             fakeCopiers[1]
-                .CallsTo(x => x.Copy(A<Structure>.Ignored, A<Structure>.Ignored))
-                .ReturnsLazily((Structure _, Structure __) => fakeResult);
+                .CallsTo(x => x.Copy(A<object>.Ignored, A<object>.Ignored))
+                .ReturnsLazily(() => fakeResult);
 
             var objectReplicator = BuildReplicator<Structure>();
             var result = objectReplicator.Replicate(new Structure());
@@ -79,16 +76,16 @@ namespace NClone.Tests.TypeReplication
         [Test]
         public void ReplicateTwice_MetadataReadOnceAndCopiersBuiltOnce()
         {
-            var fakeMember = typeof(Structure).GetFields().First();
-            var fakeCopier = A.Fake<IFieldCopier<Structure>>();
+            var fakeMember = typeof (Structure).GetFields().First();
+            var fakeCopier = A.Fake<IFieldCopier>();
             metadataProvider
                 .Configure()
-                .CallsTo(x => x.GetReplicatingMembers(typeof(Structure)))
+                .CallsTo(x => x.GetReplicatingMembers(typeof (Structure)))
                 .Returns(new[] { fakeMember })
                 .NumberOfTimes(1);
             fieldCopiersBuilder
                 .Configure()
-                .CallsTo(x => x.BuildFor<Structure>(fakeMember))
+                .CallsTo(x => x.BuildFor(typeof (Structure), fakeMember))
                 .Returns(fakeCopier)
                 .NumberOfTimes(1);
 

@@ -45,8 +45,8 @@ namespace NClone.Tests
                 typeof (ClassWithPrivateField), true);
             var ilGenerator = method.GetILGenerator();
 
-            ilGenerator.EmitLoadArgumentAddress(typeof (ClassWithPrivateField), 0);
-            ilGenerator.EmitLoadFieldValue(field);
+            ilGenerator.LoadArgumentAddress(typeof (ClassWithPrivateField), 0);
+            ilGenerator.LoadFieldValue(field);
             ilGenerator.Emit(OpCodes.Ret);
 
             var getViaMethod = (Func<ClassWithPrivateField, int>) method.CreateDelegate(typeof (Func<ClassWithPrivateField, int>));
@@ -99,10 +99,10 @@ namespace NClone.Tests
                 typeof (ClassWithPrivateField), true);
             var ilGenerator = method.GetILGenerator();
 
-            ilGenerator.EmitLoadArgumentAddress(typeof (ClassWithPrivateField), 0);
-            ilGenerator.EmitLoadArgument(1);
-            ilGenerator.EmitStoreFieldValue(field);
-            ilGenerator.EmitLoadArgument(0);
+            ilGenerator.LoadArgumentAddress(typeof (ClassWithPrivateField), 0);
+            ilGenerator.LoadArgument(1);
+            ilGenerator.StoreFieldValue(field);
+            ilGenerator.LoadArgument(0);
             ilGenerator.Emit(OpCodes.Ret);
 
             var setViaMethod = (Func<ClassWithPrivateField, int, ClassWithPrivateField>)

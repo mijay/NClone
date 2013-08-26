@@ -1,13 +1,15 @@
-﻿namespace NClone.TypeReplication
+﻿using System;
+
+namespace NClone.TypeReplication
 {
     /// <summary>
-    /// Builds <see cref="IEntityReplicator{TType}"/> for a given actualType.
+    /// Builds <see cref="IEntityReplicator"/> for a given actualType.
     /// </summary>
     internal interface IEntityReplicatorsBuilder
     {
         /// <summary>
-        /// Builds <see cref="IEntityReplicator{TType}"/> for the given <typeparamref name="TType"/>.
+        /// Builds <see cref="IEntityReplicator"/> for the given <paramref name="entityType"/>.
         /// </summary>
-        IEntityReplicator<TType> BuildFor<TType>();
+        IEntityReplicator BuildFor(Type entityType);
     }
 }

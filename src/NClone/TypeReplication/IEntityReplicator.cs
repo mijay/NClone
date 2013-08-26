@@ -3,20 +3,25 @@
 namespace NClone.TypeReplication
 {
     /// <summary>
-    /// Object which is able to replicate (deep copy) an entity of type <typeparamref name="TType"/>.
+    /// Object which is able to replicate (deep copy) an entity of type <see cref="EntityType"/>.
     /// </summary>
-    internal interface IEntityReplicator<TType>
+    internal interface IEntityReplicator
     {
+        /// <summary>
+        /// <see cref="Type"/> of entities processed by the current <see cref="IEntityReplicator"/>.
+        /// </summary>
+        Type EntityType { get; }
+
         /// <summary>
         /// Replicate (deep copy) <paramref name="source"/>.
         /// </summary>
         /// <exception cref="InvalidCastException">
-        /// If <paramref name="source"/> is not of type <typeparamref name="TType"/>.
+        /// If <paramref name="source"/> is not of type <see cref="EntityType"/>.
         /// </exception>
-        TType Replicate(TType source);
+        object Replicate(object source);
 
         /// <summary>
-        /// Indicates, whether current <see cref="IEntityReplicator{TType}"/> is trivial,
+        /// Indicates, whether current <see cref="IEntityReplicator"/> is trivial,
         /// i.e. whether its <see cref="Replicate"/> just returns given source,
         /// because copying can be omitted.
         /// </summary>

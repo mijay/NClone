@@ -1,11 +1,20 @@
-﻿namespace NClone.TypeReplication
+﻿using System;
+
+namespace NClone.TypeReplication
 {
     /// <summary>
-    /// Trivial implementation of <see cref="IEntityReplicator{TType}"/>, which always omit copying.
+    /// Trivial implementation of <see cref="IEntityReplicator"/>, which always omit copying.
     /// </summary>
-    internal class TrivialReplicator<TType>: IEntityReplicator<TType>
+    internal class TrivialReplicator: IEntityReplicator
     {
-        public TType Replicate(TType source)
+        public TrivialReplicator(Type entityType)
+        {
+            EntityType = entityType;
+        }
+
+        public Type EntityType { get; private set; }
+
+        public object Replicate(object source)
         {
             return source;
         }

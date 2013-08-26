@@ -92,19 +92,11 @@ namespace NClone.Tests.MemberAccess
         public class ArgumentValidationTest: FieldAccessorBuilderTest
         {
             [Test]
-            public void BuildAccessorForFieldOfDifferentType_Exception()
-            {
-                var field = GetField<ClassWithPublicField>();
-                Assert.Throws<ArgumentException>(
-                    () => FieldAccessorBuilder.BuildFor<ClassWithPublicField, bool>(field, true));
-            }
-
-            [Test]
             public void BuildAccessorForDifferentEntity_Exception()
             {
                 var field = GetField<ClassWithPublicField>();
                 Assert.Throws<ArgumentException>(
-                    () => FieldAccessorBuilder.BuildFor<ClassWithPrivateReadonlyField, int>(field, true));
+                    () => FieldAccessorBuilder.BuildFor(typeof(ClassWithPrivateReadonlyField), field, true));
             }
 
             [Test]
@@ -112,7 +104,7 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<ClassWithPrivateReadonlyField>();
                 Assert.DoesNotThrow(
-                    () => FieldAccessorBuilder.BuildFor<ClassWithInheritedPrivateReadonlyField, int>(field, true));
+                    () => FieldAccessorBuilder.BuildFor(typeof(ClassWithInheritedPrivateReadonlyField), field, true));
             }
         }
 
@@ -123,7 +115,7 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<ClassWithPublicField>();
 
-                var accessor = FieldAccessorBuilder.BuildFor<ClassWithPublicField, int>(field, true);
+                var accessor = FieldAccessorBuilder.BuildFor(typeof(ClassWithPublicField), field, true);
 
                 Assert.That(accessor.CanGet && accessor.CanSet);
                 var data = new ClassWithPublicField { field = RandomInt() };
@@ -138,7 +130,7 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<ClassWithPrivateReadonlyField>();
 
-                var accessor = FieldAccessorBuilder.BuildFor<ClassWithPrivateReadonlyField, int>(field, true);
+                var accessor = FieldAccessorBuilder.BuildFor(typeof(ClassWithPrivateReadonlyField), field, true);
 
                 var data = new ClassWithPrivateReadonlyField(RandomInt());
                 Assert.That(accessor.GetMember(data), Is.EqualTo(data.GetField()));
@@ -152,7 +144,7 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<ClassWithPrivateReadonlyField>();
 
-                var accessor = FieldAccessorBuilder.BuildFor<ClassWithInheritedPrivateReadonlyField, int>(field, true);
+                var accessor = FieldAccessorBuilder.BuildFor(typeof(ClassWithInheritedPrivateReadonlyField), field, true);
 
                 var data = new ClassWithInheritedPrivateReadonlyField(RandomInt());
                 Assert.That(accessor.GetMember(data), Is.EqualTo(data.GetField()));
@@ -166,7 +158,7 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<ClassWithInheritedInternalReadonlyField>();
 
-                var accessor = FieldAccessorBuilder.BuildFor<ClassWithInheritedInternalReadonlyField, int>(field, true);
+                var accessor = FieldAccessorBuilder.BuildFor(typeof(ClassWithInheritedInternalReadonlyField), field, true);
 
                 var data = new ClassWithInheritedInternalReadonlyField(RandomInt());
                 Assert.That(accessor.GetMember(data), Is.EqualTo(data.GetField()));
@@ -183,12 +175,12 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<Structure>();
 
-                var accessor = FieldAccessorBuilder.BuildFor<Structure, int>(field, true);
+                var accessor = FieldAccessorBuilder.BuildFor(typeof(Structure), field, true);
 
                 var source = new Structure { field = RandomInt() };
                 Assert.That(accessor.GetMember(source), Is.EqualTo(source.field));
                 var fieldValue = RandomInt();
-                var result = accessor.SetMember(source, fieldValue);
+                var result = (Structure) accessor.SetMember(source, fieldValue);
                 Assert.That(result.field, Is.EqualTo(fieldValue));
             }
         }
@@ -200,7 +192,7 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<ClassWithPrivateField>();
 
-                var result = FieldAccessorBuilder.BuildFor<ClassWithPrivateField, int>(field);
+                var result = FieldAccessorBuilder.BuildFor(typeof(ClassWithPrivateField), field);
 
                 Assert.That(result.CanGet, Is.False);
                 Assert.That(result.CanSet, Is.False);
@@ -211,7 +203,7 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<ClassWithPublicReadonlyField>();
 
-                var result = FieldAccessorBuilder.BuildFor<ClassWithPublicReadonlyField, int>(field);
+                var result = FieldAccessorBuilder.BuildFor(typeof(ClassWithPublicReadonlyField), field);
 
                 Assert.That(result.CanGet, Is.True);
                 Assert.That(result.CanSet, Is.False);
@@ -222,7 +214,7 @@ namespace NClone.Tests.MemberAccess
             {
                 var field = GetField<ClassWithInheritedInternalField>();
 
-                var result = FieldAccessorBuilder.BuildFor<ClassWithInheritedInternalField, int>(field);
+                var result = FieldAccessorBuilder.BuildFor(typeof(ClassWithInheritedInternalField), field);
 
                 Assert.That(result.CanGet, Is.False);
                 Assert.That(result.CanSet, Is.False);

@@ -3,7 +3,6 @@ using System.Reflection;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax;
 using NClone.FieldCopying;
-using NClone.MemberAccess;
 using NClone.TypeReplication;
 using NUnit.Framework;
 
@@ -35,17 +34,17 @@ namespace NClone.Tests.FieldCopying
             entityReplicatorBuilder = A.Fake<IEntityReplicatorsBuilder>(x => x.Strict());
         }
 
-        private void ConfigureBuilderToReturn<TEntity>(IEntityReplicator<TEntity> entityReplicator)
+        private void ConfigureBuilderToReturn<TEntity>(IEntityReplicator entityReplicator)
         {
             entityReplicatorBuilder
                 .Configure()
-                .CallsTo(x => x.BuildFor<TEntity>())
+                .CallsTo(x => x.BuildFor(typeof (TEntity)))
                 .Returns(entityReplicator);
         }
 
-        private static IEntityReplicator<TEntity> BuildEntityReplicator<TEntity>(bool isTrivial = false)
+        private static IEntityReplicator BuildEntityReplicator(bool isTrivial = false)
         {
-            var entityReplicator = A.Fake<IEntityReplicator<TEntity>>(x => x.Strict());
+            var entityReplicator = A.Fake<IEntityReplicator>(x => x.Strict());
             entityReplicator
                 .Configure()
                 .CallsTo(x => x.IsTrivial)
@@ -53,46 +52,45 @@ namespace NClone.Tests.FieldCopying
             return entityReplicator;
         }
 
-        private FieldCopier<TEntity, TMember> BuildFieldCopier<TEntity, TMember>()
+        private FieldCopier BuildFieldCopier<TEntity, TMember>()
         {
             var field = typeof (TEntity)
                 .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Single(x => x.FieldType == typeof (TMember));
-            return new FieldCopier<TEntity, TMember>(entityReplicatorBuilder,
-                FieldAccessorBuilder.BuildFor<TEntity, TMember>(field));
+            return new FieldCopier(entityReplicatorBuilder, typeof (TEntity), field);
         }
 
         [Test]
         public void CreateFieldCopierForTypeWithTrivialReplicator_ItIsNotReplicating()
         {
-            var entityReplicator = BuildEntityReplicator<ClassWithSimpleField>(true);
-            ConfigureBuilderToReturn(entityReplicator);
+            var entityReplicator = BuildEntityReplicator(true);
+            ConfigureBuilderToReturn<ClassWithSimpleField>(entityReplicator);
 
             var fieldCopier = BuildFieldCopier<ClassWithField, ClassWithSimpleField>();
             Assert.That(fieldCopier.Replicating, Is.False);
 
             var source = new ClassWithField { field = new ClassWithSimpleField() };
-            var result = fieldCopier.Copy(source, new ClassWithField());
+            var result = (ClassWithField) fieldCopier.Copy(source, new ClassWithField());
             Assert.That(result.field, Is.SameAs(source.field));
         }
 
         [Test]
         public void CopierForFieldWithReplicator_CopyNull_ItIsNotReplicated()
         {
-            var entityReplicator = BuildEntityReplicator<ClassWithSimpleField>();
-            ConfigureBuilderToReturn(entityReplicator);
+            var entityReplicator = BuildEntityReplicator();
+            ConfigureBuilderToReturn<ClassWithSimpleField>(entityReplicator);
 
             var fieldCopier = BuildFieldCopier<ClassWithField, ClassWithSimpleField>();
 
-            var result = fieldCopier.Copy(new ClassWithField { field = null }, new ClassWithField());
+            var result = (ClassWithField) fieldCopier.Copy(new ClassWithField { field = null }, new ClassWithField());
             Assert.That(result.field, Is.Null);
         }
 
         [Test]
         public void CreateFieldCopierForTypeWithReplicator_ReplicatingIsTrue()
         {
-            var entityReplicator = BuildEntityReplicator<ClassWithSimpleField>();
-            ConfigureBuilderToReturn(entityReplicator);
+            var entityReplicator = BuildEntityReplicator();
+            ConfigureBuilderToReturn<ClassWithSimpleField>(entityReplicator);
 
             var fieldCopier = BuildFieldCopier<ClassWithField, ClassWithSimpleField>();
 
@@ -102,8 +100,8 @@ namespace NClone.Tests.FieldCopying
         [Test]
         public void CopierForTypeWithReplicator_CopyField_ReplicateIsCalled()
         {
-            var entityReplicator = BuildEntityReplicator<ClassWithSimpleField>();
-            ConfigureBuilderToReturn(entityReplicator);
+            var entityReplicator = BuildEntityReplicator();
+            ConfigureBuilderToReturn<ClassWithSimpleField>(entityReplicator);
 
             var source = new ClassWithField { field = new ClassWithSimpleField { field = RandomInt() } };
             var fakeReplicatedField = new ClassWithSimpleField { field = RandomInt() };
@@ -113,7 +111,7 @@ namespace NClone.Tests.FieldCopying
                 .Returns(fakeReplicatedField);
 
             var fieldCopier = BuildFieldCopier<ClassWithField, ClassWithSimpleField>();
-            var result = fieldCopier.Copy(source, new ClassWithField());
+            var result = (ClassWithField) fieldCopier.Copy(source, new ClassWithField());
 
             Assert.That(result.field, Is.SameAs(fakeReplicatedField));
         }
@@ -121,10 +119,10 @@ namespace NClone.Tests.FieldCopying
         [Test]
         public void CopierForFieldOfTypeT_CopyFieldWithSuccessorOfT_ReplicateIsBuiltAndCalledForSuccessor()
         {
-            var replicatorOfT = BuildEntityReplicator<ClassWithSimpleField>();
-            var replicatorOfSuccessor = BuildEntityReplicator<InheritedClass>();
-            ConfigureBuilderToReturn(replicatorOfT);
-            ConfigureBuilderToReturn(replicatorOfSuccessor);
+            var replicatorOfT = BuildEntityReplicator();
+            ConfigureBuilderToReturn<ClassWithSimpleField>(replicatorOfT);
+            var replicatorOfSuccessor = BuildEntityReplicator();
+            ConfigureBuilderToReturn<InheritedClass>(replicatorOfSuccessor);
 
             var sourceField = new InheritedClass { field = RandomInt() };
             var source = new ClassWithField { field = sourceField };
@@ -135,7 +133,7 @@ namespace NClone.Tests.FieldCopying
                 .Returns(fakeReplicatedField);
 
             var fieldCopier = BuildFieldCopier<ClassWithField, ClassWithSimpleField>();
-            var result = fieldCopier.Copy(source, new ClassWithField());
+            var result = (ClassWithField) fieldCopier.Copy(source, new ClassWithField());
 
             Assert.That(result.field, Is.SameAs(fakeReplicatedField));
         }

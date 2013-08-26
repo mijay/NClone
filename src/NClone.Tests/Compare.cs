@@ -66,14 +66,14 @@ namespace NClone.Tests
 
             Debug.WriteLine("Mine first run");
             timer.Restart();
-            entityReplicatorsBuilder.BuildFor<T>().Replicate(source);
+            entityReplicatorsBuilder.BuildFor(typeof(T)).Replicate(source);
             timer.Stop();
             Debug.WriteLine(timer.ElapsedMilliseconds);
             Debug.WriteLine(timer.ElapsedTicks);
 
             Debug.WriteLine("Mine second run");
             timer.Restart();
-            entityReplicatorsBuilder.BuildFor<T>().Replicate(source);
+            entityReplicatorsBuilder.BuildFor(typeof(T)).Replicate(source);
             timer.Stop();
             Debug.WriteLine(timer.ElapsedMilliseconds);
             Debug.WriteLine(timer.ElapsedTicks);

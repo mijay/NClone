@@ -1,9 +1,11 @@
 ﻿using System;
-using NClone.EntityReplicators;
+using NClone.Annotation;
+using NClone.ObjectReplicators;
 using NClone.Shared;
+using NClone.SpecificTypeReplicators;
 using NUnit.Framework;
 
-namespace NClone.Tests.EntityReplicators
+namespace NClone.Tests.SpecificTypesReplicators
 {
     public class ReferenceTypeReplicatorTest: TestBase
     {
@@ -72,15 +74,21 @@ namespace NClone.Tests.EntityReplicators
 
         #endregion
 
+        private static ReferenceTypeReplicator ReplicatorFor<T>()
+        {
+            var metadataProvider = new AttributeBasedMetadataProvider();
+            return new ReferenceTypeReplicator(metadataProvider, new ObjectReplicator(metadataProvider), typeof (T));
+        }
+
         private static T Replicate<T>(T source)
         {
-            return new ReferenceTypeReplicator(typeof (T)).Replicate(source).As<T>();
+            return ReplicatorFor<T>().Replicate(source).As<T>();
         }
 
         [Test]
         public void ReplicatorForBaseType_ReceivesInheritedType_Exception()
         {
-            var replicator = new ReferenceTypeReplicator(typeof (ClassWithPublicField));
+            var replicator = ReplicatorFor<ClassWithPublicField>();
 
             Assert.Throws<ArgumentException>(
                 () => replicator.Replicate(new ClassWithNewField(RandomInt())));

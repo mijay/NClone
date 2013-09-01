@@ -66,14 +66,14 @@ namespace NClone.Tests.Benchmarks
 
             Console.WriteLine("Mine first run");
             timer.Restart();
-            ObjectReplicator.Replicate(source);
+            DefaultObjectReplicator.Replicate(source);
             timer.Stop();
             Console.Write(timer.ElapsedMilliseconds + "\n");
             Console.Write(timer.ElapsedTicks + "\n");
 
             Console.WriteLine("Mine second run");
             timer.Restart();
-            ObjectReplicator.Replicate(source);
+            DefaultObjectReplicator.Replicate(source);
             timer.Stop();
             Console.Write(timer.ElapsedMilliseconds + "\n");
             Console.Write(timer.ElapsedTicks + "\n");

@@ -43,12 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarks\Compare.cs" />
-    <Compile Include="EntityReplicators\ReferenceTypeReplicatorTest.cs" />
+    <Compile Include="SpecificTypesReplicators\ReferenceTypeReplicatorTest.cs" />
     <Compile Include="Shared\EnumerableExtensionTest.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repeat.cs" />
-    <Compile Include="ObjectReplicatorTest.cs" />
+    <Compile Include="ObjectReplicators\ObjectReplicatorTest.cs" />
     <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>

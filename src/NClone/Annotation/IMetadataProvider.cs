@@ -4,8 +4,12 @@ using System.Reflection;
 
 namespace NClone.Annotation
 {
+    /// <summary>
+    /// Provides information about <see cref="ReplicationBehavior"/> for fields and types.
+    /// </summary>
     public interface IMetadataProvider
     {
-        IEnumerable<FieldInfo> GetReplicatingMembers(Type entityType);
+        ReplicationBehavior GetBehavior(Type entityType);
+        IEnumerable<Tuple<FieldInfo, ReplicationBehavior>> GetMembers(Type entityType);
     }
 }

@@ -1,17 +1,27 @@
 ﻿using System;
+using NClone.Annotation;
+using NClone.ObjectReplicators;
+using NClone.Shared;
 using NUnit.Framework;
 
-namespace NClone.Tests
+namespace NClone.Tests.ObjectReplicators
 {
     public class ObjectReplicatorTest: TestBase
     {
+        private IObjectReplicator objectReplicator;
+
+        protected override void SetUp()
+        {
+            base.SetUp();
+            objectReplicator = new ObjectReplicator(new AttributeBasedMetadataProvider());
+        }
 
         [Test]
         public void SourceIsString_SameReturned()
         {
             var source = "blah-blah";
 
-            var result = ObjectReplicator.Replicate(source);
+            var result = objectReplicator.Replicate(source);
 
             Assert.That(result, Is.SameAs(source));
         }
@@ -21,7 +31,7 @@ namespace NClone.Tests
         {
             var source = 42;
 
-            var result = ObjectReplicator.Replicate(source);
+            var result = objectReplicator.Replicate(source);
 
             Assert.That(result, Is.EqualTo(source));
         }
@@ -32,8 +42,8 @@ namespace NClone.Tests
             var sourceWithValue = new int?(42);
             var sourceWithoutValue = new int?();
 
-            var resultWithValue = ObjectReplicator.Replicate(sourceWithValue);
-            var resultWithoutValue = ObjectReplicator.Replicate(sourceWithoutValue);
+            var resultWithValue = objectReplicator.Replicate(sourceWithValue);
+            var resultWithoutValue = objectReplicator.Replicate(sourceWithoutValue);
 
             Assert.That(resultWithValue, Is.EqualTo(sourceWithValue));
             Assert.That(resultWithoutValue, Is.EqualTo(sourceWithoutValue));
@@ -44,7 +54,7 @@ namespace NClone.Tests
         {
             var source = DateTime.Now;
 
-            var result = ObjectReplicator.Replicate(source);
+            var result = objectReplicator.Replicate(source);
 
             Assert.That(result, Is.EqualTo(source));
         }
@@ -60,7 +70,7 @@ namespace NClone.Tests
         {
             var source = new Class { field = new Class { number = RandomInt() } };
 
-            var result = ObjectReplicator.Replicate(source);
+            var result = objectReplicator.Replicate(source).As<Class>();
 
             Assert.That(result, Is.Not.SameAs(source));
             Assert.That(result.field, Is.Not.SameAs(source.field));
@@ -70,7 +80,7 @@ namespace NClone.Tests
         [Test]
         public void SourceIsNull_NullReturned()
         {
-            var result = ObjectReplicator.Replicate(null);
+            var result = objectReplicator.Replicate(null);
 
             Assert.That(result, Is.Null);
         }

@@ -1,23 +1,27 @@
 using System;
 using System.Linq.Expressions;
+using NClone.ObjectReplicators;
 using NClone.Shared;
 
-namespace NClone.EntityReplicators
+namespace NClone.SpecificTypeReplicators
 {
     /// <summary>
-    /// Implementation of <see cref="IEntityReplicator"/> for nullable types.
+    /// Implementation of <see cref="ISpecificTypeReplicator"/> for nullable types.
     /// </summary>
     //note: while DummyReplicator used for all ValueType-s => there is no need to deep-copy Nullable-s
     //todo: no tests
-    internal class NullableTypeReplicator: IEntityReplicator
+    internal class NullableTypeReplicator: ISpecificTypeReplicator
     {
+        private readonly IObjectReplicator objectReplicator;
         private readonly Func<object, object> getUnderlyingValue;
         private readonly Func<object, object> buildNullable;
 
-        public NullableTypeReplicator(Type underlyingType)
+        public NullableTypeReplicator(IObjectReplicator objectReplicator, Type underlyingType)
         {
+            Guard.AgainstNull(objectReplicator, "objectReplicator");
             Guard.AgainstNull(underlyingType, "underlyingType");
             Guard.AgainstViolation(underlyingType.IsValueType, "Underlying type should be value type");
+            this.objectReplicator = objectReplicator;
 
             var nullableType = typeof (Nullable<>).MakeGenericType(underlyingType);
             var nullableTypeCtor = nullableType.GetConstructor(new[] { underlyingType });
@@ -40,7 +44,7 @@ namespace NClone.EntityReplicators
         public object Replicate(object source)
         {
             var underlyingValue = getUnderlyingValue(source);
-            var replicatedValue = ObjectReplicator.Replicate(underlyingValue);
+            var replicatedValue = objectReplicator.Replicate(underlyingValue);
             return replicatedValue != null ? buildNullable(replicatedValue) : null;
         }
     }

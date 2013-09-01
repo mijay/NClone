@@ -1,4 +1,4 @@
-namespace NClone.SecondVersion
+namespace NClone.EntityReplicators
 {
     /// <summary>
     /// Dummy implementation of <see cref="IEntityReplicator"/>, which <see cref="Replicate"/> method just returns given argument.

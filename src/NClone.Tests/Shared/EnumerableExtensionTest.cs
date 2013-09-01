@@ -5,7 +5,7 @@ using System.Linq;
 using NClone.Shared;
 using NUnit.Framework;
 
-namespace NClone.Tests
+namespace NClone.Tests.Shared
 {
     public class EnumerableExtensionTest: TestBase
     {

@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using NClone.Shared;
 
-namespace NClone.SecondVersion
+namespace NClone.EntityReplicators
 {
     /// <summary>
     /// Implementation of <see cref="IEntityReplicator"/> for nullable types.

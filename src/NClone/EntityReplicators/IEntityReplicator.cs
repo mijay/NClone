@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace NClone.SecondVersion
+namespace NClone.EntityReplicators
 {
     /// <summary>
     /// Object which is able to replicate (deep copy) an entity of a specific type.

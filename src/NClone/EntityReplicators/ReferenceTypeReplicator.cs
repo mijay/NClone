@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using NClone.MemberAccess;
 using NClone.Shared;
 
-namespace NClone.SecondVersion
+namespace NClone.EntityReplicators
 {
     /// <summary>
     /// Implementation of <see cref="IEntityReplicator"/> for general reference types.
@@ -32,6 +32,11 @@ namespace NClone.SecondVersion
 
         public object Replicate(object source)
         {
+            Guard.AgainstNull(source, "source");
+            Guard.AgainstViolation(source.GetType() == type,
+                "This replicator can copy only entities of type {0}, but {1} received",
+                type, source.GetType());
+
             var result = FormatterServices.GetUninitializedObject(type);
             foreach (var memberAccessor in memberAccessors) {
                 var memberValue = memberAccessor.GetMember(source);

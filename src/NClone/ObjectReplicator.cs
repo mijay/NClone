@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using NClone.EntityReplicators;
 using NClone.Shared;
 
-namespace NClone.SecondVersion
+namespace NClone
 {
     public static class ObjectReplicator
     {

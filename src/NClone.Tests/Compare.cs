@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using GeorgeCloney;
-using NClone.Annotation;
-using NClone.FieldCopying;
-using NClone.TypeReplication;
 using NUnit.Framework;
-using ObjectReplicator = NClone.SecondVersion.ObjectReplicator;
 
 namespace NClone.Tests
 {
@@ -58,7 +54,7 @@ namespace NClone.Tests
             timer.Restart();
             CloneExtension.DeepCloneWithoutSerialization(source);
             timer.Stop();
-            Console.Write(timer.ElapsedMilliseconds+"\n");
+            Console.Write(timer.ElapsedMilliseconds + "\n");
             Console.Write(timer.ElapsedTicks + "\n");
 
             Console.WriteLine("George second run");
@@ -68,32 +64,14 @@ namespace NClone.Tests
             Console.Write(timer.ElapsedMilliseconds + "\n");
             Console.Write(timer.ElapsedTicks + "\n");
 
-            EntityReplicatorsBuilder entityReplicatorsBuilder = null;
-            entityReplicatorsBuilder = new EntityReplicatorsBuilder(new DefaultMetadataProvider(),
-                new FieldCopiersBuilder(() => entityReplicatorsBuilder));
-
             Console.WriteLine("Mine first run");
-            timer.Restart();
-            entityReplicatorsBuilder.BuildFor(typeof(T)).Replicate(source);
-            timer.Stop();
-            Console.Write(timer.ElapsedMilliseconds + "\n");
-            Console.Write(timer.ElapsedTicks + "\n");
-
-            Console.WriteLine("Mine second run");
-            timer.Restart();
-            entityReplicatorsBuilder.BuildFor(typeof(T)).Replicate(source);
-            timer.Stop();
-            Console.Write(timer.ElapsedMilliseconds + "\n");
-            Console.Write(timer.ElapsedTicks + "\n");
-
-            Console.WriteLine("Mine v2 first run");
             timer.Restart();
             ObjectReplicator.Replicate(source);
             timer.Stop();
             Console.Write(timer.ElapsedMilliseconds + "\n");
             Console.Write(timer.ElapsedTicks + "\n");
 
-            Console.WriteLine("Mine v2 second run");
+            Console.WriteLine("Mine second run");
             timer.Restart();
             ObjectReplicator.Replicate(source);
             timer.Stop();

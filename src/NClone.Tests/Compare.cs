@@ -5,6 +5,7 @@ using NClone.Annotation;
 using NClone.FieldCopying;
 using NClone.TypeReplication;
 using NUnit.Framework;
+using ObjectReplicator = NClone.SecondVersion.ObjectReplicator;
 
 namespace NClone.Tests
 {
@@ -53,37 +54,51 @@ namespace NClone.Tests
         {
             var timer = new Stopwatch();
 
-            Debug.WriteLine("George first run");
+            Console.WriteLine("George first run");
             timer.Restart();
             CloneExtension.DeepCloneWithoutSerialization(source);
             timer.Stop();
-            Debug.WriteLine(timer.ElapsedMilliseconds);
-            Debug.WriteLine(timer.ElapsedTicks);
+            Console.Write(timer.ElapsedMilliseconds+"\n");
+            Console.Write(timer.ElapsedTicks + "\n");
 
-            Debug.WriteLine("George second run");
+            Console.WriteLine("George second run");
             timer.Restart();
             CloneExtension.DeepCloneWithoutSerialization(source);
             timer.Stop();
-            Debug.WriteLine(timer.ElapsedMilliseconds);
-            Debug.WriteLine(timer.ElapsedTicks);
+            Console.Write(timer.ElapsedMilliseconds + "\n");
+            Console.Write(timer.ElapsedTicks + "\n");
 
             EntityReplicatorsBuilder entityReplicatorsBuilder = null;
             entityReplicatorsBuilder = new EntityReplicatorsBuilder(new DefaultMetadataProvider(),
                 new FieldCopiersBuilder(() => entityReplicatorsBuilder));
 
-            Debug.WriteLine("Mine first run");
+            Console.WriteLine("Mine first run");
             timer.Restart();
             entityReplicatorsBuilder.BuildFor(typeof(T)).Replicate(source);
             timer.Stop();
-            Debug.WriteLine(timer.ElapsedMilliseconds);
-            Debug.WriteLine(timer.ElapsedTicks);
+            Console.Write(timer.ElapsedMilliseconds + "\n");
+            Console.Write(timer.ElapsedTicks + "\n");
 
-            Debug.WriteLine("Mine second run");
+            Console.WriteLine("Mine second run");
             timer.Restart();
             entityReplicatorsBuilder.BuildFor(typeof(T)).Replicate(source);
             timer.Stop();
-            Debug.WriteLine(timer.ElapsedMilliseconds);
-            Debug.WriteLine(timer.ElapsedTicks);
+            Console.Write(timer.ElapsedMilliseconds + "\n");
+            Console.Write(timer.ElapsedTicks + "\n");
+
+            Console.WriteLine("Mine v2 first run");
+            timer.Restart();
+            ObjectReplicator.Replicate(source);
+            timer.Stop();
+            Console.Write(timer.ElapsedMilliseconds + "\n");
+            Console.Write(timer.ElapsedTicks + "\n");
+
+            Console.WriteLine("Mine v2 second run");
+            timer.Restart();
+            ObjectReplicator.Replicate(source);
+            timer.Stop();
+            Console.Write(timer.ElapsedMilliseconds + "\n");
+            Console.Write(timer.ElapsedTicks + "\n");
         }
     }
 }

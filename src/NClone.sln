@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone.Tests", "NClone.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone.Tests.ExternalAssembly", "NClone.Tests.ExternalAssembly\NClone.Tests.ExternalAssembly.csproj", "{75D517CB-C930-470B-928B-089D1D32FE9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone.EntryPoint", "NClone.EntryPoint\NClone.EntryPoint.csproj", "{E86E7527-AF3A-4324-B273-58BBD28624E8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,10 +25,6 @@ Global
 		{75D517CB-C930-470B-928B-089D1D32FE9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75D517CB-C930-470B-928B-089D1D32FE9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75D517CB-C930-470B-928B-089D1D32FE9C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E86E7527-AF3A-4324-B273-58BBD28624E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E86E7527-AF3A-4324-B273-58BBD28624E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E86E7527-AF3A-4324-B273-58BBD28624E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E86E7527-AF3A-4324-B273-58BBD28624E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

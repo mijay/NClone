@@ -13,31 +13,31 @@ namespace NClone.EntityReplicators
     /// </summary>
     internal class ReferenceTypeReplicator: IEntityReplicator
     {
-        private readonly Type type;
+        private readonly Type entityType;
         private readonly IEnumerable<IMemberAccessor> memberAccessors;
 
-        public ReferenceTypeReplicator(Type type)
+        public ReferenceTypeReplicator(Type entityType)
         {
-            Guard.AgainstNull(type, "type");
-            Guard.AgainstViolation(!type.IsValueType, "Type should be reference type");
+            Guard.AgainstNull(entityType, "entityType");
+            Guard.AgainstViolation(!entityType.IsValueType, "Type should be reference type");
 
-            this.type = type;
-            memberAccessors = type
+            this.entityType = entityType;
+            memberAccessors = entityType
                 .GetHierarchy()
                 .SelectMany(t => t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 .DistinctBy(x => x.MetadataToken)
-                .Select(field => FieldAccessorBuilder.BuildFor(type, field, true))
+                .Select(field => FieldAccessorBuilder.BuildFor(entityType, field, true))
                 .Materialize();
         }
 
         public object Replicate(object source)
         {
             Guard.AgainstNull(source, "source");
-            Guard.AgainstViolation(source.GetType() == type,
+            Guard.AgainstViolation(source.GetType() == entityType,
                 "This replicator can copy only entities of type {0}, but {1} received",
-                type, source.GetType());
+                entityType, source.GetType());
 
-            var result = FormatterServices.GetUninitializedObject(type);
+            var result = FormatterServices.GetUninitializedObject(entityType);
             foreach (var memberAccessor in memberAccessors) {
                 var memberValue = memberAccessor.GetMember(source);
                 var replicatedValue = ObjectReplicator.Replicate(memberValue);

@@ -7,6 +7,8 @@ namespace NClone.EntityReplicators
     /// <summary>
     /// Implementation of <see cref="IEntityReplicator"/> for nullable types.
     /// </summary>
+    //note: while DummyReplicator used for all ValueType-s => there is no need to deep-copy Nullable-s
+    //todo: no tests
     internal class NullableTypeReplicator: IEntityReplicator
     {
         private readonly Func<object, object> getUnderlyingValue;

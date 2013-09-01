@@ -74,6 +74,5 @@ namespace NClone.Tests
 
             Assert.That(result, Is.Null);
         }
-
     }
 }

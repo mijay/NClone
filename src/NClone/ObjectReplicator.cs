@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using NClone.EntityReplicators;
 using NClone.Shared;
 
@@ -29,11 +28,10 @@ namespace NClone
         {
             if (type.IsPrimitive || type == typeof (string))
                 return DummyReplicator.Instance;
-            if (type.IsNullable())
-                return new NullableTypeReplicator(type.GetGenericArguments().Single());
-            if (type.IsValueType)
-                return DummyReplicator.Instance;
-            return new ReferenceTypeReplicator(type);
+            //note: while DummyReplicator used for all ValueType-s => there is no need to deep-copy Nullable-s
+            //if (type.IsNullable())
+            //    return new NullableTypeReplicator(type.GetGenericArguments().Single());
+            return type.IsValueType ? DummyReplicator.Instance : new ReferenceTypeReplicator(type);
         }
     }
 }

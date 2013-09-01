@@ -42,7 +42,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compare.cs" />
+    <Compile Include="Benchmarks\Compare.cs" />
     <Compile Include="EntityReplicators\ReferenceTypeReplicatorTest.cs" />
     <Compile Include="Shared\EnumerableExtensionTest.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilderTest.cs" />

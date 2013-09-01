@@ -12,7 +12,7 @@ namespace NClone.Tests.Shared
         [Test]
         public void MaterializeCollection_GetSameCollection()
         {
-            var source = new Collection<int>() { 1, 2, 3 };
+            var source = new Collection<int> { 1, 2, 3 };
 
             var result = source.Materialize();
 

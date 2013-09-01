@@ -9,26 +9,17 @@ namespace NClone.Shared
         [Conditional("DEBUG"), StringFormatMethod("errorDescriptionFormat")]
         public static void AgainstViolation(bool condition, string errorDescriptionFormat, params object[] args)
         {
-            if (!condition)
-                throw new ArgumentException(string.Format(errorDescriptionFormat, args));
+            AgainstViolation<ArgumentException>(condition, errorDescriptionFormat, args);
         }
 
         [Conditional("DEBUG"), StringFormatMethod("errorDescriptionFormat")]
         public static void AgainstViolation<TException>(bool condition, string errorDescriptionFormat = null, params object[] args)
         {
             if (!condition)
-                throw (Exception) Activator.CreateInstance(typeof (TException), errorDescriptionFormat != null
-                    ? new object[] { string.Format(errorDescriptionFormat, args) }
-                    : new object[0]);
-        }
-
-        [Conditional("DEBUG"), StringFormatMethod("errorDescriptionFormat")]
-        public static void Against<TException>(bool condition, string errorDescriptionFormat = null, params object[] args)
-        {
-            if (condition)
-                throw (Exception) Activator.CreateInstance(typeof (TException), errorDescriptionFormat != null
-                    ? new object[] { string.Format(errorDescriptionFormat, args) }
-                    : new object[0]);
+                throw (Exception) Activator.CreateInstance(typeof (TException),
+                    errorDescriptionFormat != null
+                        ? new object[] { string.Format(errorDescriptionFormat, args) }
+                        : new object[0]);
         }
 
         [Conditional("DEBUG")]

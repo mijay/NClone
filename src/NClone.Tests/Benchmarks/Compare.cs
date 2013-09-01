@@ -3,7 +3,7 @@ using System.Diagnostics;
 using GeorgeCloney;
 using NUnit.Framework;
 
-namespace NClone.Tests
+namespace NClone.Tests.Benchmarks
 {
     [Ignore]
     public class Compare: TestBase

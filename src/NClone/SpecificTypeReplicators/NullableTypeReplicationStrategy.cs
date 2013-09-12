@@ -24,21 +24,8 @@ namespace NClone.SpecificTypeReplicators
             this.objectReplicator = objectReplicator;
 
             var nullableType = typeof (Nullable<>).MakeGenericType(underlyingType);
-            var nullableTypeCtor = nullableType.GetConstructor(new[] { underlyingType });
-            var valueProperty = nullableType.GetProperty("Value");
-
-            var xArgument = Expression.Parameter(typeof (object));
-            getUnderlyingValue = Expression
-                .Lambda<Func<object, object>>(
-                    Expression.Property(Expression.Convert(xArgument, nullableType), valueProperty),
-                    xArgument)
-                .Compile();
-
-            buildNullable = Expression
-                .Lambda<Func<object, object>>(
-                    Expression.New(nullableTypeCtor, Expression.Convert(xArgument, underlyingType)),
-                    xArgument)
-                .Compile();
+            getUnderlyingValue = BuildUnwrappingDelegate(nullableType);
+            buildNullable = BuildWrappingDelegate(nullableType, underlyingType);
         }
 
         public object Replicate(object source)
@@ -46,6 +33,31 @@ namespace NClone.SpecificTypeReplicators
             var underlyingValue = getUnderlyingValue(source);
             var replicatedValue = objectReplicator.Replicate(underlyingValue);
             return replicatedValue != null ? buildNullable(replicatedValue) : null;
+        }
+
+        private static Func<object, object> BuildUnwrappingDelegate(Type nullableType)
+        {
+            var valueProperty = nullableType.GetProperty("Value");
+
+            var xArgument = Expression.Parameter(typeof (object));
+            return Expression
+                .Lambda<Func<object, object>>(
+                    Expression.Property(Expression.Convert(xArgument, nullableType), valueProperty),
+                    xArgument)
+                .Compile();
+        }
+
+        private static Func<object, object> BuildWrappingDelegate(Type nullableType, Type underlyingType)
+        {
+            var nullableTypeCtor = nullableType.GetConstructor(new[] { underlyingType });
+
+            var xArgument = Expression.Parameter(typeof (object));
+            var nullable = Expression
+                .Lambda<Func<object, object>>(
+                    Expression.New(nullableTypeCtor, Expression.Convert(xArgument, underlyingType)),
+                    xArgument)
+                .Compile();
+            return nullable;
         }
     }
 }

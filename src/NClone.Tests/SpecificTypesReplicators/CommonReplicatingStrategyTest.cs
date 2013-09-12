@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace NClone.Tests.SpecificTypesReplicators
 {
-    public class ReferenceTypeReplicatorTest: TestBase
+    public class CommonReplicatingStrategyTest: TestBase
     {
         #region Test data
 
@@ -74,10 +74,10 @@ namespace NClone.Tests.SpecificTypesReplicators
 
         #endregion
 
-        private static ReferenceTypeReplicator ReplicatorFor<T>()
+        private static CommonReplicationStrategy ReplicatorFor<T>()
         {
             var metadataProvider = new DefaultMetadataProvider();
-            return new ReferenceTypeReplicator(metadataProvider, new ObjectReplicator(metadataProvider), typeof (T));
+            return new CommonReplicationStrategy(metadataProvider, new ObjectReplicator(metadataProvider), typeof (T));
         }
 
         private static T Replicate<T>(T source)

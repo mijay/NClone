@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarks\Compare.cs" />
-    <Compile Include="SpecificTypesReplicators\ReferenceTypeReplicatorTest.cs" />
+    <Compile Include="SpecificTypesReplicators\CommonReplicatingStrategyTest.cs" />
     <Compile Include="Shared\EnumerableExtensionTest.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

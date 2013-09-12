@@ -11,16 +11,16 @@ using NClone.Shared;
 namespace NClone.SpecificTypeReplicators
 {
     /// <summary>
-    /// Implementation of <see cref="ISpecificTypeReplicator"/> for general reference types.
+    /// Implementation of <see cref="IReplicationStrategy"/> for general reference types.
     /// </summary>
-    internal class ReferenceTypeReplicator: ISpecificTypeReplicator
+    internal class CommonReplicationStrategy: IReplicationStrategy
     {
         private readonly IMetadataProvider metadataProvider;
         private readonly IObjectReplicator objectReplicator;
         private readonly Type entityType;
         private readonly IEnumerable<IMemberAccessor> memberAccessors;
 
-        public ReferenceTypeReplicator(IMetadataProvider metadataProvider, IObjectReplicator objectReplicator, Type entityType)
+        public CommonReplicationStrategy(IMetadataProvider metadataProvider, IObjectReplicator objectReplicator, Type entityType)
         {
             Guard.AgainstNull(metadataProvider, "metadataProvider");
             Guard.AgainstNull(objectReplicator, "objectReplicator");

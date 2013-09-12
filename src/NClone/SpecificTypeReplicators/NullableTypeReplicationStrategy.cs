@@ -6,17 +6,17 @@ using NClone.Shared;
 namespace NClone.SpecificTypeReplicators
 {
     /// <summary>
-    /// Implementation of <see cref="ISpecificTypeReplicator"/> for nullable types.
+    /// Implementation of <see cref="IReplicationStrategy"/> for nullable types.
     /// </summary>
-    //note: while DummyReplicator used for all ValueType-s => there is no need to deep-copy Nullable-s
+    //note: while NonReplicatingStrategy used for all ValueType-s => there is no need to deep-copy Nullable-s
     //todo: no tests
-    internal class NullableTypeReplicator: ISpecificTypeReplicator
+    internal class NullableTypeReplicationStrategy: IReplicationStrategy
     {
         private readonly IObjectReplicator objectReplicator;
         private readonly Func<object, object> getUnderlyingValue;
         private readonly Func<object, object> buildNullable;
 
-        public NullableTypeReplicator(IObjectReplicator objectReplicator, Type underlyingType)
+        public NullableTypeReplicationStrategy(IObjectReplicator objectReplicator, Type underlyingType)
         {
             Guard.AgainstNull(objectReplicator, "objectReplicator");
             Guard.AgainstNull(underlyingType, "underlyingType");

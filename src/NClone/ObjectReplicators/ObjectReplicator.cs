@@ -13,8 +13,8 @@ namespace NClone.ObjectReplicators
     {
         private readonly IMetadataProvider metadataProvider;
 
-        private readonly ConcurrentDictionary<Type, ISpecificTypeReplicator> entityReplicators =
-            new ConcurrentDictionary<Type, ISpecificTypeReplicator>();
+        private readonly ConcurrentDictionary<Type, IReplicationStrategy> entityReplicators =
+            new ConcurrentDictionary<Type, IReplicationStrategy>();
 
         public ObjectReplicator(IMetadataProvider metadataProvider)
         {
@@ -31,14 +31,14 @@ namespace NClone.ObjectReplicators
             return entityReplicator.Replicate(source);
         }
 
-        private ISpecificTypeReplicator BuildEntityReplicator(Type type)
+        private IReplicationStrategy BuildEntityReplicator(Type type)
         {
             if (type.IsPrimitive || type == typeof (string))
-                return DummyReplicator.Instance;
-            //note: while DummyReplicator used for all ValueType-s => there is no need to deep-copy Nullable-s
+                return NonReplicatingStrategy.Instance;
+            //note: while NonReplicatingStrategy used for all ValueType-s => there is no need to deep-copy Nullable-s
             //if (type.IsNullable())
             //    return new NullableTypeReplicator(type.GetGenericArguments().Single());
-            return type.IsValueType ? DummyReplicator.Instance : new ReferenceTypeReplicator(metadataProvider, this, type);
+            return type.IsValueType ? NonReplicatingStrategy.Instance : new CommonReplicationStrategy(metadataProvider, this, type);
         }
     }
 }

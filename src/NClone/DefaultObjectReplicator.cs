@@ -6,7 +6,7 @@ namespace NClone
 {
     public static class DefaultObjectReplicator
     {
-        private static readonly IObjectReplicator instance = new ObjectReplicator(new AttributeBasedMetadataProvider());
+        private static readonly IObjectReplicator instance = new ObjectReplicator(new DefaultMetadataProvider());
 
         public static T Replicate<T>(T source)
         {

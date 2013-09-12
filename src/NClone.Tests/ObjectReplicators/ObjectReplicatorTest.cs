@@ -13,7 +13,7 @@ namespace NClone.Tests.ObjectReplicators
         protected override void SetUp()
         {
             base.SetUp();
-            objectReplicator = new ObjectReplicator(new AttributeBasedMetadataProvider());
+            objectReplicator = new ObjectReplicator(new DefaultMetadataProvider());
         }
 
         [Test]

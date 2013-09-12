@@ -76,7 +76,7 @@ namespace NClone.Tests.SpecificTypesReplicators
 
         private static ReferenceTypeReplicator ReplicatorFor<T>()
         {
-            var metadataProvider = new AttributeBasedMetadataProvider();
+            var metadataProvider = new DefaultMetadataProvider();
             return new ReferenceTypeReplicator(metadataProvider, new ObjectReplicator(metadataProvider), typeof (T));
         }
 

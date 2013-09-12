@@ -9,35 +9,36 @@ namespace NClone.Annotation
     /// <summary>
     /// Implementation of <see cref="IMetadataProvider"/> that uses information from <see cref="CustomReplicationBehaviorAttribute"/>s.
     /// </summary>
-    public class AttributeBasedMetadataProvider: IMetadataProvider
+    public class AttributeBasedMetadataProvider: MetadataProviderBase
     {
-        public ReplicationBehavior GetBehavior(Type entityType)
+        public override ReplicationBehavior GetBehavior(Type entityType)
         {
-            Guard.AgainstNull(entityType, "entityType");
-
-            CustomReplicationBehaviorAttribute customReplicationBehavior;
-            if (entityType
-                .GetCustomAttributes<CustomReplicationBehaviorAttribute>()
-                .TrySingle(out customReplicationBehavior))
-                return customReplicationBehavior.ReplicationBehavior;
-
-            if (typeof (Delegate).IsAssignableFrom(entityType))
-                return ReplicationBehavior.Ignore;
-            if (entityType.IsValueType)
-                return ReplicationBehavior.Copy;
+            ReplicationBehavior behavior;
+            if (TryGetDefaultBehavior(entityType, out behavior))
+                return behavior;
+            if (TryGetBehaviorFromTypeAttribute(entityType, out behavior))
+                return behavior;
             return ReplicationBehavior.DeepCopy;
         }
 
-        public IEnumerable<Tuple<FieldInfo, ReplicationBehavior>> GetMembers(Type entityType)
+        protected static bool TryGetBehaviorFromTypeAttribute(Type entityType, out ReplicationBehavior behavior)
         {
-            return entityType
-                .GetHierarchy()
-                .SelectMany(t => t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-                .DistinctBy(f => f.MetadataToken)
-                .Select(f => Tuple.Create(f, GetBehavior(f)));
+            CustomReplicationBehaviorAttribute customReplicationBehavior;
+            if (entityType.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
+                          .TrySingle(out customReplicationBehavior)) {
+                behavior = customReplicationBehavior.ReplicationBehavior;
+                return true;
+            }
+            behavior = ReplicationBehavior.DeepCopy;
+            return false;
         }
 
-        private static ReplicationBehavior GetBehavior(FieldInfo fieldInfo)
+        public override IEnumerable<Tuple<FieldInfo, ReplicationBehavior>> GetMembers(Type entityType)
+        {
+            return GetAllFields(entityType).Select(f => Tuple.Create(f, GetFieldBehavior(f)));
+        }
+
+        private static ReplicationBehavior GetFieldBehavior(FieldInfo fieldInfo)
         {
             CustomReplicationBehaviorAttribute customReplicationBehavior;
             return fieldInfo.GetCustomAttributes<CustomReplicationBehaviorAttribute>()

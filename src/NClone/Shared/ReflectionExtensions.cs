@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NClone.Shared
 {
@@ -23,6 +24,22 @@ namespace NClone.Shared
                 yield return currentType;
                 currentType = currentType.BaseType;
             } while (currentType != typeof (object));
+        }
+
+        /// <summary>
+        /// Checks whether <paramref name="type"/> implements interface, which generic definition is <paramref name="genericInterface"/>.
+        /// </summary>
+        public static bool ImplementsGenericInterface(this Type type, Type genericInterface)
+        {
+            Guard.AgainstNull(type, "type");
+            Guard.AgainstNull(genericInterface, "genericInterface");
+            Guard.AgainstViolation(genericInterface.IsGenericTypeDefinition && genericInterface.IsInterface,
+                "Only generic interface can be used");
+
+            return type.GetInterfaces()
+                       .Where(i => i.IsGenericType)
+                       .Select(i => i.GetGenericTypeDefinition())
+                       .Contains(genericInterface);
         }
     }
 }

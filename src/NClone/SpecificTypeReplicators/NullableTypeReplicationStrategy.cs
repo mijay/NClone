@@ -30,6 +30,8 @@ namespace NClone.SpecificTypeReplicators
 
         public object Replicate(object source)
         {
+            Guard.AgainstNull(source, "source");
+
             var underlyingValue = getUnderlyingValue(source);
             var replicatedValue = objectReplicator.Replicate(underlyingValue);
             return replicatedValue != null ? buildNullable(replicatedValue) : null;

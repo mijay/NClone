@@ -9,7 +9,7 @@ namespace NClone.Annotation
     /// <summary>
     /// Implementation of <see cref="IMetadataProvider"/> that uses information from <see cref="CustomReplicationBehaviorAttribute"/>s.
     /// </summary>
-    public class AttributeBasedMetadataProvider: MetadataProviderBase
+    public class AttributeBasedMetadataProvider: BasicMetadataProvider
     {
         public override ReplicationBehavior GetBehavior(Type entityType)
         {
@@ -35,16 +35,25 @@ namespace NClone.Annotation
 
         public override IEnumerable<Tuple<FieldInfo, ReplicationBehavior>> GetMembers(Type entityType)
         {
-            return GetAllFields(entityType).Select(f => Tuple.Create(f, GetFieldBehavior(f)));
+            return GetAllFields(entityType)
+                .Select(field => {
+                    ReplicationBehavior behavior;
+                    if (!TryGetBehaviorFromAttribute(field, out behavior))
+                        behavior = ReplicationBehavior.DeepCopy;
+                    return Tuple.Create(field, behavior);
+                });
         }
 
-        private static ReplicationBehavior GetFieldBehavior(FieldInfo fieldInfo)
+        protected static bool TryGetBehaviorFromAttribute(FieldInfo fieldInfo, out ReplicationBehavior behavior)
         {
             CustomReplicationBehaviorAttribute customReplicationBehavior;
-            return fieldInfo.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
-                            .TrySingle(out customReplicationBehavior)
-                ? customReplicationBehavior.ReplicationBehavior
-                : ReplicationBehavior.DeepCopy;
+            if (fieldInfo.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
+                         .TrySingle(out customReplicationBehavior)) {
+                behavior = customReplicationBehavior.ReplicationBehavior;
+                return true;
+            }
+            behavior = ReplicationBehavior.DeepCopy;
+            return false;
         }
     }
 }

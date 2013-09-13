@@ -40,7 +40,7 @@
   <ItemGroup>
     <Compile Include="Annotation\CustomReplicationBehaviorAttribute.cs" />
     <Compile Include="Annotation\DefaultMetadataProvider.cs" />
-    <Compile Include="Annotation\MetadataProviderBase.cs" />
+    <Compile Include="Annotation\BasicMetadataProvider.cs" />
     <Compile Include="Annotation\ReplicationBehavior.cs" />
     <Compile Include="SpecificTypeReplicators\NonReplicatingStrategy.cs" />
     <Compile Include="SpecificTypeReplicators\IReplicationStrategy.cs" />

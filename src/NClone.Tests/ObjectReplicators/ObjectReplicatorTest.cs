@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
+using FakeItEasy;
+using FakeItEasy.ExtensionSyntax.Full;
 using NClone.MetadataProviders;
 using NClone.ObjectReplicators;
 using NClone.Shared;
@@ -8,81 +12,70 @@ namespace NClone.Tests.ObjectReplicators
 {
     public class ObjectReplicatorTest: TestBase
     {
-        private IObjectReplicator objectReplicator;
-
-        protected override void SetUp()
+        private static ObjectReplicator ReplicatorFor<T>(ReplicationBehavior markedAs,
+                                                         Expression<Func<T, object>> thatCopiesField = null)
         {
-            base.SetUp();
-            objectReplicator = new ObjectReplicator(new ConventionalMetadataProvider());
-        }
+            var metadataProvider = A.Fake<IMetadataProvider>(x => x.Strict());
+            metadataProvider
+                .CallsTo(x => x.GetBehavior(typeof (T)))
+                .Returns(markedAs);
 
-        [Test]
-        public void SourceIsString_SameReturned()
-        {
-            var source = "blah-blah";
+            if (thatCopiesField != null) {
+                var fieldInfo = thatCopiesField.Body.As<MemberExpression>().Member.As<FieldInfo>();
+                metadataProvider
+                    .CallsTo(x => x.GetMembers(typeof (T)))
+                    .Returns(new[] { new MemberInformation(fieldInfo, ReplicationBehavior.Copy) });
+            }
 
-            var result = objectReplicator.Replicate(source);
-
-            Assert.That(result, Is.SameAs(source));
-        }
-
-        [Test]
-        public void SourceIsNumber_CanBeCloned()
-        {
-            var source = 42;
-
-            var result = objectReplicator.Replicate(source);
-
-            Assert.That(result, Is.EqualTo(source));
-        }
-
-        [Test]
-        public void SourceIsNullableNumber_CanBeCloned()
-        {
-            var sourceWithValue = new int?(42);
-            var sourceWithoutValue = new int?();
-
-            var resultWithValue = objectReplicator.Replicate(sourceWithValue);
-            var resultWithoutValue = objectReplicator.Replicate(sourceWithoutValue);
-
-            Assert.That(resultWithValue, Is.EqualTo(sourceWithValue));
-            Assert.That(resultWithoutValue, Is.EqualTo(sourceWithoutValue));
-        }
-
-        [Test]
-        public void SourceIsValueType_Copied()
-        {
-            var source = DateTime.Now;
-
-            var result = objectReplicator.Replicate(source);
-
-            Assert.That(result, Is.EqualTo(source));
-        }
-
-        private class Class
-        {
-            public Class field;
-            public int number;
-        }
-
-        [Test]
-        public void SourceIsReferenceType_Cloned()
-        {
-            var source = new Class { field = new Class { number = RandomInt() } };
-
-            var result = objectReplicator.Replicate(source).As<Class>();
-
-            Assert.That(result, Is.Not.SameAs(source));
-            Assert.That(result.field, Is.Not.SameAs(source.field));
-            Assert.That(result.field.number, Is.EqualTo(source.field.number));
+            return new ObjectReplicator(metadataProvider);
         }
 
         [Test]
         public void SourceIsNull_NullReturned()
         {
-            var result = objectReplicator.Replicate(null);
+            object result = new ObjectReplicator(A.Fake<IMetadataProvider>()).Replicate(null);
 
             Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void SourceIsMarkedAsIgnored_NullReturned()
+        {
+            ObjectReplicator replicator = ReplicatorFor<Class>(markedAs: ReplicationBehavior.Ignore);
+
+            var source = new Class();
+            object result = replicator.Replicate(source);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void SourceIsMarkedAsCopy_OriginalReturned()
+        {
+            ObjectReplicator replicator = ReplicatorFor<Class>(markedAs: ReplicationBehavior.Copy);
+
+            var source = new Class();
+            object result = replicator.Replicate(source);
+
+            Assert.That(result, Is.SameAs(source));
+        }
+
+        [Test]
+        public void SourceIsMarkedAsReplicate_CopyReturned()
+        {
+            ObjectReplicator replicator = ReplicatorFor<Class>(
+                markedAs: ReplicationBehavior.DeepCopy, thatCopiesField: x => x.field);
+
+            var source = new Class() { field = new object() };
+            object result = replicator.Replicate(source);
+
+            Assert.That(result, Is.Not.SameAs(source));
+            Assert.That(result.As<Class>().field, Is.SameAs(source.field));
+        }
+
+        private class Class
+        {
+            public object field;
         }
     }
 }

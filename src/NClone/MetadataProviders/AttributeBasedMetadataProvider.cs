@@ -26,7 +26,7 @@ namespace NClone.MetadataProviders
             CustomReplicationBehaviorAttribute customReplicationBehavior;
             if (entityType.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
                 .TrySingle(out customReplicationBehavior)) {
-                behavior = customReplicationBehavior.ReplicationBehavior;
+                behavior = customReplicationBehavior.GetReplicationBehavior();
                 return true;
             }
             behavior = ReplicationBehavior.DeepCopy;
@@ -49,7 +49,7 @@ namespace NClone.MetadataProviders
             CustomReplicationBehaviorAttribute customReplicationBehavior;
             if (fieldInfo.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
                 .TrySingle(out customReplicationBehavior)) {
-                behavior = customReplicationBehavior.ReplicationBehavior;
+                behavior = customReplicationBehavior.GetReplicationBehavior();
                 return true;
             }
             behavior = ReplicationBehavior.DeepCopy;

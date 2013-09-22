@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarks\Compare.cs" />
+    <Compile Include="MetadataProviders\AttributeBasedMetadataProviderTest.cs" />
     <Compile Include="MetadataProviders\DefaultMetadataProviderTest.cs" />
     <Compile Include="SpecificTypesReplicators\CommonReplicatingStrategyTest.cs" />
     <Compile Include="Shared\EnumerableExtensionTest.cs" />

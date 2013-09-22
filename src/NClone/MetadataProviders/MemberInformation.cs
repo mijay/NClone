@@ -3,7 +3,7 @@
 namespace NClone.MetadataProviders
 {
     /// <summary>
-    /// Value-type for describing declaration-side behavior for members.
+    /// Value-object for describing declaration-side behavior for members.
     /// </summary>
     public class MemberInformation
     {

@@ -15,6 +15,7 @@ namespace NClone.MetadataProviders
     /// <para>2) All <see cref="Delegate"/>s are not copied during replication.</para>
     /// <para>3) Lazy <see cref="IEnumerable"/> are illegal inside replicating types (causes exception).</para>
     /// </remarks>
+    //todo: test + modify AssertIsNotLazyEnumerable
     public class ConventionalMetadataProvider: AttributeBasedMetadataProvider
     {
         private const string lazyObjectFoundError = @"You should not replicate lazy objects.
@@ -39,7 +40,6 @@ If replicating of this type makes sence, then mark it with CustomReplicationBeha
 
         private static void AssertIsNotLazyEnumerable(Type entityType)
         {
-            //todo: make more clear check
             if (entityType.ImplementsGenericInterface(typeof (IEnumerator<>)) || typeof (IEnumerator).IsAssignableFrom(entityType))
                 throw new InvalidOperationException(string.Format(
                     "Potential enumerator found: {0}.\n{1}", entityType, lazyObjectFoundError));

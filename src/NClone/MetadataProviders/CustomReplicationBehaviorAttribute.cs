@@ -5,11 +5,16 @@ namespace NClone.MetadataProviders
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class CustomReplicationBehaviorAttribute: Attribute
     {
-        public ReplicationBehavior ReplicationBehavior { get; private set; }
+        private readonly ReplicationBehavior replicationBehavior;
 
         public CustomReplicationBehaviorAttribute(ReplicationBehavior replicationBehavior)
         {
-            ReplicationBehavior = replicationBehavior;
+            this.replicationBehavior = replicationBehavior;
+        }
+
+        public ReplicationBehavior GetReplicationBehavior()
+        {
+            return replicationBehavior;
         }
     }
 }

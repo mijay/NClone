@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NClone.Annotation
+namespace NClone.MetadataProviders
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class CustomReplicationBehaviorAttribute: Attribute

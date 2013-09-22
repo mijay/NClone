@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NClone.Shared;
 
-namespace NClone.Annotation
+namespace NClone.MetadataProviders
 {
     /// <summary>
     /// Implementation of <see cref="IMetadataProvider"/> that uses information from <see cref="CustomReplicationBehaviorAttribute"/>s.

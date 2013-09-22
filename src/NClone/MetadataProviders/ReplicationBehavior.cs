@@ -1,4 +1,4 @@
-﻿namespace NClone.Annotation
+﻿namespace NClone.MetadataProviders
 {
     /// <summary>
     /// Defines how <see cref="DefaultObjectReplicator"/> should treat specific types/members.

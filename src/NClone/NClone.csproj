@@ -38,19 +38,19 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Annotation\CustomReplicationBehaviorAttribute.cs" />
-    <Compile Include="Annotation\ConventionalMetadataProvider.cs" />
-    <Compile Include="Annotation\DefaultMetadataProvider.cs" />
-    <Compile Include="Annotation\MemberInformation.cs" />
-    <Compile Include="Annotation\ReplicationBehavior.cs" />
+    <Compile Include="MetadataProviders\CustomReplicationBehaviorAttribute.cs" />
+    <Compile Include="MetadataProviders\ConventionalMetadataProvider.cs" />
+    <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />
+    <Compile Include="MetadataProviders\MemberInformation.cs" />
+    <Compile Include="MetadataProviders\ReplicationBehavior.cs" />
     <Compile Include="SpecificTypeReplicators\CopyOnlyReplicationStategy.cs" />
     <Compile Include="SpecificTypeReplicators\IReplicationStrategy.cs" />
     <Compile Include="SpecificTypeReplicators\IgnoringReplicationStrategy.cs" />
     <Compile Include="SpecificTypeReplicators\NullableTypeReplicationStrategy.cs" />
     <Compile Include="ObjectReplicators\IObjectReplicator.cs" />
     <Compile Include="DefaultObjectReplicator.cs" />
-    <Compile Include="Annotation\AttributeBasedMetadataProvider.cs" />
-    <Compile Include="Annotation\IMetadataProvider.cs" />
+    <Compile Include="MetadataProviders\AttributeBasedMetadataProvider.cs" />
+    <Compile Include="MetadataProviders\IMetadataProvider.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilder.cs" />
     <Compile Include="MemberAccess\IMemberAccessor.cs" />
     <Compile Include="MemberAccess\MemberAccessor.cs" />

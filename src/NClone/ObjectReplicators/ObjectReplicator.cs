@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using NClone.Annotation;
+using NClone.MetadataProviders;
 using NClone.Shared;
 using NClone.SpecificTypeReplicators;
 

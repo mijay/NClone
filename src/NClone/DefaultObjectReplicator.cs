@@ -1,4 +1,4 @@
-﻿using NClone.Annotation;
+﻿using NClone.MetadataProviders;
 using NClone.ObjectReplicators;
 using NClone.Shared;
 

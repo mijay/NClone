@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NClone.Shared;
 
-namespace NClone.Annotation
+namespace NClone.MetadataProviders
 {
     /// <summary>
     /// Implementation of <see cref="IMetadataProvider"/> that is based on conventions

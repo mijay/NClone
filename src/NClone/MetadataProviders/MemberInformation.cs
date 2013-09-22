@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace NClone.Annotation
+namespace NClone.MetadataProviders
 {
     /// <summary>
     /// Value-type for describing declaration-side behavior for members.

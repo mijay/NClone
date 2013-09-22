@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NClone.Annotation
+namespace NClone.MetadataProviders
 {
     /// <summary>
     /// Provides information about <see cref="ReplicationBehavior"/> for fields and types.

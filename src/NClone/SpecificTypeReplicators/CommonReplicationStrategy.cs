@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using NClone.Annotation;
 using NClone.MemberAccess;
+using NClone.MetadataProviders;
 using NClone.ObjectReplicators;
 using NClone.Shared;
 

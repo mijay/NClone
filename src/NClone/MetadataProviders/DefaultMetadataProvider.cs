@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NClone.Shared;
 
-namespace NClone.Annotation
+namespace NClone.MetadataProviders
 {
     /// <summary>
     /// Implementation of <see cref="IMetadataProvider"/> that provides basic and always applicable functionality.
@@ -34,7 +34,8 @@ namespace NClone.Annotation
         {
             Guard.AgainstNull(entityType, "entityType");
 
-            if (entityType.IsPrimitive || entityType.IsEnum || entityType == typeof (string)) {
+            if (entityType.IsPrimitive || entityType.IsEnum
+                || entityType == typeof (string) || entityType == typeof (object)) {
                 behavior = ReplicationBehavior.Copy;
                 return true;
             }

@@ -25,7 +25,9 @@ If replicating of this type makes sence, then mark it with CustomReplicationBeha
 
             if (typeof (Delegate).IsAssignableFrom(entityType))
                 return ReplicationBehavior.Ignore;
-            return entityType.IsValueType ? ReplicationBehavior.Copy : ReplicationBehavior.DeepCopy;
+            if (entityType.IsValueType)
+                return ReplicationBehavior.Copy;
+            return ReplicationBehavior.DeepCopy;
         }
 
         private static void AssertIsNotLazyEnumerable(Type entityType)

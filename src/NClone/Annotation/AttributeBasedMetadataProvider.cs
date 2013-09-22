@@ -25,7 +25,7 @@ namespace NClone.Annotation
         {
             CustomReplicationBehaviorAttribute customReplicationBehavior;
             if (entityType.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
-                          .TrySingle(out customReplicationBehavior)) {
+                .TrySingle(out customReplicationBehavior)) {
                 behavior = customReplicationBehavior.ReplicationBehavior;
                 return true;
             }
@@ -33,22 +33,22 @@ namespace NClone.Annotation
             return false;
         }
 
-        public override IEnumerable<Tuple<FieldInfo, ReplicationBehavior>> GetMembers(Type entityType)
+        public override IEnumerable<MemberInformation> GetMembers(Type entityType)
         {
             return GetAllFields(entityType)
                 .Select(field => {
-                    ReplicationBehavior behavior;
-                    if (!TryGetBehaviorFromAttribute(field, out behavior))
-                        behavior = ReplicationBehavior.DeepCopy;
-                    return Tuple.Create(field, behavior);
-                });
+                            ReplicationBehavior behavior;
+                            if (!TryGetBehaviorFromAttribute(field, out behavior))
+                                behavior = ReplicationBehavior.DeepCopy;
+                            return new MemberInformation(field, behavior);
+                        });
         }
 
         protected static bool TryGetBehaviorFromAttribute(FieldInfo fieldInfo, out ReplicationBehavior behavior)
         {
             CustomReplicationBehaviorAttribute customReplicationBehavior;
             if (fieldInfo.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
-                         .TrySingle(out customReplicationBehavior)) {
+                .TrySingle(out customReplicationBehavior)) {
                 behavior = customReplicationBehavior.ReplicationBehavior;
                 return true;
             }

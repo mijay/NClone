@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace NClone.Annotation
 {
@@ -17,6 +16,6 @@ namespace NClone.Annotation
         /// <summary>
         /// Provides list of type members and declaration-side behavior for them.
         /// </summary>
-        IEnumerable<Tuple<FieldInfo, ReplicationBehavior>> GetMembers(Type entityType);
+        IEnumerable<MemberInformation> GetMembers(Type entityType);
     }
 }

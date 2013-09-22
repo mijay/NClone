@@ -7,7 +7,7 @@ using NClone.Shared;
 namespace NClone.Annotation
 {
     /// <summary>
-    /// Implementation of <see cref="IMetadataProvider"/> that provides only basic functionality.
+    /// Implementation of <see cref="IMetadataProvider"/> that provides basic and always applicable functionality.
     /// </summary>
     public class BasicMetadataProvider: IMetadataProvider
     {
@@ -19,7 +19,12 @@ namespace NClone.Annotation
             return ReplicationBehavior.DeepCopy;
         }
 
-        protected static bool TryGetDefaultBehavior(Type entityType, out ReplicationBehavior behavior)
+        public virtual IEnumerable<MemberInformation> GetMembers(Type entityType)
+        {
+            return GetAllFields(entityType).Select(x => new MemberInformation(x, ReplicationBehavior.DeepCopy));
+        }
+
+        protected bool TryGetDefaultBehavior(Type entityType, out ReplicationBehavior behavior)
         {
             Guard.AgainstNull(entityType, "entityType");
 
@@ -31,13 +36,13 @@ namespace NClone.Annotation
                 behavior = ReplicationBehavior.Copy;
                 return true;
             }
+            if (entityType.IsNullable()) {
+                Type underlyingType = entityType.GetNullableUnderlyingType();
+                behavior = GetBehavior(underlyingType);
+                return true;
+            }
             behavior = ReplicationBehavior.DeepCopy;
             return false;
-        }
-
-        public virtual IEnumerable<Tuple<FieldInfo, ReplicationBehavior>> GetMembers(Type entityType)
-        {
-            return GetAllFields(entityType).Select(x => Tuple.Create(x, ReplicationBehavior.DeepCopy));
         }
 
         protected static IEnumerable<FieldInfo> GetAllFields(Type entityType)

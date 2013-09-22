@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace NClone.SpecificTypeReplicators
+namespace NClone.ReplicationStategies
 {
     /// <summary>
     /// Strategy of replicating (seep copying) instances of a single type.

@@ -43,10 +43,10 @@
     <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />
     <Compile Include="MetadataProviders\MemberInformation.cs" />
     <Compile Include="MetadataProviders\ReplicationBehavior.cs" />
-    <Compile Include="SpecificTypeReplicators\CopyOnlyReplicationStategy.cs" />
-    <Compile Include="SpecificTypeReplicators\IReplicationStrategy.cs" />
-    <Compile Include="SpecificTypeReplicators\IgnoringReplicationStrategy.cs" />
-    <Compile Include="SpecificTypeReplicators\NullableTypeReplicationStrategy.cs" />
+    <Compile Include="ReplicationStategies\CopyOnlyReplicationStategy.cs" />
+    <Compile Include="ReplicationStategies\IReplicationStrategy.cs" />
+    <Compile Include="ReplicationStategies\IgnoringReplicationStrategy.cs" />
+    <Compile Include="ReplicationStategies\NullableTypeReplicationStrategy.cs" />
     <Compile Include="ObjectReplicators\IObjectReplicator.cs" />
     <Compile Include="DefaultObjectReplicator.cs" />
     <Compile Include="MetadataProviders\AttributeBasedMetadataProvider.cs" />
@@ -55,7 +55,7 @@
     <Compile Include="MemberAccess\IMemberAccessor.cs" />
     <Compile Include="MemberAccess\MemberAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpecificTypeReplicators\CommonReplicationStrategy.cs" />
+    <Compile Include="ReplicationStategies\CommonReplicationStrategy.cs" />
     <Compile Include="ObjectReplicators\ObjectReplicator.cs" />
     <Compile Include="Shared\DelegateEqualityComparer.cs" />
     <Compile Include="Shared\EnumerableExtensions.cs" />

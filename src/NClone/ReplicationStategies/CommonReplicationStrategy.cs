@@ -7,7 +7,7 @@ using NClone.MetadataProviders;
 using NClone.ObjectReplicators;
 using NClone.Shared;
 
-namespace NClone.SpecificTypeReplicators
+namespace NClone.ReplicationStategies
 {
     /// <summary>
     /// Implementation of <see cref="IReplicationStrategy"/> for general reference or value types.

@@ -20,7 +20,7 @@ namespace NClone.Tests.MetadataProviders
         #region GetBehavior tests
 
         [Test]
-        public void GetBehaviorForPrimitiveType_GetCopyOnly()
+        public void GetBehaviorForPrimitiveType_CopyOnlyReturned()
         {
             ReplicationBehavior result = metadataProvider.GetBehavior(typeof (UInt64));
 
@@ -28,7 +28,7 @@ namespace NClone.Tests.MetadataProviders
         }
 
         [Test]
-        public void GetBehaviorForEnum_GetCopyOnly()
+        public void GetBehaviorForEnum_CopyOnlyReturned()
         {
             ReplicationBehavior result = metadataProvider.GetBehavior(typeof (Enum));
 
@@ -36,7 +36,7 @@ namespace NClone.Tests.MetadataProviders
         }
 
         [Test]
-        public void GetBehaviorForString_GetCopyOnly()
+        public void GetBehaviorForString_CopyOnlyReturned()
         {
             ReplicationBehavior result = metadataProvider.GetBehavior(typeof (string));
 
@@ -44,7 +44,7 @@ namespace NClone.Tests.MetadataProviders
         }
 
         [Test]
-        public void GetBehaviorForObject_GetCopyOnly()
+        public void GetBehaviorForObject_CopyOnlyReturned()
         {
             ReplicationBehavior result = metadataProvider.GetBehavior(typeof (object));
 
@@ -52,7 +52,7 @@ namespace NClone.Tests.MetadataProviders
         }
 
         [Test]
-        public void GetBehaviorForNullableInt_GetCopyOnly()
+        public void GetBehaviorForNullableInt_CopyOnlyReturned()
         {
             ReplicationBehavior result = metadataProvider.GetBehavior(typeof (int?));
 
@@ -60,19 +60,19 @@ namespace NClone.Tests.MetadataProviders
         }
 
         [Test]
-        public void GetBehaviorForNullableStruct_GetDeepCopy()
+        public void GetBehaviorForNullableStruct_ReplicateReturned()
         {
             ReplicationBehavior result = metadataProvider.GetBehavior(typeof (SomeValueType?));
 
-            Assert.That(result, Is.EqualTo(ReplicationBehavior.DeepCopy));
+            Assert.That(result, Is.EqualTo(ReplicationBehavior.Replicate));
         }
 
         [Test]
-        public void GetBehaviorForArray_GetDeepCopy()
+        public void GetBehaviorForArray_ReplicateReturned()
         {
             ReplicationBehavior result = metadataProvider.GetBehavior(typeof (char[]));
 
-            Assert.That(result, Is.EqualTo(ReplicationBehavior.DeepCopy));
+            Assert.That(result, Is.EqualTo(ReplicationBehavior.Replicate));
         }
 
         private enum Enum: long

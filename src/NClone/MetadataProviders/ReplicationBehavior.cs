@@ -11,13 +11,13 @@
         Ignore,
 
         /// <summary>
-        /// Value should be copied, no deep-copy occur.
+        /// Value should be copied, no replication occur.
         /// </summary>
         Copy,
 
         /// <summary>
-        /// value should be deep-copied.
+        /// Value should be replicated (deep copied).
         /// </summary>
-        DeepCopy
+        Replicate
     }
 }

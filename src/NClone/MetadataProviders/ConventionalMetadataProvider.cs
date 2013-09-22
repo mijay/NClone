@@ -35,7 +35,7 @@ If replicating of this type makes sence, then mark it with CustomReplicationBeha
                 return ReplicationBehavior.Ignore;
             if (entityType.IsValueType)
                 return ReplicationBehavior.Copy;
-            return ReplicationBehavior.DeepCopy;
+            return ReplicationBehavior.Replicate;
         }
 
         private static void AssertIsNotLazyEnumerable(Type entityType)

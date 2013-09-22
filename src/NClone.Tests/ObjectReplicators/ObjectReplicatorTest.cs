@@ -61,10 +61,10 @@ namespace NClone.Tests.ObjectReplicators
         }
 
         [Test]
-        public void SourceIsMarkedAsReplicate_CopyReturned()
+        public void SourceIsMarkedAsReplicate_ReplicaReturned()
         {
             ObjectReplicator replicator = ReplicatorFor<Class>(
-                markedAs: ReplicationBehavior.DeepCopy, thatCopiesField: x => x.field);
+                markedAs: ReplicationBehavior.Replicate, thatCopiesField: x => x.field);
 
             var source = new Class() { field = new object() };
             object result = replicator.Replicate(source);

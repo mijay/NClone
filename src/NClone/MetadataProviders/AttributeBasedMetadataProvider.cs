@@ -18,7 +18,7 @@ namespace NClone.MetadataProviders
                 return behavior;
             if (TryGetBehaviorFromTypeAttribute(entityType, out behavior))
                 return behavior;
-            return ReplicationBehavior.DeepCopy;
+            return ReplicationBehavior.Replicate;
         }
 
         protected static bool TryGetBehaviorFromTypeAttribute(Type entityType, out ReplicationBehavior behavior)
@@ -29,7 +29,7 @@ namespace NClone.MetadataProviders
                 behavior = customReplicationBehavior.GetReplicationBehavior();
                 return true;
             }
-            behavior = ReplicationBehavior.DeepCopy;
+            behavior = ReplicationBehavior.Replicate;
             return false;
         }
 
@@ -39,7 +39,7 @@ namespace NClone.MetadataProviders
                 .Select(field => {
                             ReplicationBehavior behavior;
                             if (!TryGetBehaviorFromAttribute(field, out behavior))
-                                behavior = ReplicationBehavior.DeepCopy;
+                                behavior = ReplicationBehavior.Replicate;
                             return new MemberInformation(field, behavior);
                         });
         }
@@ -52,7 +52,7 @@ namespace NClone.MetadataProviders
                 behavior = customReplicationBehavior.GetReplicationBehavior();
                 return true;
             }
-            behavior = ReplicationBehavior.DeepCopy;
+            behavior = ReplicationBehavior.Replicate;
             return false;
         }
     }

@@ -39,7 +39,7 @@ namespace NClone.ObjectReplicators
                     return IgnoringReplicationStrategy.Instance;
                 case ReplicationBehavior.Copy:
                     return CopyOnlyReplicationStategy.Instance;
-                case ReplicationBehavior.DeepCopy:
+                case ReplicationBehavior.Replicate:
                     return new CommonReplicationStrategy(metadataProvider, this,
                         type.IsNullable() ? type.GetNullableUnderlyingType() : type);
                 default:

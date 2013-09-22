@@ -44,7 +44,7 @@ namespace NClone.ReplicationStrategies
             object result = FormatterServices.GetUninitializedObject(entityType);
             foreach (var memberDescription in memberDescriptions) {
                 object memberValue = memberDescription.Item2.GetMember(source);
-                object replicatedValue = memberDescription.Item1 == ReplicationBehavior.DeepCopy
+                object replicatedValue = memberDescription.Item1 == ReplicationBehavior.Replicate
                     ? objectReplicator.Replicate(memberValue)
                     : memberValue;
                 result = memberDescription.Item2.SetMember(result, replicatedValue);

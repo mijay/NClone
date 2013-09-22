@@ -22,12 +22,12 @@ namespace NClone.MetadataProviders
             ReplicationBehavior behavior;
             if (TryGetDefaultBehavior(entityType, out behavior))
                 return behavior;
-            return ReplicationBehavior.DeepCopy;
+            return ReplicationBehavior.Replicate;
         }
 
         public virtual IEnumerable<MemberInformation> GetMembers(Type entityType)
         {
-            return GetAllFields(entityType).Select(x => new MemberInformation(x, ReplicationBehavior.DeepCopy));
+            return GetAllFields(entityType).Select(x => new MemberInformation(x, ReplicationBehavior.Replicate));
         }
 
         protected bool TryGetDefaultBehavior(Type entityType, out ReplicationBehavior behavior)
@@ -44,7 +44,7 @@ namespace NClone.MetadataProviders
                 behavior = GetBehavior(underlyingType);
                 return true;
             }
-            behavior = ReplicationBehavior.DeepCopy;
+            behavior = ReplicationBehavior.Replicate;
             return false;
         }
 

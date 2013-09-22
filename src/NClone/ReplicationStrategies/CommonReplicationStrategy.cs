@@ -7,12 +7,11 @@ using NClone.MetadataProviders;
 using NClone.ObjectReplicators;
 using NClone.Shared;
 
-namespace NClone.ReplicationStategies
+namespace NClone.ReplicationStrategies
 {
     /// <summary>
     /// Implementation of <see cref="IReplicationStrategy"/> for general reference or value types.
     /// </summary>
-    //todo: test
     internal class CommonReplicationStrategy: IReplicationStrategy
     {
         private readonly Type entityType;

@@ -4,7 +4,7 @@ using System.Reflection;
 using NClone.ObjectReplicators;
 using NClone.Shared;
 
-namespace NClone.ReplicationStategies
+namespace NClone.ReplicationStrategies
 {
     /// <summary>
     /// Implementation of <see cref="IReplicationStrategy"/> for nullable types.

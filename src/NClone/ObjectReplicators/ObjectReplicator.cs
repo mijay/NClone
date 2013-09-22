@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using NClone.MetadataProviders;
-using NClone.ReplicationStategies;
+using NClone.ReplicationStrategies;
 using NClone.Shared;
 
 namespace NClone.ObjectReplicators

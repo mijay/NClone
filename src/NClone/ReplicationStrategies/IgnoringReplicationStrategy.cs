@@ -1,4 +1,4 @@
-namespace NClone.ReplicationStategies
+namespace NClone.ReplicationStrategies
 {
     /// <summary>
     /// Dummy implementation of <see cref="IReplicationStrategy"/>, which <see cref="Replicate"/> method always return <c>null</c>.

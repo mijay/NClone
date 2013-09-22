@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using NClone.Annotation;
 using NClone.MemberAccess;
@@ -11,30 +10,28 @@ using NClone.Shared;
 namespace NClone.SpecificTypeReplicators
 {
     /// <summary>
-    /// Implementation of <see cref="IReplicationStrategy"/> for general reference types.
+    /// Implementation of <see cref="IReplicationStrategy"/> for general reference or value types.
     /// </summary>
+    //todo: test
     internal class CommonReplicationStrategy: IReplicationStrategy
     {
-        private readonly IMetadataProvider metadataProvider;
-        private readonly IObjectReplicator objectReplicator;
         private readonly Type entityType;
-        private readonly IEnumerable<IMemberAccessor> memberAccessors;
+        private readonly IEnumerable<Tuple<ReplicationBehavior, IMemberAccessor>> memberDescriptions;
+        private readonly IObjectReplicator objectReplicator;
 
         public CommonReplicationStrategy(IMetadataProvider metadataProvider, IObjectReplicator objectReplicator, Type entityType)
         {
             Guard.AgainstNull(metadataProvider, "metadataProvider");
             Guard.AgainstNull(objectReplicator, "objectReplicator");
             Guard.AgainstNull(entityType, "entityType");
-            Guard.AgainstViolation(!entityType.IsValueType, "Type should be reference type");
+            Guard.AgainstViolation(!entityType.IsNullable(), "CommonReplicationStrategy is not applicable to nullable types");
 
-            this.metadataProvider = metadataProvider;
             this.objectReplicator = objectReplicator;
             this.entityType = entityType;
-            memberAccessors = entityType
-                .GetHierarchy()
-                .SelectMany(t => t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-                .DistinctBy(x => x.MetadataToken)
-                .Select(field => FieldAccessorBuilder.BuildFor(entityType, field, true))
+
+            memberDescriptions = metadataProvider.GetMembers(entityType)
+                .Where(t => t.Behavior != ReplicationBehavior.Ignore)
+                .Select(t => Tuple.Create(t.Behavior, FieldAccessorBuilder.BuildFor(entityType, t.Member, true)))
                 .Materialize();
         }
 
@@ -45,11 +42,13 @@ namespace NClone.SpecificTypeReplicators
                 "This replicator can copy only entities of type {0}, but {1} received",
                 entityType, source.GetType());
 
-            var result = FormatterServices.GetUninitializedObject(entityType);
-            foreach (var memberAccessor in memberAccessors) {
-                var memberValue = memberAccessor.GetMember(source);
-                var replicatedValue = objectReplicator.Replicate(memberValue);
-                memberAccessor.SetMember(result, replicatedValue);
+            object result = FormatterServices.GetUninitializedObject(entityType);
+            foreach (var memberDescription in memberDescriptions) {
+                object memberValue = memberDescription.Item2.GetMember(source);
+                object replicatedValue = memberDescription.Item1 == ReplicationBehavior.DeepCopy
+                    ? objectReplicator.Replicate(memberValue)
+                    : memberValue;
+                result = memberDescription.Item2.SetMember(result, replicatedValue);
             }
             return result;
         }

@@ -41,9 +41,11 @@
     <Compile Include="Annotation\CustomReplicationBehaviorAttribute.cs" />
     <Compile Include="Annotation\DefaultMetadataProvider.cs" />
     <Compile Include="Annotation\BasicMetadataProvider.cs" />
+    <Compile Include="Annotation\MemberInformation.cs" />
     <Compile Include="Annotation\ReplicationBehavior.cs" />
-    <Compile Include="SpecificTypeReplicators\NonReplicatingStrategy.cs" />
+    <Compile Include="SpecificTypeReplicators\CopyOnlyReplicationStategy.cs" />
     <Compile Include="SpecificTypeReplicators\IReplicationStrategy.cs" />
+    <Compile Include="SpecificTypeReplicators\IgnoringReplicationStrategy.cs" />
     <Compile Include="SpecificTypeReplicators\NullableTypeReplicationStrategy.cs" />
     <Compile Include="ObjectReplicators\IObjectReplicator.cs" />
     <Compile Include="DefaultObjectReplicator.cs" />

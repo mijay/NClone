@@ -15,11 +15,20 @@ namespace NClone.Shared
         }
 
         /// <summary>
+        /// Gets the underlying <see cref="ValueType"/> from type of <see cref="Nullable{T}"/>.
+        /// </summary>
+        public static Type GetNullableUnderlyingType(this Type type)
+        {
+            Guard.AgainstViolation(type.IsNullable(), "Type should be nullable");
+            return type.GetGenericArguments().Single();
+        }
+
+        /// <summary>
         /// Returns <paramref name="type"/> and all his base types.
         /// </summary>
         public static IEnumerable<Type> GetHierarchy(this Type type)
         {
-            var currentType = type;
+            Type currentType = type;
             do {
                 yield return currentType;
                 currentType = currentType.BaseType;

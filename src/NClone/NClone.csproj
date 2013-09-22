@@ -39,8 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotation\CustomReplicationBehaviorAttribute.cs" />
+    <Compile Include="Annotation\ConventionalMetadataProvider.cs" />
     <Compile Include="Annotation\DefaultMetadataProvider.cs" />
-    <Compile Include="Annotation\BasicMetadataProvider.cs" />
     <Compile Include="Annotation\MemberInformation.cs" />
     <Compile Include="Annotation\ReplicationBehavior.cs" />
     <Compile Include="SpecificTypeReplicators\CopyOnlyReplicationStategy.cs" />

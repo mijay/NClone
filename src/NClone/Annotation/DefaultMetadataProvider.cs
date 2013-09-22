@@ -1,45 +1,60 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using NClone.Shared;
 
 namespace NClone.Annotation
 {
     /// <summary>
-    /// Implementation of <see cref="IMetadataProvider"/> that is based on conventions and uses information from <see cref="CustomReplicationBehaviorAttribute"/>s.
+    /// Implementation of <see cref="IMetadataProvider"/> that provides basic and always applicable functionality.
     /// </summary>
-    public class DefaultMetadataProvider: AttributeBasedMetadataProvider
+    /// <remarks>
+    /// <para><see cref="DefaultMetadataProvider"/> defines that:</para>
+    /// <para>1) Primitive types, enums and <c>string</c>s should be just <see cref="ReplicationBehavior.Copy"/>.</para>
+    /// <para>2) <see cref="Nullable{T}"/> types inherit their behavior from underlying type.</para>
+    /// <para>3) When type is replicated, all its fields should be replicated.</para>
+    /// </remarks>
+    public class DefaultMetadataProvider: IMetadataProvider
     {
-        private const string lazyObjectFoundError = @"You should not replicate lazy objects.
-If replicating of this type makes sence, then mark it with CustomReplicationBehavior attribute";
-
-        public override ReplicationBehavior GetBehavior(Type entityType)
+        public virtual ReplicationBehavior GetBehavior(Type entityType)
         {
             ReplicationBehavior behavior;
             if (TryGetDefaultBehavior(entityType, out behavior))
                 return behavior;
-            if (TryGetBehaviorFromTypeAttribute(entityType, out behavior))
-                return behavior;
-
-            AssertIsNotLazyEnumerable(entityType);
-
-            if (typeof (Delegate).IsAssignableFrom(entityType))
-                return ReplicationBehavior.Ignore;
-            if (entityType.IsValueType)
-                return ReplicationBehavior.Copy;
             return ReplicationBehavior.DeepCopy;
         }
 
-        private static void AssertIsNotLazyEnumerable(Type entityType)
+        public virtual IEnumerable<MemberInformation> GetMembers(Type entityType)
         {
-            if (entityType.ImplementsGenericInterface(typeof (IEnumerator<>)) || typeof (IEnumerator).IsAssignableFrom(entityType))
-                throw new InvalidOperationException(string.Format(
-                    "Potential enumerator found: {0}.\n{1}", entityType, lazyObjectFoundError));
+            return GetAllFields(entityType).Select(x => new MemberInformation(x, ReplicationBehavior.DeepCopy));
+        }
 
-            if (entityType.ImplementsGenericInterface(typeof (IEnumerable<>)) || typeof (IEnumerable).IsAssignableFrom(entityType))
-                if (!entityType.ImplementsGenericInterface(typeof (ICollection<>)) && !typeof (ICollection).IsAssignableFrom(entityType))
-                    throw new InvalidOperationException(string.Format(
-                        "Potential lazy enumerable found: {0}.\n{1}", entityType, lazyObjectFoundError));
+        protected bool TryGetDefaultBehavior(Type entityType, out ReplicationBehavior behavior)
+        {
+            Guard.AgainstNull(entityType, "entityType");
+
+            if (entityType.IsPrimitive || entityType.IsEnum || entityType == typeof (string)) {
+                behavior = ReplicationBehavior.Copy;
+                return true;
+            }
+            if (entityType.IsNullable()) {
+                Type underlyingType = entityType.GetNullableUnderlyingType();
+                behavior = GetBehavior(underlyingType);
+                return true;
+            }
+            behavior = ReplicationBehavior.DeepCopy;
+            return false;
+        }
+
+        protected static IEnumerable<FieldInfo> GetAllFields(Type entityType)
+        {
+            Guard.AgainstNull(entityType, "entityType");
+
+            return entityType
+                .GetHierarchy()
+                .SelectMany(t => t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                .DistinctBy(f => f.MetadataToken);
         }
     }
 }

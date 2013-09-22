@@ -76,7 +76,7 @@ namespace NClone.Tests.SpecificTypesReplicators
 
         private static CommonReplicationStrategy ReplicatorFor<T>()
         {
-            var metadataProvider = new DefaultMetadataProvider();
+            var metadataProvider = new ConventionalMetadataProvider();
             return new CommonReplicationStrategy(metadataProvider, new ObjectReplicator(metadataProvider), typeof (T));
         }
 

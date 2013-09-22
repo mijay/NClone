@@ -46,7 +46,7 @@
     <Compile Include="ReplicationStrategies\CopyOnlyReplicationStategy.cs" />
     <Compile Include="ReplicationStrategies\IReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\IgnoringReplicationStrategy.cs" />
-    <Compile Include="ReplicationStrategies\NullableTypeReplicationStrategy.cs" />
+    <Compile Include="ReplicationStrategies\PassThroughReplicationStrategy.cs" />
     <Compile Include="ObjectReplicators\IObjectReplicator.cs" />
     <Compile Include="DefaultObjectReplicator.cs" />
     <Compile Include="MetadataProviders\AttributeBasedMetadataProvider.cs" />

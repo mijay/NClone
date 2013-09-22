@@ -40,9 +40,8 @@ namespace NClone.ObjectReplicators
                 case ReplicationBehavior.Copy:
                     return CopyOnlyReplicationStategy.Instance;
                 case ReplicationBehavior.DeepCopy:
-                    if (type.IsNullable())
-                        return new NullableTypeReplicationStrategy(this, type);
-                    return new CommonReplicationStrategy(metadataProvider, this, type);
+                    return new CommonReplicationStrategy(metadataProvider, this,
+                        type.IsNullable() ? type.GetNullableUnderlyingType() : type);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

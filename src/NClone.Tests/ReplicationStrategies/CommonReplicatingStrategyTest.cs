@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace NClone.Tests.ReplicationStrategies
 {
-    public class CommonReplicatingStrategyTest2: TestBase
+    public class CommonReplicatingStrategyTest: TestBase
     {
         private static CommonReplicationStrategy ReplicatorFor<T>(IMetadataProvider metadataProvider = null,
                                                                   IObjectReplicator objectReplicator = null)

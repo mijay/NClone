@@ -14,6 +14,10 @@ namespace NClone.Tests.ReplicationStrategies
             metadataProvider
                 .CallsTo(x => x.GetBehavior(typeof (T)))
                 .Returns(isMarkedAs);
+            metadataProvider
+                .CallsTo(x => x.GetMembers(typeof (T)))
+                .WithAnyArguments()
+                .Returns(new MemberInformation[0]);
 
             return new ReplicationStrategyFactory(metadataProvider);
         }

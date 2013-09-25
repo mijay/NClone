@@ -56,7 +56,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplicationStrategies\CommonReplicationStrategy.cs" />
     <Compile Include="ObjectReplicators\ObjectReplicator.cs" />
-    <Compile Include="Shared\DelegateEqualityComparer.cs" />
+    <Compile Include="Shared\DelegatedEqualityComparer.cs" />
     <Compile Include="Shared\EnumerableExtensions.cs" />
     <Compile Include="Shared\Guard.cs" />
     <Compile Include="Shared\ILGeneratorExtensions.cs" />

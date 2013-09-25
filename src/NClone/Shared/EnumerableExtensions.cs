@@ -10,15 +10,22 @@ namespace NClone.Shared
     [DebuggerStepThrough]
     public static class EnumerableExtensions
     {
+        /// <summary>
+        /// Executes <paramref name="action"/> for each element of the <paramref name="source"/>.
+        /// </summary>
         public static void ForEach<T>([InstantHandle] this IEnumerable<T> source, [InstantHandle] Action<T> action)
         {
             foreach (var element in source)
                 action(element);
         }
 
+        /// <summary>
+        /// Tries to get single value from <paramref name="source"/>.
+        /// Throws <see cref="InvalidOperationException"/>, if more than one element found.
+        /// </summary>
         public static bool TrySingle<T>([InstantHandle] this IEnumerable<T> source, out T value)
         {
-            var values = source.Take(2).ToArray();
+            T[] values = source.Take(2).ToArray();
             switch (values.Length) {
                 case 0:
                     value = default(T);
@@ -31,14 +38,21 @@ namespace NClone.Shared
             }
         }
 
-        public static IEnumerable<TSource> DistinctBy<TSource, TComparable>(this IEnumerable<TSource> source,
-                                                                            Func<TSource, TComparable> comparableSelector,
-                                                                            IEqualityComparer<TComparable> equalityComparer = null)
+        /// <summary>
+        /// Returns <see cref="IEnumerable{T}"/> of values from <paramref name="source"/> with distinct keys.
+        /// Keys are selected using <paramref name="keySelector"/>.
+        /// </summary>
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source,
+                                                                     Func<TSource, TKey> keySelector,
+                                                                     IEqualityComparer<TKey> keyComparer = null)
         {
-            return source.Distinct(new DelegateEqualityComparer<TSource, TComparable>(
-                comparableSelector, equalityComparer ?? EqualityComparer<TComparable>.Default));
+            return source.Distinct(new DelegatedEqualityComparer<TSource, TKey>(
+                keySelector, keyComparer ?? EqualityComparer<TKey>.Default));
         }
 
+        /// <summary>
+        /// Materialize, i.e. make non-lazy, the given <paramref name="source"/>.
+        /// </summary>
         public static IEnumerable<T> Materialize<T>([InstantHandle] this IEnumerable<T> source)
         {
             if (source is ICollection<T> || source is IReadOnlyCollection<T> || source is ICollection)

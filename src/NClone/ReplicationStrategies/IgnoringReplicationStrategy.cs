@@ -1,4 +1,4 @@
-using NClone.ObjectReplicators;
+using NClone.ObjectReplication;
 
 namespace NClone.ReplicationStrategies
 {

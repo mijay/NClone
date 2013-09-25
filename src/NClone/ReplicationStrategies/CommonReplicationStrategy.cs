@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using NClone.MemberAccess;
 using NClone.MetadataProviders;
-using NClone.ObjectReplicators;
+using NClone.ObjectReplication;
 using NClone.Shared;
 
 namespace NClone.ReplicationStrategies

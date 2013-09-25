@@ -1,11 +1,7 @@
 ﻿using System;
-using NClone.MetadataProviders;
-using NClone.ReplicationStrategies;
-using NClone.Shared;
-using NClone.Tests.ReplicationStrategies;
 using NUnit.Framework;
 
-namespace NClone.Tests.ObjectReplicators
+namespace NClone.Tests.ObjectReplication
 {
     public class ObjectReplicatorIntegrationTest: TestBase
     {

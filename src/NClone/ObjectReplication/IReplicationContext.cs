@@ -1,4 +1,4 @@
-﻿namespace NClone.ObjectReplicators
+﻿namespace NClone.ObjectReplication
 {
     /// <summary>
     /// Represents one context of replication, which tracks replicated objects and resolves circular references.

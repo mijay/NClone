@@ -43,13 +43,14 @@
     <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />
     <Compile Include="MetadataProviders\MemberInformation.cs" />
     <Compile Include="MetadataProviders\ReplicationBehavior.cs" />
-    <Compile Include="ObjectReplicators\IReplicationContext.cs" />
+    <Compile Include="ObjectReplication\IReplicationContext.cs" />
+    <Compile Include="ObjectReplication\ObjectReplicator.cs" />
     <Compile Include="ReplicationStrategies\IReplicationStrategyFactory.cs" />
-    <Compile Include="ObjectReplicators\ReplicationContext.cs" />
+    <Compile Include="ObjectReplication\ReplicationContext.cs" />
     <Compile Include="ReplicationStrategies\CopyOnlyReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\IReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\IgnoringReplicationStrategy.cs" />
-    <Compile Include="ObjectReplicators\IObjectReplicator.cs" />
+    <Compile Include="ObjectReplication\IObjectReplicator.cs" />
     <Compile Include="DefaultObjectReplicator.cs" />
     <Compile Include="MetadataProviders\AttributeBasedMetadataProvider.cs" />
     <Compile Include="MetadataProviders\IMetadataProvider.cs" />

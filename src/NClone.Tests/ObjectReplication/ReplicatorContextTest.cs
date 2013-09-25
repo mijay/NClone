@@ -1,10 +1,10 @@
 ﻿using FakeItEasy;
 using FakeItEasy.ExtensionSyntax.Full;
-using NClone.ObjectReplicators;
+using NClone.ObjectReplication;
 using NClone.ReplicationStrategies;
 using NUnit.Framework;
 
-namespace NClone.Tests.ObjectReplicators
+namespace NClone.Tests.ObjectReplication
 {
     public class ReplicatorContextTest: TestBase
     {

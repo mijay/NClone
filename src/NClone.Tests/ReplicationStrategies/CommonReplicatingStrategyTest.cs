@@ -4,7 +4,7 @@ using System.Reflection;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax.Full;
 using NClone.MetadataProviders;
-using NClone.ObjectReplicators;
+using NClone.ObjectReplication;
 using NClone.ReplicationStrategies;
 using NClone.Shared;
 using NUnit.Framework;

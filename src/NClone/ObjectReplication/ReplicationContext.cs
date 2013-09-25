@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using NClone.ReplicationStrategies;
+using NClone.Shared;
 
-namespace NClone.ObjectReplicators
+namespace NClone.ObjectReplication
 {
     /// <summary>
     /// Implementation of <see cref="IReplicationContext"/>.
@@ -13,6 +14,7 @@ namespace NClone.ObjectReplicators
 
         public ReplicationContext(IReplicationStrategyFactory replicationStrategyFactory)
         {
+            Guard.AgainstNull(replicationStrategyFactory, "replicationStrategyFactory");
             this.replicationStrategyFactory = replicationStrategyFactory;
         }
 

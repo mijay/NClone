@@ -1,34 +1,30 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using NClone.MetadataProviders;
-using NClone.ReplicationStrategies;
 using NClone.Shared;
 
-namespace NClone.ObjectReplicators
+namespace NClone.ReplicationStrategies
 {
     /// <summary>
-    /// Implementation of <see cref="IObjectReplicator"/>.
+    /// Implementation of <see cref="IReplicationStrategyFactory"/>.
     /// </summary>
-    public class ObjectReplicator: IObjectReplicator
+    internal class ReplicationStrategyFactory: IReplicationStrategyFactory
     {
         private readonly ConcurrentDictionary<Type, IReplicationStrategy> entityReplicators =
             new ConcurrentDictionary<Type, IReplicationStrategy>();
 
         private readonly IMetadataProvider metadataProvider;
 
-        public ObjectReplicator(IMetadataProvider metadataProvider)
+        public ReplicationStrategyFactory(IMetadataProvider metadataProvider)
         {
             Guard.AgainstNull(metadataProvider, "metadataProvider");
             this.metadataProvider = metadataProvider;
         }
 
-        public object Replicate(object source)
+        public IReplicationStrategy StrategyForType(Type type)
         {
-            if (ReferenceEquals(source, null))
-                return null;
-            Type type = source.GetType();
-            IReplicationStrategy entityReplicator = entityReplicators.GetOrAdd(type, BuildEntityReplicator);
-            return entityReplicator.Replicate(source);
+            Guard.AgainstNull(type, "type");
+            return entityReplicators.GetOrAdd(type, BuildEntityReplicator);
         }
 
         private IReplicationStrategy BuildEntityReplicator(Type type)
@@ -40,7 +36,7 @@ namespace NClone.ObjectReplicators
                 case ReplicationBehavior.Copy:
                     return CopyOnlyReplicationStategy.Instance;
                 case ReplicationBehavior.Replicate:
-                    return new CommonReplicationStrategy(metadataProvider, this,
+                    return new CommonReplicationStrategy(metadataProvider, null, //todo: fix
                         type.IsNullable() ? type.GetNullableUnderlyingType() : type);
                 default:
                     throw new ArgumentOutOfRangeException();

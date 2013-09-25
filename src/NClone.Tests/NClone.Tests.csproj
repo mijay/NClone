@@ -46,6 +46,7 @@
     <Compile Include="MetadataProviders\AttributeBasedMetadataProviderTest.cs" />
     <Compile Include="MetadataProviders\DefaultMetadataProviderTest.cs" />
     <Compile Include="ObjectReplicators\ObjectReplicatorIntegrationTest.cs" />
+    <Compile Include="ObjectReplicators\ReplicatorContextTest.cs" />
     <Compile Include="ReplicationStrategies\ReplicationStrategyFactoryTest.cs" />
     <Compile Include="ReplicationStrategies\CommonReplicatingStrategyTest.cs" />
     <Compile Include="Shared\EnumerableExtensionTest.cs" />

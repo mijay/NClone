@@ -35,7 +35,7 @@ namespace NClone.Tests.ReplicationStrategies
 
             IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Class));
 
-            Assert.That(result, Is.InstanceOf<CopyOnlyReplicationStategy>());
+            Assert.That(result, Is.InstanceOf<CopyOnlyReplicationStrategy>());
         }
 
         [Test]

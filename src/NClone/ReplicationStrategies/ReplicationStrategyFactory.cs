@@ -34,9 +34,9 @@ namespace NClone.ReplicationStrategies
                 case ReplicationBehavior.Ignore:
                     return IgnoringReplicationStrategy.Instance;
                 case ReplicationBehavior.Copy:
-                    return CopyOnlyReplicationStategy.Instance;
+                    return CopyOnlyReplicationStrategy.Instance;
                 case ReplicationBehavior.Replicate:
-                    return new CommonReplicationStrategy(metadataProvider, null, //todo: fix
+                    return new CommonReplicationStrategy(metadataProvider,
                         type.IsNullable() ? type.GetNullableUnderlyingType() : type);
                 default:
                     throw new ArgumentOutOfRangeException();

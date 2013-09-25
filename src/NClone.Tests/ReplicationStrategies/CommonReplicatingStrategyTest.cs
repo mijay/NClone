@@ -13,17 +13,23 @@ namespace NClone.Tests.ReplicationStrategies
 {
     public class CommonReplicatingStrategyTest: TestBase
     {
+        private IReplicationContext dummyContext;
+
+        protected override void SetUp()
+        {
+            base.SetUp();
+            dummyContext = A.Fake<IReplicationContext>(x => x.Strict());
+        }
+
         private static CommonReplicationStrategy ReplicatorFor<T>(IMetadataProvider metadataProvider = null,
                                                                   IObjectReplicator objectReplicator = null)
         {
-            return new CommonReplicationStrategy(metadataProvider ?? A.Fake<IMetadataProvider>(),
-                objectReplicator ?? A.Fake<IObjectReplicator>(x => x.Strict()),
-                typeof (T));
+            return new CommonReplicationStrategy(metadataProvider ?? A.Fake<IMetadataProvider>(), typeof (T));
         }
 
         private static IMetadataProvider MetadataProviderFor<T>(Expression<Func<T, object>> member, ReplicationBehavior returnsBehavior)
         {
-            var memberAccess = member.Body is UnaryExpression
+            Expression memberAccess = member.Body is UnaryExpression
                 ? member.Body.As<UnaryExpression>().Operand
                 : member.Body;
             var fieldInfo = memberAccess.As<MemberExpression>().Member.As<FieldInfo>();
@@ -36,13 +42,13 @@ namespace NClone.Tests.ReplicationStrategies
             return metadataProvider;
         }
 
-        private static IObjectReplicator ObjectReplicatorThat<T>(T onReceiving, T returns)
+        private static IReplicationContext ReplicationContextThat<T>(T onReceiving, T returns)
         {
-            var objectReplicator = A.Fake<IObjectReplicator>(x => x.Strict());
-            objectReplicator
+            var replicationContext = A.Fake<IReplicationContext>(x => x.Strict());
+            replicationContext
                 .CallsTo(x => x.Replicate(onReceiving))
                 .Returns(returns);
-            return objectReplicator;
+            return replicationContext;
         }
 
         [Test]
@@ -50,7 +56,7 @@ namespace NClone.Tests.ReplicationStrategies
         {
             CommonReplicationStrategy replicator = ReplicatorFor<Class>();
 
-            Assert.Throws<ArgumentException>(() => replicator.Replicate(new InheritedClass()));
+            Assert.Throws<ArgumentException>(() => replicator.Replicate(new InheritedClass(), dummyContext));
         }
 
         [Test]
@@ -58,7 +64,7 @@ namespace NClone.Tests.ReplicationStrategies
         {
             CommonReplicationStrategy replicator = ReplicatorFor<ClassWithCtor>();
 
-            var result = replicator.Replicate(new ClassWithCtor()).As<ClassWithCtor>();
+            var result = replicator.Replicate(new ClassWithCtor(), dummyContext).As<ClassWithCtor>();
 
             Assert.That(result.CtorWasCalled, Is.False);
         }
@@ -71,7 +77,7 @@ namespace NClone.Tests.ReplicationStrategies
             CommonReplicationStrategy replicator = ReplicatorFor<ClassWithField>(metadataProvider);
 
             var source = new ClassWithField { field = new Class() };
-            var result = replicator.Replicate(source).As<ClassWithField>();
+            var result = replicator.Replicate(source, dummyContext).As<ClassWithField>();
 
             Assert.That(result.field, Is.SameAs(source.field));
         }
@@ -83,11 +89,11 @@ namespace NClone.Tests.ReplicationStrategies
             var resultField = new Class();
 
             IMetadataProvider metadataProvider = MetadataProviderFor<ClassWithField>(x => x.field, ReplicationBehavior.Replicate);
-            IObjectReplicator objectReplicator = ObjectReplicatorThat(onReceiving: sourceField, returns: resultField);
-            CommonReplicationStrategy replicator = ReplicatorFor<ClassWithField>(metadataProvider, objectReplicator);
+            CommonReplicationStrategy replicator = ReplicatorFor<ClassWithField>(metadataProvider);
+            IReplicationContext context = ReplicationContextThat(onReceiving: sourceField, returns: resultField);
 
             var source = new ClassWithField { field = sourceField };
-            var result = replicator.Replicate(source).As<ClassWithField>();
+            var result = replicator.Replicate(source, context).As<ClassWithField>();
 
             Assert.That(result.field, Is.SameAs(resultField));
         }
@@ -95,15 +101,15 @@ namespace NClone.Tests.ReplicationStrategies
         [Test]
         public void SourceIsValueType_SourceIsReplicated_FieldWasReplicated()
         {
-            var sourceField = DateTime.Today;
-            var resultField = DateTime.Today.AddDays(1);
+            DateTime sourceField = DateTime.Today;
+            DateTime resultField = DateTime.Today.AddDays(1);
 
             IMetadataProvider metadataProvider = MetadataProviderFor<Struct>(x => x.field, ReplicationBehavior.Replicate);
-            IObjectReplicator objectReplicator = ObjectReplicatorThat(onReceiving: sourceField, returns: resultField);
-            CommonReplicationStrategy replicator = ReplicatorFor<Struct>(metadataProvider, objectReplicator);
+            CommonReplicationStrategy replicator = ReplicatorFor<Struct>(metadataProvider);
+            IReplicationContext context = ReplicationContextThat(onReceiving: sourceField, returns: resultField);
 
             var source = new Struct { field = sourceField };
-            var result = replicator.Replicate(source).As<Struct>();
+            var result = replicator.Replicate(source, context).As<Struct>();
 
             Assert.That(result.field, Is.EqualTo(resultField));
         }

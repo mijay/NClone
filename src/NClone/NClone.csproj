@@ -46,7 +46,7 @@
     <Compile Include="ObjectReplicators\IReplicationContext.cs" />
     <Compile Include="ReplicationStrategies\IReplicationStrategyFactory.cs" />
     <Compile Include="ObjectReplicators\ReplicationContext.cs" />
-    <Compile Include="ReplicationStrategies\CopyOnlyReplicationStategy.cs" />
+    <Compile Include="ReplicationStrategies\CopyOnlyReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\IReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\IgnoringReplicationStrategy.cs" />
     <Compile Include="ObjectReplicators\IObjectReplicator.cs" />

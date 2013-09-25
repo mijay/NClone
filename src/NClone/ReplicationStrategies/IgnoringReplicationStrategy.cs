@@ -1,3 +1,5 @@
+using NClone.ObjectReplicators;
+
 namespace NClone.ReplicationStrategies
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace NClone.ReplicationStrategies
 
         private IgnoringReplicationStrategy() { }
 
-        public object Replicate(object source)
+        public object Replicate(object source, IReplicationContext context)
         {
             return null;
         }

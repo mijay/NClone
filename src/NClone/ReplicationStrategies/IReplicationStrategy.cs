@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using NClone.ObjectReplicators;
 
 namespace NClone.ReplicationStrategies
 {
@@ -10,6 +11,6 @@ namespace NClone.ReplicationStrategies
         /// <summary>
         /// Apply current <see cref="IReplicationStrategy"/> to <paramref name="source"/>.
         /// </summary>
-        object Replicate([NotNull] object source);
+        object Replicate([NotNull] object source, IReplicationContext context);
     }
 }

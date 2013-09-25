@@ -16,16 +16,13 @@ namespace NClone.ReplicationStrategies
     {
         private readonly Type entityType;
         private readonly IEnumerable<Tuple<ReplicationBehavior, IMemberAccessor>> memberDescriptions;
-        private readonly IObjectReplicator objectReplicator;
 
-        public CommonReplicationStrategy(IMetadataProvider metadataProvider, IObjectReplicator objectReplicator, Type entityType)
+        public CommonReplicationStrategy(IMetadataProvider metadataProvider, Type entityType)
         {
             Guard.AgainstNull(metadataProvider, "metadataProvider");
-            Guard.AgainstNull(objectReplicator, "objectReplicator");
             Guard.AgainstNull(entityType, "entityType");
             Guard.AgainstViolation(!entityType.IsNullable(), "CommonReplicationStrategy is not applicable to nullable types");
 
-            this.objectReplicator = objectReplicator;
             this.entityType = entityType;
 
             memberDescriptions = metadataProvider.GetMembers(entityType)
@@ -34,7 +31,7 @@ namespace NClone.ReplicationStrategies
                 .Materialize();
         }
 
-        public object Replicate(object source)
+        public object Replicate(object source, IReplicationContext context)
         {
             Guard.AgainstNull(source, "source");
             Guard.AgainstViolation(source.GetType() == entityType,
@@ -45,7 +42,7 @@ namespace NClone.ReplicationStrategies
             foreach (var memberDescription in memberDescriptions) {
                 object memberValue = memberDescription.Item2.GetMember(source);
                 object replicatedValue = memberDescription.Item1 == ReplicationBehavior.Replicate
-                    ? objectReplicator.Replicate(memberValue)
+                    ? context.Replicate(memberValue)
                     : memberValue;
                 result = memberDescription.Item2.SetMember(result, replicatedValue);
             }

@@ -43,25 +43,35 @@ namespace NClone.MetadataProviders
 
         public override IEnumerable<MemberInformation> GetMembers(Type entityType)
         {
-            return GetAllFields(entityType)
-                .Select(field => {
-                            ReplicationBehavior behavior;
-                            if (!TryGetBehaviorFromAttribute(field, out behavior))
-                                behavior = ReplicationBehavior.Replicate;
-                            return new MemberInformation(field, behavior);
-                        });
+            return entityType
+                .GetHierarchy()
+                .SelectMany(GetMembersDefinedIn);
         }
 
-        protected static bool TryGetBehaviorFromAttribute(FieldInfo fieldInfo, out ReplicationBehavior behavior)
+        private static IEnumerable<MemberInformation> GetMembersDefinedIn(Type type)
+        {
+            IEnumerable<MemberInformation> fieldsInfo = type
+                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(field => field.DeclaringType == type)
+                .Where(field => !field.IsBackingField())
+                .Select(field => new MemberInformation(field, GetBehaviorOrDefault(field)));
+
+            IEnumerable<MemberInformation> propertiesInfo = type
+                .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(prop => prop.DeclaringType == type)
+                .Where(prop => prop.IsAutoProperty())
+                .Select(prop => new MemberInformation(prop.GetBackingField(), GetBehaviorOrDefault(prop)));
+
+            return propertiesInfo.Concat(fieldsInfo);
+        }
+
+        private static ReplicationBehavior GetBehaviorOrDefault(MemberInfo memberInfo)
         {
             CustomReplicationBehaviorAttribute customReplicationBehavior;
-            if (fieldInfo.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
-                .TrySingle(out customReplicationBehavior)) {
-                behavior = customReplicationBehavior.GetReplicationBehavior();
-                return true;
-            }
-            behavior = ReplicationBehavior.Replicate;
-            return false;
+            if (memberInfo.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
+                .TrySingle(out customReplicationBehavior))
+                return customReplicationBehavior.GetReplicationBehavior();
+            return ReplicationBehavior.Replicate;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using NClone.MetadataProviders;
 using NUnit.Framework;
 
@@ -26,9 +25,27 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void WhenFieldIsMarkedWithAttribute_GetMembersReturnsBehaviorFromAttribute()
         {
-            IEnumerable<MemberInformation> result = metadataProvider.GetMembers(typeof (Class));
+            MemberInformation result = metadataProvider.GetMembers(typeof (Class)).Single();
 
-            Assert.That(result.Single().Behavior, Is.EqualTo(ReplicationBehavior.Copy));
+            Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
+        }
+
+        [Test]
+        public void WhenAutopropertyIsMarkedWithAttribute_GetMembersReturnsBehaviorFromAttribute()
+        {
+            MemberInformation result = metadataProvider.GetMembers(typeof (ClassWithProperty)).Single();
+
+            Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
+            Assert.That(result.Member.Name, Is.StringContaining("Property"));
+        }
+
+        [Test]
+        public void WhenInheritedAutopropertyIsMarkedWithAttribute_GetMembersReturnsBehaviorFromAttribute()
+        {
+            MemberInformation result = metadataProvider.GetMembers(typeof (ClassWithInheritedProperty)).Single();
+
+            Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
+            Assert.That(result.Member.Name, Is.StringContaining("Property"));
         }
 
         [CustomReplicationBehavior(ReplicationBehavior.Ignore)]
@@ -36,6 +53,14 @@ namespace NClone.Tests.MetadataProviders
         {
             [CustomReplicationBehavior(ReplicationBehavior.Copy)]
             private readonly int field;
+        }
+
+        private class ClassWithInheritedProperty: ClassWithProperty { }
+
+        private class ClassWithProperty
+        {
+            [CustomReplicationBehavior(ReplicationBehavior.Copy)]
+            private int Property { get; set; }
         }
     }
 }

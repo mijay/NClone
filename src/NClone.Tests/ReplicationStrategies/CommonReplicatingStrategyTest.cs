@@ -35,8 +35,8 @@ namespace NClone.Tests.ReplicationStrategies
 
             var metadataProvider = A.Fake<IMetadataProvider>();
             metadataProvider
-                .CallsTo(x => x.GetMembers(typeof (T)))
-                .Returns(new[] { new MemberInformation(fieldInfo, returnsBehavior) });
+                .CallsTo(x => x.GetFieldsReplicationInfo(typeof (T)))
+                .Returns(new[] { new FieldReplicationInfo(fieldInfo, returnsBehavior) });
 
             return metadataProvider;
         }

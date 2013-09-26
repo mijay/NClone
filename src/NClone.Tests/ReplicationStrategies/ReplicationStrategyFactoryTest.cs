@@ -12,12 +12,12 @@ namespace NClone.Tests.ReplicationStrategies
         {
             var metadataProvider = A.Fake<IMetadataProvider>(x => x.Strict());
             metadataProvider
-                .CallsTo(x => x.GetBehavior(typeof (T)))
+                .CallsTo(x => x.GetPerTypeBehavior(typeof (T)))
                 .Returns(isMarkedAs);
             metadataProvider
-                .CallsTo(x => x.GetMembers(typeof (T)))
+                .CallsTo(x => x.GetFieldsReplicationInfo(typeof (T)))
                 .WithAnyArguments()
-                .Returns(new MemberInformation[0]);
+                .Returns(new FieldReplicationInfo[0]);
 
             return new ReplicationStrategyFactory(metadataProvider);
         }

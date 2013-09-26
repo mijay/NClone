@@ -41,7 +41,7 @@
     <Compile Include="MetadataProviders\CustomReplicationBehaviorAttribute.cs" />
     <Compile Include="MetadataProviders\ConventionalMetadataProvider.cs" />
     <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />
-    <Compile Include="MetadataProviders\MemberInformation.cs" />
+    <Compile Include="MetadataProviders\FieldReplicationInfo.cs" />
     <Compile Include="MetadataProviders\ReplicationBehavior.cs" />
     <Compile Include="ObjectReplication\CircularReferenceFoundException.cs" />
     <Compile Include="ObjectReplication\IReplicationContext.cs" />

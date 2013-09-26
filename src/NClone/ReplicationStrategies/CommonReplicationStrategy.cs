@@ -25,7 +25,7 @@ namespace NClone.ReplicationStrategies
 
             this.entityType = entityType;
 
-            memberDescriptions = metadataProvider.GetMembers(entityType)
+            memberDescriptions = metadataProvider.GetFieldsReplicationInfo(entityType)
                 .Where(t => t.Behavior != ReplicationBehavior.Ignore)
                 .Select(t => Tuple.Create(t.Behavior, FieldAccessorBuilder.BuildFor(entityType, t.Member, true)))
                 .Materialize();

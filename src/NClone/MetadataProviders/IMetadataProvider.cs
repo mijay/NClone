@@ -1,21 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace NClone.MetadataProviders
 {
     /// <summary>
     /// Provides information about <see cref="ReplicationBehavior"/> for fields and types.
     /// </summary>
+    /// <remarks>
+    /// <para><see cref="IMetadataProvider"/> provides two levels of <see cref="ReplicationBehavior"/>:
+    /// defined per-type (can be obtained via <see cref="GetPerTypeBehavior"/>), and defined per-member
+    /// (can be obtained via <see cref="GetFieldsReplicationInfo"/>). Actual <see cref="ReplicationBehavior"/> for
+    /// specific object during replication is computed as a minimum of its per-type <see cref="ReplicationBehavior"/>
+    /// and <see cref="ReplicationBehavior"/> for member, where it is located in original object graph.</para>
+    /// 
+    /// <para>Such approach gives additional flexibility for declaring type to adjust how its members are replicated.</para>
+    /// </remarks>
     public interface IMetadataProvider
     {
         /// <summary>
-        /// Provides class-level <see cref="ReplicationBehavior"/> for given <paramref name="entityType"/>.
+        /// Provides per-type <see cref="ReplicationBehavior"/> for given <paramref name="type"/>.
         /// </summary>
-        ReplicationBehavior GetBehavior(Type entityType);
+        ReplicationBehavior GetPerTypeBehavior(Type type);
 
         /// <summary>
-        /// Provides list of type members and declaration-side behavior for them.
+        /// Get the list of <see cref="FieldInfo"/>s in concrete type and per-member <see cref="ReplicationBehavior"/>
+        /// defined for them.
         /// </summary>
-        IEnumerable<MemberInformation> GetMembers(Type entityType);
+        IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type);
     }
 }

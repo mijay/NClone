@@ -10,8 +10,8 @@ namespace NClone.MetadataProviders
     /// Implementation of <see cref="IMetadataProvider"/> that uses information from <see cref="CustomReplicationBehaviorAttribute"/>s.
     /// </summary>
     /// <remarks>
-    /// <para>Method <see cref="GetBehavior"/> consider type-level <see cref="CustomReplicationBehaviorAttribute"/>s,
-    /// while method <see cref="GetMembers"/> consider member-level <see cref="CustomReplicationBehaviorAttribute"/>s.</para>
+    /// <para>Method <see cref="GetPerTypeBehavior"/> consider type-level <see cref="CustomReplicationBehaviorAttribute"/>s,
+    /// while method <see cref="GetFieldsReplicationInfo"/> consider member-level <see cref="CustomReplicationBehaviorAttribute"/>s.</para>
     /// 
     /// <para>Note that <see cref="CustomReplicationBehaviorAttribute"/> has no effect on common properties,
     /// it only affects auto-properties.</para>
@@ -19,12 +19,12 @@ namespace NClone.MetadataProviders
     /// <seealso cref="CustomReplicationBehaviorAttribute"/>
     public class AttributeBasedMetadataProvider: DefaultMetadataProvider
     {
-        public override ReplicationBehavior GetBehavior(Type entityType)
+        public override ReplicationBehavior GetPerTypeBehavior(Type type)
         {
             ReplicationBehavior behavior;
-            if (TryGetDefaultBehavior(entityType, out behavior))
+            if (TryGetDefaultBehavior(type, out behavior))
                 return behavior;
-            if (TryGetBehaviorFromTypeAttribute(entityType, out behavior))
+            if (TryGetBehaviorFromTypeAttribute(type, out behavior))
                 return behavior;
             return ReplicationBehavior.Replicate;
         }
@@ -41,26 +41,26 @@ namespace NClone.MetadataProviders
             return false;
         }
 
-        public override IEnumerable<MemberInformation> GetMembers(Type entityType)
+        public override IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
         {
-            return entityType
+            return type
                 .GetHierarchy()
                 .SelectMany(GetMembersDefinedIn);
         }
 
-        private static IEnumerable<MemberInformation> GetMembersDefinedIn(Type type)
+        private static IEnumerable<FieldReplicationInfo> GetMembersDefinedIn(Type type)
         {
-            IEnumerable<MemberInformation> fieldsInfo = type
+            IEnumerable<FieldReplicationInfo> fieldsInfo = type
                 .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(field => field.DeclaringType == type)
                 .Where(field => !field.IsBackingField())
-                .Select(field => new MemberInformation(field, GetBehaviorOrDefault(field)));
+                .Select(field => new FieldReplicationInfo(field, GetBehaviorOrDefault(field)));
 
-            IEnumerable<MemberInformation> propertiesInfo = type
+            IEnumerable<FieldReplicationInfo> propertiesInfo = type
                 .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(prop => prop.DeclaringType == type)
                 .Where(prop => prop.IsAutoProperty())
-                .Select(prop => new MemberInformation(prop.GetBackingField(), GetBehaviorOrDefault(prop)));
+                .Select(prop => new FieldReplicationInfo(prop.GetBackingField(), GetBehaviorOrDefault(prop)));
 
             return propertiesInfo.Concat(fieldsInfo);
         }

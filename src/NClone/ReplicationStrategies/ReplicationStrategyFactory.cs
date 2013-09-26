@@ -29,7 +29,7 @@ namespace NClone.ReplicationStrategies
 
         private IReplicationStrategy BuildEntityReplicator(Type type)
         {
-            ReplicationBehavior behavior = metadataProvider.GetBehavior(type);
+            ReplicationBehavior behavior = metadataProvider.GetPerTypeBehavior(type);
             switch (behavior) {
                 case ReplicationBehavior.Ignore:
                     return IgnoringReplicationStrategy.Instance;

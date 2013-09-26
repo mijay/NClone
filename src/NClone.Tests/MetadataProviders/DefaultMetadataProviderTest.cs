@@ -17,12 +17,12 @@ namespace NClone.Tests.MetadataProviders
             metadataProvider = new DefaultMetadataProvider();
         }
 
-        #region GetBehavior tests
+        #region GetPerTypeBehavior tests
 
         [Test]
         public void GetBehaviorForPrimitiveType_CopyOnlyReturned()
         {
-            ReplicationBehavior result = metadataProvider.GetBehavior(typeof (UInt64));
+            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (UInt64));
 
             Assert.That(result, Is.EqualTo(ReplicationBehavior.Copy));
         }
@@ -30,7 +30,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void GetBehaviorForEnum_CopyOnlyReturned()
         {
-            ReplicationBehavior result = metadataProvider.GetBehavior(typeof (Enum));
+            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (Enum));
 
             Assert.That(result, Is.EqualTo(ReplicationBehavior.Copy));
         }
@@ -38,7 +38,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void GetBehaviorForString_CopyOnlyReturned()
         {
-            ReplicationBehavior result = metadataProvider.GetBehavior(typeof (string));
+            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (string));
 
             Assert.That(result, Is.EqualTo(ReplicationBehavior.Copy));
         }
@@ -46,7 +46,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void GetBehaviorForObject_CopyOnlyReturned()
         {
-            ReplicationBehavior result = metadataProvider.GetBehavior(typeof (object));
+            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (object));
 
             Assert.That(result, Is.EqualTo(ReplicationBehavior.Copy));
         }
@@ -54,7 +54,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void GetBehaviorForNullableInt_CopyOnlyReturned()
         {
-            ReplicationBehavior result = metadataProvider.GetBehavior(typeof (int?));
+            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (int?));
 
             Assert.That(result, Is.EqualTo(ReplicationBehavior.Copy));
         }
@@ -62,7 +62,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void GetBehaviorForNullableStruct_ReplicateReturned()
         {
-            ReplicationBehavior result = metadataProvider.GetBehavior(typeof (SomeValueType?));
+            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (SomeValueType?));
 
             Assert.That(result, Is.EqualTo(ReplicationBehavior.Replicate));
         }
@@ -70,7 +70,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void GetBehaviorForArray_ReplicateReturned()
         {
-            ReplicationBehavior result = metadataProvider.GetBehavior(typeof (char[]));
+            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (char[]));
 
             Assert.That(result, Is.EqualTo(ReplicationBehavior.Replicate));
         }
@@ -86,12 +86,12 @@ namespace NClone.Tests.MetadataProviders
 
         #endregion
 
-        #region GetMembers tests
+        #region GetFieldsReplicationInfo tests
 
         [Test]
         public void ClassWithPrivateField_GetMembersReturnsIt()
         {
-            IEnumerable<MemberInformation> result = metadataProvider.GetMembers(typeof (ClassWithPrivateField));
+            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPrivateField));
 
             Assert.That(result.Count(), Is.EqualTo(1));
         }
@@ -99,7 +99,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void ClassWhichBaseHasPrivateField_GetMembersReturnsIt()
         {
-            IEnumerable<MemberInformation> result = metadataProvider.GetMembers(typeof (ClassWithPrivateInheritedField));
+            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPrivateInheritedField));
 
             Assert.That(result.Count(), Is.EqualTo(1));
             Assert.That(result.Single().Member.DeclaringType, Is.EqualTo(typeof (ClassWithPrivateField)));
@@ -108,7 +108,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void ClassWhichBaseHasInternalField_GetMembersReturnsIt()
         {
-            IEnumerable<MemberInformation> result = metadataProvider.GetMembers(typeof (ClassWithInternalInheritedField));
+            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithInternalInheritedField));
 
             Assert.That(result.Count(), Is.EqualTo(1));
             Assert.That(result.Single().Member.DeclaringType, Is.EqualTo(typeof (ClassWithInternalReadonlyField)));
@@ -117,7 +117,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void ClassWithPublicField_GetMembersReturnsIt()
         {
-            IEnumerable<MemberInformation> result = metadataProvider.GetMembers(typeof (ClassWithPublicField));
+            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPublicField));
 
             Assert.That(result.Count(), Is.EqualTo(1));
         }
@@ -125,7 +125,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void ClassThatHidesBaseField_GetMembersReturnsBoth()
         {
-            IEnumerable<MemberInformation> result = metadataProvider.GetMembers(typeof (ClassWithNewField));
+            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithNewField));
 
             Assert.That(result.Count(), Is.EqualTo(2));
             Assert.That(result.Select(x => x.Member.DeclaringType),

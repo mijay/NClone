@@ -17,7 +17,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void WhenTypeIsMarkedWithAttribute_GetBehaviorReturnsBehaviorFromAttribute()
         {
-            ReplicationBehavior result = metadataProvider.GetBehavior(typeof (Class));
+            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (Class));
 
             Assert.That(result, Is.EqualTo(ReplicationBehavior.Ignore));
         }
@@ -25,7 +25,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void WhenFieldIsMarkedWithAttribute_GetMembersReturnsBehaviorFromAttribute()
         {
-            MemberInformation result = metadataProvider.GetMembers(typeof (Class)).Single();
+            FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (Class)).Single();
 
             Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
         }
@@ -33,7 +33,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void WhenAutopropertyIsMarkedWithAttribute_GetMembersReturnsBehaviorFromAttribute()
         {
-            MemberInformation result = metadataProvider.GetMembers(typeof (ClassWithProperty)).Single();
+            FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithProperty)).Single();
 
             Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
             Assert.That(result.Member.Name, Is.StringContaining("Property"));
@@ -42,7 +42,7 @@ namespace NClone.Tests.MetadataProviders
         [Test]
         public void WhenInheritedAutopropertyIsMarkedWithAttribute_GetMembersReturnsBehaviorFromAttribute()
         {
-            MemberInformation result = metadataProvider.GetMembers(typeof (ClassWithInheritedProperty)).Single();
+            FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithInheritedProperty)).Single();
 
             Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
             Assert.That(result.Member.Name, Is.StringContaining("Property"));

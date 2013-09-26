@@ -17,17 +17,17 @@ namespace NClone.MetadataProviders
     /// </remarks>
     public class DefaultMetadataProvider: IMetadataProvider
     {
-        public virtual ReplicationBehavior GetBehavior(Type entityType)
+        public virtual ReplicationBehavior GetPerTypeBehavior(Type type)
         {
             ReplicationBehavior behavior;
-            if (TryGetDefaultBehavior(entityType, out behavior))
+            if (TryGetDefaultBehavior(type, out behavior))
                 return behavior;
             return ReplicationBehavior.Replicate;
         }
 
-        public virtual IEnumerable<MemberInformation> GetMembers(Type entityType)
+        public virtual IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
         {
-            return GetAllFields(entityType).Select(x => new MemberInformation(x, ReplicationBehavior.Replicate));
+            return GetAllFields(type).Select(x => new FieldReplicationInfo(x, ReplicationBehavior.Replicate));
         }
 
         protected bool TryGetDefaultBehavior(Type entityType, out ReplicationBehavior behavior)
@@ -41,7 +41,7 @@ namespace NClone.MetadataProviders
             }
             if (entityType.IsNullable()) {
                 Type underlyingType = entityType.GetNullableUnderlyingType();
-                behavior = GetBehavior(underlyingType);
+                behavior = GetPerTypeBehavior(underlyingType);
                 return true;
             }
             behavior = ReplicationBehavior.Replicate;

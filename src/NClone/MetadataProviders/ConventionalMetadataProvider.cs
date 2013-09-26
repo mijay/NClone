@@ -11,30 +11,33 @@ namespace NClone.MetadataProviders
     /// </summary>
     /// <remarks>
     /// <para>Used conventions:</para>
-    /// <para>1) All structures are immutable => use <see cref="ReplicationBehavior.Copy"/>.</para>
+    /// <para>1) All structures are immutable => use <see cref="ReplicationBehavior.Copy"/> behavior.</para>
+    /// <para>2) If all members of a given <see cref="Type"/> have <see cref="ReplicationBehavior.Copy"/> behavior =>
+    /// type has <see cref="ReplicationBehavior.Copy"/> behavior.</para>
     /// <para>2) All <see cref="Delegate"/>s are not copied during replication.</para>
     /// <para>3) Lazy <see cref="IEnumerable"/> are illegal inside replicating types (causes exception).</para>
     /// </remarks>
     /// <seealso cref="AttributeBasedMetadataProvider"/>
+    /// <seealso cref="CustomReplicationBehaviorAttribute"/>
     //todo: test + modify AssertIsNotLazyEnumerable
     public class ConventionalMetadataProvider: AttributeBasedMetadataProvider
     {
         private const string lazyObjectFoundError = @"You should not replicate lazy objects.
 If replicating of this type makes sence, then mark it with CustomReplicationBehavior attribute";
 
-        public override ReplicationBehavior GetBehavior(Type entityType)
+        public override ReplicationBehavior GetPerTypeBehavior(Type type)
         {
             ReplicationBehavior behavior;
-            if (TryGetDefaultBehavior(entityType, out behavior))
+            if (TryGetDefaultBehavior(type, out behavior))
                 return behavior;
-            if (TryGetBehaviorFromTypeAttribute(entityType, out behavior))
+            if (TryGetBehaviorFromTypeAttribute(type, out behavior))
                 return behavior;
 
-            AssertIsNotLazyEnumerable(entityType);
+            AssertIsNotLazyEnumerable(type);
 
-            if (typeof (Delegate).IsAssignableFrom(entityType))
+            if (typeof (Delegate).IsAssignableFrom(type))
                 return ReplicationBehavior.Ignore;
-            if (entityType.IsValueType)
+            if (type.IsValueType)
                 return ReplicationBehavior.Copy;
             return ReplicationBehavior.Replicate;
         }

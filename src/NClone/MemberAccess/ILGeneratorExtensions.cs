@@ -2,9 +2,9 @@
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace NClone.Shared
+namespace NClone.MemberAccess
 {
-    public static class ILGeneratorExtensions
+    internal static class ILGeneratorExtensions
     {
         public static ILGenerator LoadArgumentAddress(this ILGenerator ilGenerator, Type argumentType, int argumentIndex)
         {
@@ -18,13 +18,13 @@ namespace NClone.Shared
             return ilGenerator;
         }
 
-        public static ILGenerator LoadFieldValue(this ILGenerator ilGenerator, FieldInfo fieldInfo)
+        public static ILGenerator GetFieldValue(this ILGenerator ilGenerator, FieldInfo fieldInfo)
         {
             ilGenerator.Emit(OpCodes.Ldfld, fieldInfo);
             return ilGenerator;
         }
 
-        public static ILGenerator StoreFieldValue(this ILGenerator ilGenerator, FieldInfo fieldInfo)
+        public static ILGenerator SetFieldValue(this ILGenerator ilGenerator, FieldInfo fieldInfo)
         {
             ilGenerator.Emit(OpCodes.Stfld, fieldInfo);
             return ilGenerator;
@@ -47,19 +47,19 @@ namespace NClone.Shared
             return ilGenerator;
         }
 
-        public static ILGenerator StoreInLocal(this ILGenerator ilGenerator, int localValueIndex)
+        public static ILGenerator StoreInVariable(this ILGenerator ilGenerator, int localValueIndex)
         {
             ilGenerator.Emit(OpCodes.Stloc, localValueIndex);
             return ilGenerator;
         }
 
-        public static ILGenerator LoadAddressOfLocal(this ILGenerator ilGenerator, int localValueIndex, Type typeOfLocal)
+        public static ILGenerator LoadAddressOfVariable(this ILGenerator ilGenerator, int localValueIndex, Type typeOfLocal)
         {
             ilGenerator.Emit(typeOfLocal.IsValueType ? OpCodes.Ldloca : OpCodes.Ldloc, localValueIndex);
             return ilGenerator;
         }
 
-        public static ILGenerator LoadLocal(this ILGenerator ilGenerator, int localValueIndex)
+        public static ILGenerator LoadVariable(this ILGenerator ilGenerator, int localValueIndex)
         {
             ilGenerator.Emit(OpCodes.Ldloc, localValueIndex);
             return ilGenerator;

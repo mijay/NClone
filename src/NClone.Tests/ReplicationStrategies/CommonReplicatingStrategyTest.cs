@@ -21,8 +21,7 @@ namespace NClone.Tests.ReplicationStrategies
             dummyContext = A.Fake<IReplicationContext>(x => x.Strict());
         }
 
-        private static CommonReplicationStrategy ReplicatorFor<T>(IMetadataProvider metadataProvider = null,
-                                                                  IObjectReplicator objectReplicator = null)
+        private static CommonReplicationStrategy ReplicatorFor<T>(IMetadataProvider metadataProvider = null)
         {
             return new CommonReplicationStrategy(metadataProvider ?? A.Fake<IMetadataProvider>(), typeof (T));
         }

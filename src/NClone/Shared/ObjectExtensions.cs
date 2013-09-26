@@ -1,5 +1,8 @@
-﻿namespace NClone.Shared
+﻿using System.Diagnostics;
+
+namespace NClone.Shared
 {
+    [DebuggerStepThrough]
     public static class ObjectExtensions
     {
         /// <summary>

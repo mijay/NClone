@@ -12,7 +12,7 @@ namespace NClone.MetadataProviders
     /// <remarks>
     /// <para><see cref="DefaultMetadataProvider"/> defines that:</para>
     /// <para>1) Primitive types, enums and <c>string</c>s should be just <see cref="ReplicationBehavior.Copy"/>.</para>
-    /// <para>2) <see cref="Nullable{T}"/> types inherit their behavior from underlying type.</para>
+    /// <para>2) <see cref="Nullable{T}"/> types inherit <see cref="ReplicationBehavior"/> from underlying type.</para>
     /// <para>3) When type is replicated, all its fields should be replicated.</para>
     /// </remarks>
     public class DefaultMetadataProvider: IMetadataProvider

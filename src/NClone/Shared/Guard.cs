@@ -17,25 +17,8 @@ namespace NClone.Shared
         [Conditional("DEBUG"), StringFormatMethod("errorDescriptionFormat")]
         public static void AgainstViolation(bool condition, string errorDescriptionFormat, params object[] args)
         {
-            AgainstViolation<ArgumentException>(condition, errorDescriptionFormat, args);
-        }
-
-        /// <summary>
-        /// Verifies that <paramref name="condition"/> is <c>true</c>.
-        /// Otherwise throw <typeparamref name="TException"/> with <see cref="Exception.Message"/> build from <paramref name="errorDescriptionFormat"/>.
-        /// </summary>
-        /// <remarks>
-        /// If no <paramref name="errorDescriptionFormat"/> is provided, then resulting <typeparamref name="TException"/> is build using parameterless
-        /// constructor. Otherwise constructor with single <c>string</c> parameter is used.
-        /// </remarks>
-        [Conditional("DEBUG"), StringFormatMethod("errorDescriptionFormat")]
-        public static void AgainstViolation<TException>(bool condition, string errorDescriptionFormat = null, params object[] args)
-        {
             if (!condition)
-                throw (Exception) Activator.CreateInstance(typeof (TException),
-                    errorDescriptionFormat != null
-                        ? new object[] { string.Format(errorDescriptionFormat, args) }
-                        : new object[0]);
+                throw new ArgumentException(string.Format(errorDescriptionFormat, args));
         }
 
         /// <summary>

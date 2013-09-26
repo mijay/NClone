@@ -1,5 +1,4 @@
 ﻿using System;
-using NClone.Shared;
 
 namespace NClone.MemberAccess
 {
@@ -8,8 +7,8 @@ namespace NClone.MemberAccess
     /// </summary>
     internal class MemberAccessor: IMemberAccessor
     {
-        private readonly Func<object, object, object> setMethod;
         private readonly Func<object, object> getMethod;
+        private readonly Func<object, object, object> setMethod;
 
         public MemberAccessor(Func<object, object> getMethod, Func<object, object, object> setMethod)
         {
@@ -19,13 +18,15 @@ namespace NClone.MemberAccess
 
         public object SetMember(object container, object memberValue)
         {
-            Guard.AgainstViolation<InvalidOperationException>(setMethod != null, "Can not set member when CanSet is false");
+            if (!CanSet)
+                throw new InvalidOperationException("Can not set member when CanSet is false");
             return setMethod(container, memberValue);
         }
 
         public object GetMember(object container)
         {
-            Guard.AgainstViolation<InvalidOperationException>(getMethod != null, "Can not get member when CanGet is false");
+            if (!CanGet)
+                throw new InvalidOperationException("Can not get member when CanGet is false");
             return getMethod(container);
         }
 

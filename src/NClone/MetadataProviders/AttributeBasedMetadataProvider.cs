@@ -9,6 +9,13 @@ namespace NClone.MetadataProviders
     /// <summary>
     /// Implementation of <see cref="IMetadataProvider"/> that uses information from <see cref="CustomReplicationBehaviorAttribute"/>s.
     /// </summary>
+    /// <remarks>
+    /// <para>Method <see cref="GetBehavior"/> consider type-level <see cref="CustomReplicationBehaviorAttribute"/>s,
+    /// while method <see cref="GetMembers"/> consider member-level <see cref="CustomReplicationBehaviorAttribute"/>s.</para>
+    /// 
+    /// <para>Note that <see cref="CustomReplicationBehaviorAttribute"/> has no effect on common properties,
+    /// it only affects auto-properties.</para>
+    /// </remarks>
     public class AttributeBasedMetadataProvider: DefaultMetadataProvider
     {
         public override ReplicationBehavior GetBehavior(Type entityType)

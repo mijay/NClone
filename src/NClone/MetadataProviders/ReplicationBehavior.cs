@@ -1,7 +1,9 @@
-﻿namespace NClone.MetadataProviders
+﻿using NClone.ObjectReplication;
+
+namespace NClone.MetadataProviders
 {
     /// <summary>
-    /// Defines how <see cref="DefaultObjectReplicator"/> should treat specific types/members.
+    /// Defines how <see cref="ObjectReplicator"/> should treat specific types/members.
     /// </summary>
     public enum ReplicationBehavior
     {

@@ -6,12 +6,12 @@ using NClone.Shared;
 namespace NClone.MemberAccess
 {
     /// <summary>
-    /// Factory for <see cref="IMemberAccessor"/> for members of type <see cref="MemberTypes.Field"/>.
+    /// Factory for <see cref="IMemberAccessor"/>s to fields.
     /// </summary>
     public static class FieldAccessorBuilder
     {
         /// <summary>
-        /// Build <see cref="IMemberAccessor"/> to access field <paramref name="field"/> in container <paramref name="containerType"/>.
+        /// Build <see cref="IMemberAccessor"/> to access <paramref name="field"/> in container of type <paramref name="containerType"/>.
         /// </summary>
         /// <param name="containerType">
         /// Type of entity, in which <see cref="IMemberAccessor"/> will get and/or set field value.
@@ -19,10 +19,16 @@ namespace NClone.MemberAccess
         /// <param name="field">
         /// Field of <paramref name="containerType"/> or its base classes, for which <see cref="IMemberAccessor"/> is built.
         /// </param>
-        /// <param name="skipAccessibility">
+        /// <param name="skipAccessibilityChecks">
         /// Flag that indicates, whether returned <see cref="IMemberAccessor"/> should ignore visibility and <c>readonly</c> checks.
         /// </param>
-        public static IMemberAccessor BuildFor(Type containerType, FieldInfo field, bool skipAccessibility = false)
+        /// <remarks>
+        /// <para><paramref name="field"/> should be defined in <paramref name="containerType"/> or in one of its base types.</para>
+        /// 
+        /// <para>Returned <see cref="IMemberAccessor"/> will be able to access containers of type <paramref name="containerType"/>
+        /// or inherited, despite the fact where <paramref name="field"/> is defined.</para>
+        /// </remarks>
+        public static IMemberAccessor BuildFor(Type containerType, FieldInfo field, bool skipAccessibilityChecks = false)
         {
             Guard.AgainstNull(containerType, "containerType");
             Guard.AgainstNull(field, "field");
@@ -30,8 +36,12 @@ namespace NClone.MemberAccess
                 "IMemberAccessor for entity [{0}] can't access field from entity [{1}]",
                 containerType.FullName, field.DeclaringType.FullName);
 
-            var getMethod = skipAccessibility || CanGet(field, containerType) ? CreateGetMethod(containerType, field) : null;
-            var setMethod = skipAccessibility || CanSet(field, containerType) ? CreateSetMethod(containerType, field) : null;
+            Func<object, object> getMethod = skipAccessibilityChecks || CanGet(field, containerType)
+                ? CreateGetMethod(containerType, field)
+                : null;
+            Func<object, object, object> setMethod = skipAccessibilityChecks || CanSet(field, containerType)
+                ? CreateSetMethod(containerType, field)
+                : null;
 
             return new MemberAccessor(getMethod, setMethod);
         }
@@ -42,13 +52,13 @@ namespace NClone.MemberAccess
                 BuildDynamicMethodName("getMember", containerType, field),
                 typeof (object), new[] { typeof (object) },
                 containerType, true);
-            var ilGenerator = method.GetILGenerator();
+            ILGenerator ilGenerator = method.GetILGenerator();
 
             ilGenerator.LoadArgument(0)
-                       .CastDown(containerType)
-                       .LoadFieldValue(field)
-                       .Box(field.FieldType)
-                       .Return();
+                .CastDown(containerType)
+                .GetFieldValue(field)
+                .Box(field.FieldType)
+                .Return();
 
             return (Func<object, object>) method.CreateDelegate(typeof (Func<object, object>));
         }
@@ -59,19 +69,19 @@ namespace NClone.MemberAccess
                 BuildDynamicMethodName("setMember", containerType, field),
                 typeof (object), new[] { typeof (object), typeof (object) },
                 containerType, true);
-            var ilGenerator = method.GetILGenerator();
+            ILGenerator ilGenerator = method.GetILGenerator();
             ilGenerator.DeclareLocal(containerType);
 
             ilGenerator.LoadArgument(0)
-                       .CastDown(containerType)
-                       .StoreInLocal(0)
-                       .LoadAddressOfLocal(0, containerType)
-                       .LoadArgument(1)
-                       .CastDown(field.FieldType)
-                       .StoreFieldValue(field)
-                       .LoadLocal(0)
-                       .Box(containerType)
-                       .Return();
+                .CastDown(containerType)
+                .StoreInVariable(0)
+                .LoadAddressOfVariable(0, containerType)
+                .LoadArgument(1)
+                .CastDown(field.FieldType)
+                .SetFieldValue(field)
+                .LoadVariable(0)
+                .Box(containerType)
+                .Return();
 
             return (Func<object, object, object>) method.CreateDelegate(typeof (Func<object, object, object>));
         }

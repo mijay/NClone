@@ -2,7 +2,7 @@
 
 namespace NClone.MetadataProviders
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class CustomReplicationBehaviorAttribute: Attribute
     {
         private readonly ReplicationBehavior replicationBehavior;

@@ -43,6 +43,7 @@
     <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />
     <Compile Include="MetadataProviders\MemberInformation.cs" />
     <Compile Include="MetadataProviders\ReplicationBehavior.cs" />
+    <Compile Include="ObjectReplication\CircularReferenceFoundException.cs" />
     <Compile Include="ObjectReplication\IReplicationContext.cs" />
     <Compile Include="ObjectReplication\ObjectReplicator.cs" />
     <Compile Include="ReplicationStrategies\IReplicationStrategyFactory.cs" />

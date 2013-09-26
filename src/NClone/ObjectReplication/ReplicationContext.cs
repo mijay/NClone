@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NClone.ReplicationStrategies;
 using NClone.Shared;
 
@@ -9,6 +10,7 @@ namespace NClone.ObjectReplication
     /// </summary>
     internal class ReplicationContext: IReplicationContext
     {
+        private readonly CircularReferenceDetector circularReferenceDetector = new CircularReferenceDetector();
         private readonly IDictionary<object, object> replicatedEntries = new Dictionary<object, object>();
         private readonly IReplicationStrategyFactory replicationStrategyFactory;
 
@@ -27,11 +29,32 @@ namespace NClone.ObjectReplication
             if (replicatedEntries.TryGetValue(source, out result))
                 return result;
 
-            IReplicationStrategy replicationStrategy = replicationStrategyFactory.StrategyForType(source.GetType());
-            result = replicationStrategy.Replicate(source, this);
+            using (circularReferenceDetector.EnterContext(source)) {
 
-            replicatedEntries.Add(source, result);
-            return result;
+                IReplicationStrategy replicationStrategy = replicationStrategyFactory.StrategyForType(source.GetType());
+                result = replicationStrategy.Replicate(source, this);
+
+                replicatedEntries.Add(source, result);
+                return result;
+            }
+        }
+
+        private class CircularReferenceDetector: IDisposable
+        {
+            private readonly Stack<object> replicatingObjectsStack = new Stack<object>();
+
+            public void Dispose()
+            {
+                replicatingObjectsStack.Pop();
+            }
+
+            public IDisposable EnterContext(object replicatingObject)
+            {
+                if (replicatingObjectsStack.Contains(replicatingObject))
+                    throw new CircularReferenceFoundException();
+                replicatingObjectsStack.Push(replicatingObject);
+                return this;
+            }
         }
     }
 }

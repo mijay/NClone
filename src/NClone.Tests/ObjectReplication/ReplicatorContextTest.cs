@@ -16,12 +16,17 @@ namespace NClone.Tests.ObjectReplication
             dummyFactory = A.Fake<IReplicationStrategyFactory>(x => x.Strict());
         }
 
-        private static IReplicationStrategyFactory FactoryForReplicatorThat(Class onReceiving, Class returns)
+        private static IReplicationStrategyFactory FactoryForReplicatorThat(Class onReceiving, Class returns = null,
+                                                                            object callsContextWithArgument = null)
         {
             var strategy = A.Fake<IReplicationStrategy>(x => x.Strict());
             strategy
                 .CallsTo(x => x.Replicate(onReceiving, A<IReplicationContext>.Ignored))
-                .Returns(returns);
+                .ReturnsLazily(call => {
+                                   if (callsContextWithArgument != null)
+                                       call.Arguments.Get<IReplicationContext>(1).Replicate(callsContextWithArgument);
+                                   return returns;
+                               });
             var strategyFactory = A.Fake<IReplicationStrategyFactory>(x => x.Strict());
             strategyFactory
                 .CallsTo(x => x.StrategyForType(typeof (Class)))
@@ -66,6 +71,19 @@ namespace NClone.Tests.ObjectReplication
                 .CallsTo(x => x.Replicate(null, null))
                 .WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void SourceContainsCircularReference_ExceptionIsThrown()
+        {
+            var source = new Class();
+            IReplicationStrategyFactory strategyFactory = FactoryForReplicatorThat(onReceiving: source,
+                callsContextWithArgument: source);
+            var replicationContext = new ReplicationContext(strategyFactory);
+
+            TestDelegate action = () => replicationContext.Replicate(source);
+
+            Assert.That(action, Throws.InstanceOf<CircularReferenceFoundException>());
         }
 
         private class Class { }

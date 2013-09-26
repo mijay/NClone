@@ -15,6 +15,7 @@ namespace NClone.MetadataProviders
     /// <para>2) All <see cref="Delegate"/>s are not copied during replication.</para>
     /// <para>3) Lazy <see cref="IEnumerable"/> are illegal inside replicating types (causes exception).</para>
     /// </remarks>
+    /// <seealso cref="AttributeBasedMetadataProvider"/>
     //todo: test + modify AssertIsNotLazyEnumerable
     public class ConventionalMetadataProvider: AttributeBasedMetadataProvider
     {

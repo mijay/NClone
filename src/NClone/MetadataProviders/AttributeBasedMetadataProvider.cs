@@ -16,6 +16,7 @@ namespace NClone.MetadataProviders
     /// <para>Note that <see cref="CustomReplicationBehaviorAttribute"/> has no effect on common properties,
     /// it only affects auto-properties.</para>
     /// </remarks>
+    /// <seealso cref="CustomReplicationBehaviorAttribute"/>
     public class AttributeBasedMetadataProvider: DefaultMetadataProvider
     {
         public override ReplicationBehavior GetBehavior(Type entityType)

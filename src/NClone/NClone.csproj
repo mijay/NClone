@@ -42,6 +42,7 @@
     <Compile Include="MetadataProviders\ConventionalMetadataProvider.cs" />
     <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />
     <Compile Include="MetadataProviders\FieldReplicationInfo.cs" />
+    <Compile Include="MetadataProviders\LazyTypeFoundException.cs" />
     <Compile Include="Shared\LazyTypeDetector.cs" />
     <Compile Include="MetadataProviders\ReplicationBehavior.cs" />
     <Compile Include="ObjectReplication\CircularReferenceFoundException.cs" />

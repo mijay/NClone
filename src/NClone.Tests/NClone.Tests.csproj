@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Benchmarks\Compare.cs" />
     <Compile Include="MetadataProviders\AttributeBasedMetadataProviderTest.cs" />
+    <Compile Include="MetadataProviders\ConventionalMetadataProviderTest.cs" />
     <Compile Include="MetadataProviders\DefaultMetadataProviderTest.cs" />
     <Compile Include="ObjectReplication\ObjectReplicatorIntegrationTest.cs" />
     <Compile Include="ObjectReplication\ReplicatorContextTest.cs" />

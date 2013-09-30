@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using NClone.Shared;
 
 namespace NClone.MetadataProviders
@@ -39,7 +38,7 @@ namespace NClone.MetadataProviders
         private static void AssertIsNotLazyEnumerable(Type type)
         {
             if (LazyTypeDetector.IsLazyEnumerable(type))
-                throw new InvalidOperationException(string.Format(
+                throw new LazyTypeFoundException(string.Format(
                     @"Potential enumerator found: {0}.
 You should not replicate lazy objects.
 If replicating of this type makes sense, then mark it with CustomReplicationBehavior attribute", type.FullName));

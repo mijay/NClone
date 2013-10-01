@@ -7,7 +7,7 @@ namespace NClone.Tests.Benchmarks
 {
     public class SetFieldBenchmark: BenchmarkBase
     {
-        private const int iterationCount = 20000;
+        private const int iterationCount = 200000;
 
         private class SomeClass
         {

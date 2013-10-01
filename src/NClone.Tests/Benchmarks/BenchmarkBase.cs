@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using BenchmarkDotNet;
 using NClone.Shared;
 using NUnit.Framework;
@@ -45,21 +43,15 @@ namespace NClone.Tests.Benchmarks
             }
         }
 
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
+        static BenchmarkBase()
         {
             BenchmarkSettings.Instance.DetailedMode = true;
+            BenchmarkSettings.Instance.DefaultPrintBenchmarkBodyToConsole = true;
             BenchmarkSettings.Instance.DefaultMaxWarmUpIterationCount = 200;
             BenchmarkSettings.Instance.DefaultWarmUpIterationCount = 20;
             BenchmarkSettings.Instance.DefaultMaxWarmUpError = 0.3;
 
             Console.SetOut(new HackTextWriter(Console.Error));
-
-            Process currentProcess = Process.GetCurrentProcess();
-            currentProcess.PriorityBoostEnabled = true;
-            currentProcess.PriorityClass = ProcessPriorityClass.RealTime;
-
-            Thread.CurrentThread.Priority = ThreadPriority.Highest;
         }
 
         [Test]

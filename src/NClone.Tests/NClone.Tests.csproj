@@ -30,7 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FakeItEasy">
+    <Reference Include="BenchmarkDotNet, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\BenchmarkDotNet.0.5.0\lib\net35\BenchmarkDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="FakeItEasy, Version=1.13.1.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FakeItEasy.1.13.1\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="GeorgeCloney">
@@ -42,7 +47,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Benchmarks\Compare.cs" />
+    <Compile Include="Benchmarks\BenchmarkAttribute.cs" />
+    <Compile Include="Benchmarks\BenchmarkBase.cs" />
+    <Compile Include="Benchmarks\SetFieldBenchmark.cs" />
     <Compile Include="MetadataProviders\AttributeBasedMetadataProviderTest.cs" />
     <Compile Include="MetadataProviders\ConventionalMetadataProviderTest.cs" />
     <Compile Include="MetadataProviders\DefaultMetadataProviderTest.cs" />

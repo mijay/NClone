@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using NClone.MetadataProviders;
-using NClone.Tests.ExternalAssembly;
 using NUnit.Framework;
 
 namespace NClone.Tests.MetadataProviders
@@ -86,60 +84,80 @@ namespace NClone.Tests.MetadataProviders
 
         #endregion
 
-        #region GetFieldsReplicationInfo tests
+        #region GetAllFields tests
 
         [Test]
-        public void ClassWithPrivateField_GetMembersReturnsIt()
+        public void ClassWithPrivateField_GetFieldsReturnsIt()
         {
-            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPrivateField));
+            DefaultMetadataProvider.CopyableFieldDescription[] result = TestingMetadataProvider.GetAllFields<ClassWithPrivateField>();
 
             Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.Single().BackingField, Is.SameAs(result.Single().DeclaringMember));
+            Assert.That(result.Single().DeclaringMember.Name, Is.EqualTo("field"));
         }
 
         [Test]
-        public void ClassWhichBaseHasPrivateField_GetMembersReturnsIt()
+        public void ClassWithPublicField_GetFieldsReturnsIt()
         {
-            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPrivateInheritedField));
+            DefaultMetadataProvider.CopyableFieldDescription[] result = TestingMetadataProvider.GetAllFields<ClassWithPublicField>();
 
             Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(result.Single().Member.DeclaringType, Is.EqualTo(typeof (ClassWithPrivateField)));
+            Assert.That(result.Single().BackingField, Is.SameAs(result.Single().DeclaringMember));
+            Assert.That(result.Single().DeclaringMember.Name, Is.EqualTo("field"));
         }
 
         [Test]
-        public void ClassWhichBaseHasInternalField_GetMembersReturnsIt()
+        public void ClassWithStaticField_GetFieldsDoesNotReturnIt()
         {
-            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithInternalInheritedField));
+            DefaultMetadataProvider.CopyableFieldDescription[] result =
+                TestingMetadataProvider.GetAllFields<ClassWithStaticField>();
+
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void ClassWhichBaseHasPrivateField_GetFieldsReturnsIt()
+        {
+            DefaultMetadataProvider.CopyableFieldDescription[] result =
+                TestingMetadataProvider.GetAllFields<ClassWithPrivateInheritedField>();
 
             Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(result.Single().Member.DeclaringType, Is.EqualTo(typeof (ClassWithInternalReadonlyField)));
+            Assert.That(result.Single().BackingField, Is.SameAs(result.Single().DeclaringMember));
+            Assert.That(result.Single().DeclaringMember.Name, Is.EqualTo("field"));
         }
 
         [Test]
-        public void ClassWithPublicField_GetMembersReturnsIt()
+        public void ClassWhichBaseHasPublicField_GetFieldsReturnsIt()
         {
-            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPublicField));
+            DefaultMetadataProvider.CopyableFieldDescription[] result =
+                TestingMetadataProvider.GetAllFields<ClassWithPublicInheritedField>();
 
             Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.Single().BackingField, Is.SameAs(result.Single().DeclaringMember));
+            Assert.That(result.Single().DeclaringMember.Name, Is.EqualTo("field"));
         }
 
         [Test]
-        public void ClassThatHidesBaseField_GetMembersReturnsBoth()
+        public void ClassWithPrivateAutoproperty_GetFieldsReturnsIt()
         {
-            IEnumerable<FieldReplicationInfo> result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithNewField));
+            DefaultMetadataProvider.CopyableFieldDescription[] result =
+                TestingMetadataProvider.GetAllFields<ClassWithPrivateProperty>();
 
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Select(x => x.Member.DeclaringType),
-                Is.EquivalentTo(new[] { typeof (ClassWithNewField), typeof (ClassWithPublicField) }));
+            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.Single().BackingField, Is.Not.SameAs(result.Single().DeclaringMember));
+            Assert.That(result.Single().DeclaringMember.Name, Is.EqualTo("Property"));
+            Assert.That(result.Single().BackingField.Name, Is.StringContaining("Property"));
         }
 
-        private class ClassWithInternalInheritedField: ClassWithInternalReadonlyField
+        [Test]
+        public void ClassWithPublicAutoevent_GetFieldsReturnsBackingField()
         {
-            public ClassWithInternalInheritedField(): base(12) { }
-        }
+            DefaultMetadataProvider.CopyableFieldDescription[] result =
+                TestingMetadataProvider.GetAllFields<ClassWithPublicEvent>();
 
-        private class ClassWithNewField: ClassWithPublicField
-        {
-            public new readonly int field;
+            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.Single().BackingField, Is.SameAs(result.Single().DeclaringMember));
+            Assert.That(result.Single().DeclaringMember.Name, Is.EqualTo("Event"));
         }
 
         private class ClassWithPrivateField
@@ -149,9 +167,47 @@ namespace NClone.Tests.MetadataProviders
 
         private class ClassWithPrivateInheritedField: ClassWithPrivateField { }
 
+        private class ClassWithPrivateProperty
+        {
+            private int Property { get; set; }
+        }
+
+        private class ClassWithPublicEvent
+        {
+            public event Action Event;
+        }
+
         private class ClassWithPublicField
         {
             public readonly int field;
+        }
+
+        private class ClassWithPublicInheritedField: ClassWithPublicField { }
+
+        private class ClassWithStaticField
+        {
+            public static readonly int field;
+        }
+
+        private class TestingMetadataProvider: DefaultMetadataProvider
+        {
+            public static CopyableFieldDescription[] GetAllFields<T>()
+            {
+                return GetAllFields(typeof (T)).ToArray();
+            }
+        }
+
+        #endregion
+
+        #region GetFieldsReplicationInfo tests
+
+        [Test]
+        public void ClassWithFields_GetFieldsReplicationInfoReturnsAllFields()
+        {
+            FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPublicInheritedField)).Single();
+
+            Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Replicate));
+            Assert.That(result.Member.Name, Is.EqualTo("field"));
         }
 
         #endregion

@@ -24,54 +24,32 @@ namespace NClone.MetadataProviders
             ReplicationBehavior behavior;
             if (TryGetDefaultBehavior(type, out behavior))
                 return behavior;
-            if (TryGetBehaviorFromTypeAttribute(type, out behavior))
+            if (TryGetBehaviorFromAttribute(type, out behavior))
                 return behavior;
             return ReplicationBehavior.Replicate;
         }
 
-        protected static bool TryGetBehaviorFromTypeAttribute(Type entityType, out ReplicationBehavior behavior)
+        public override IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
+        {
+            return GetAllFields(type)
+                .Select(x => {
+                            ReplicationBehavior behavior;
+                            if (!TryGetBehaviorFromAttribute(x.DeclaringMember, out behavior))
+                                behavior = ReplicationBehavior.Replicate;
+                            return new FieldReplicationInfo(x.BackingField, behavior);
+                        });
+        }
+
+        protected static bool TryGetBehaviorFromAttribute(MemberInfo memberOrType, out ReplicationBehavior behavior)
         {
             CustomReplicationBehaviorAttribute customReplicationBehavior;
-            if (entityType.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
+            if (memberOrType.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
                 .TrySingle(out customReplicationBehavior)) {
                 behavior = customReplicationBehavior.GetReplicationBehavior();
                 return true;
             }
             behavior = ReplicationBehavior.Replicate;
             return false;
-        }
-
-        public override IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
-        {
-            return type
-                .GetHierarchy()
-                .SelectMany(GetMembersDefinedIn);
-        }
-
-        private static IEnumerable<FieldReplicationInfo> GetMembersDefinedIn(Type type)
-        {
-            IEnumerable<FieldReplicationInfo> fieldsInfo = type
-                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(field => field.DeclaringType == type)
-                .Where(field => !field.IsBackingField())
-                .Select(field => new FieldReplicationInfo(field, GetBehaviorOrDefault(field)));
-
-            IEnumerable<FieldReplicationInfo> propertiesInfo = type
-                .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(prop => prop.DeclaringType == type)
-                .Where(prop => prop.IsAutoProperty())
-                .Select(prop => new FieldReplicationInfo(prop.GetBackingField(), GetBehaviorOrDefault(prop)));
-
-            return propertiesInfo.Concat(fieldsInfo);
-        }
-
-        private static ReplicationBehavior GetBehaviorOrDefault(MemberInfo memberInfo)
-        {
-            CustomReplicationBehaviorAttribute customReplicationBehavior;
-            if (memberInfo.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
-                .TrySingle(out customReplicationBehavior))
-                return customReplicationBehavior.GetReplicationBehavior();
-            return ReplicationBehavior.Replicate;
         }
     }
 }

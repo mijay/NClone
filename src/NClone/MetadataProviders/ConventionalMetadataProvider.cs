@@ -29,7 +29,7 @@ namespace NClone.MetadataProviders
             ReplicationBehavior behavior;
             if (TryGetDefaultBehavior(type, out behavior))
                 return behavior;
-            if (TryGetBehaviorFromTypeAttribute(type, out behavior))
+            if (TryGetBehaviorFromAttribute(type, out behavior))
                 return behavior;
 
             AssertIsNotLazyEnumerable(type);

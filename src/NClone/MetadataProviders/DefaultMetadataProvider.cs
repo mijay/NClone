@@ -27,7 +27,7 @@ namespace NClone.MetadataProviders
 
         public virtual IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
         {
-            return GetAllFields(type).Select(x => new FieldReplicationInfo(x, ReplicationBehavior.Replicate));
+            return GetAllFields(type).Select(x => new FieldReplicationInfo(x.BackingField, ReplicationBehavior.Replicate));
         }
 
         protected bool TryGetDefaultBehavior(Type entityType, out ReplicationBehavior behavior)
@@ -48,14 +48,58 @@ namespace NClone.MetadataProviders
             return false;
         }
 
-        protected static IEnumerable<FieldInfo> GetAllFields(Type entityType)
+        protected static IEnumerable<CopyableFieldDescription> GetAllFields(Type entityType)
         {
             Guard.AgainstNull(entityType, "entityType");
 
             return entityType
                 .GetHierarchy()
-                .SelectMany(t => t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-                .DistinctBy(f => f.MetadataToken);
+                .SelectMany(GetFieldsDefinedIn);
+        }
+
+        private static IEnumerable<CopyableFieldDescription> GetFieldsDefinedIn(Type type)
+        {
+            MemberInfo[] typeMembers = type
+                .GetMembers(BindingFlags.Public | BindingFlags.NonPublic
+                            | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+            IEnumerable<CopyableFieldDescription> fieldsInfo = typeMembers
+                .OfType<FieldInfo>()
+                .Where(field => !field.IsBackingField())
+                .Select(field => new CopyableFieldDescription(field));
+
+            IEnumerable<CopyableFieldDescription> propertiesInfo = typeMembers
+                .OfType<PropertyInfo>()
+                .Where(prop => prop.IsAutoProperty())
+                .Select(prop => new CopyableFieldDescription(prop, prop.GetBackingField()));
+
+            return propertiesInfo.Concat(fieldsInfo);
+        }
+
+        /// <summary>
+        /// Description of one field in replicated type.
+        /// </summary>
+        /// <remarks>
+        /// The main need of these class is to bind compiler-generated fields to 
+        /// auto-implemented properties that causes their generation.
+        /// </remarks>
+        // marked internal for testing purposes
+        protected internal class CopyableFieldDescription
+        {
+            public CopyableFieldDescription(FieldInfo field)
+            {
+                BackingField = field;
+                DeclaringMember = field;
+            }
+
+            public CopyableFieldDescription(PropertyInfo autoProperty, FieldInfo backingField)
+            {
+                BackingField = backingField;
+                DeclaringMember = autoProperty;
+            }
+
+            public FieldInfo BackingField { get; private set; }
+            public MemberInfo DeclaringMember { get; private set; }
         }
     }
 }

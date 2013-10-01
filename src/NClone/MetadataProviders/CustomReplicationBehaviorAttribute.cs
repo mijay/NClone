@@ -11,6 +11,12 @@ namespace NClone.MetadataProviders
     /// 
     /// <para>When applied to auto-implemented properties actually affects their backing fields. When applied to normal properties
     /// does not have any affect.</para>
+    /// 
+    /// <para>To apply to backing properties of auto-implemented events use the following syntax:
+    /// <code>
+    /// [field: CustomReplicationBehavior(ReplicationBehavior.Ignore)]
+    /// public event Action SomeEvent;
+    /// </code></para>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Property,
         AllowMultiple = false, Inherited = true)]

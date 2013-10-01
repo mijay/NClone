@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NClone.MetadataProviders;
 using NUnit.Framework;
 
@@ -40,6 +41,15 @@ namespace NClone.Tests.MetadataProviders
         }
 
         [Test]
+        public void WhenAutoeventFieldIsMarkedWithAttribute_GetMembersReturnsBehaviorFromAttribute()
+        {
+            FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof(ClassWithEvent)).Single();
+
+            Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
+            Assert.That(result.Member.Name, Is.StringContaining("Event"));
+        }
+
+        [Test]
         public void WhenInheritedAutopropertyIsMarkedWithAttribute_GetMembersReturnsBehaviorFromAttribute()
         {
             FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithInheritedProperty)).Single();
@@ -61,6 +71,12 @@ namespace NClone.Tests.MetadataProviders
         {
             [CustomReplicationBehavior(ReplicationBehavior.Copy)]
             private int Property { get; set; }
+        }
+
+        private class ClassWithEvent
+        {
+            [field: CustomReplicationBehavior(ReplicationBehavior.Copy)]
+            public event Action Event;
         }
     }
 }

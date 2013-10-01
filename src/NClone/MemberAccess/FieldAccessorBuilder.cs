@@ -55,7 +55,7 @@ namespace NClone.MemberAccess
             ILGenerator ilGenerator = method.GetILGenerator();
 
             ilGenerator.LoadArgument(0)
-                .CastDown(containerType)
+                .CastDownReference(containerType)
                 .GetFieldValue(field)
                 .Box(field.FieldType)
                 .Return();
@@ -70,16 +70,15 @@ namespace NClone.MemberAccess
                 typeof (object), new[] { typeof (object), typeof (object) },
                 containerType, true);
             ILGenerator ilGenerator = method.GetILGenerator();
-            ilGenerator.DeclareLocal(containerType);
 
             ilGenerator.LoadArgument(0)
-                .CastDown(containerType)
-                .StoreInVariable(0)
-                .LoadAddressOfVariable(0, containerType)
+                .CastDownReference(containerType)
+                .DuplicateItemOnStack()
                 .LoadArgument(1)
-                .CastDown(field.FieldType)
+                .CastDownReference(field.FieldType)
+                .LoadValueType(field.FieldType)
                 .SetFieldValue(field)
-                .LoadVariable(0)
+                .LoadValueType(containerType)
                 .Box(containerType)
                 .Return();
 

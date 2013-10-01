@@ -30,13 +30,19 @@ namespace NClone.MemberAccess
             return ilGenerator;
         }
 
-        public static ILGenerator CastDown(this ILGenerator ilGenerator, Type targetType)
+        public static ILGenerator CastDownReference(this ILGenerator ilGenerator, Type targetType)
         {
             if (targetType.IsValueType) {
                 ilGenerator.Emit(OpCodes.Unbox, targetType);
+            }
+            return ilGenerator;
+        }
+
+        public static ILGenerator LoadValueType(this ILGenerator ilGenerator, Type targetType)
+        {
+            if (targetType.IsValueType) {
                 ilGenerator.Emit(OpCodes.Ldobj, targetType);
-            } else
-                ilGenerator.Emit(OpCodes.Castclass, targetType);
+            }
             return ilGenerator;
         }
 
@@ -73,6 +79,12 @@ namespace NClone.MemberAccess
         public static ILGenerator Pop(this ILGenerator ilGenerator)
         {
             ilGenerator.Emit(OpCodes.Pop);
+            return ilGenerator;
+        }
+
+        public static ILGenerator DuplicateItemOnStack(this ILGenerator ilGenerator)
+        {
+            ilGenerator.Emit(OpCodes.Dup);
             return ilGenerator;
         }
 

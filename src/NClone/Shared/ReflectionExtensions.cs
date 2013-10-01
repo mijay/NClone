@@ -42,10 +42,10 @@ namespace NClone.Shared
         public static IEnumerable<Type> GetHierarchy(this Type type)
         {
             Type currentType = type;
-            do {
+            while (currentType != typeof (object)) {
                 yield return currentType;
                 currentType = currentType.BaseType;
-            } while (currentType != typeof (object));
+            }
         }
 
         /// <summary>

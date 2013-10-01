@@ -26,6 +26,17 @@ namespace NClone.Tests.ObjectReplication
         }
 
         [Test]
+        public void SourceIsObject_NewObjectReturned()
+        {
+            var source = new object();
+
+            var result = objectReplicator.Replicate(source);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.SameAs(source));
+        }
+
+        [Test]
         public void SourceIsStruct_ItIsReplicated()
         {
             var source = new Struct { field1 = "some string", field2 = new Class() };
@@ -48,9 +59,9 @@ namespace NClone.Tests.ObjectReplication
         }
 
         [Test]
-        public void SourceHasObjectFieldWithObjectInIt_ItsValueIsCopied()
+        public void SourceHasObjectFieldWithCopyOnlyObjectInIt_ItsValueIsCopied()
         {
-            var source = new Class { field = new object() };
+            var source = new Class { field = new ClassWithAttribute() };
 
             Class result = objectReplicator.Replicate(source);
 

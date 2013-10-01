@@ -42,14 +42,6 @@ namespace NClone.Tests.MetadataProviders
         }
 
         [Test]
-        public void GetBehaviorForObject_CopyOnlyReturned()
-        {
-            ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (object));
-
-            Assert.That(result, Is.EqualTo(ReplicationBehavior.Copy));
-        }
-
-        [Test]
         public void GetBehaviorForNullableInt_CopyOnlyReturned()
         {
             ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (int?));

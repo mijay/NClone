@@ -10,10 +10,13 @@ namespace NClone.MetadataProviders
     /// Implementation of <see cref="IMetadataProvider"/> that provides basic and always applicable functionality.
     /// </summary>
     /// <remarks>
-    /// <para><see cref="DefaultMetadataProvider"/> defines that:</para>
-    /// <para>1) Primitive types, enums and <c>string</c>s should be just <see cref="ReplicationBehavior.Copy"/>.</para>
-    /// <para>2) <see cref="Nullable{T}"/> types inherit <see cref="ReplicationBehavior"/> from underlying type.</para>
-    /// <para>3) When type is replicated, all its fields should be replicated.</para>
+    /// <para><see cref="DefaultMetadataProvider"/> defines that:
+    /// <list type="number">
+    /// <item>Primitive types, enums and <c>string</c> should be just <see cref="ReplicationBehavior.Copy"/>.</item>
+    /// <item><see cref="Nullable{T}"/> types inherit <see cref="ReplicationBehavior"/> from underlying type.</item>
+    /// <item>When type is replicated, all its fields should be replicated.</item>
+    /// </list>
+    /// </para>
     /// </remarks>
     public class DefaultMetadataProvider: IMetadataProvider
     {
@@ -34,8 +37,7 @@ namespace NClone.MetadataProviders
         {
             Guard.AgainstNull(entityType, "entityType");
 
-            if (entityType.IsPrimitive || entityType.IsEnum
-                || entityType == typeof (string) || entityType == typeof (object)) {
+            if (entityType.IsPrimitive || entityType.IsEnum || entityType == typeof (string)) {
                 behavior = ReplicationBehavior.Copy;
                 return true;
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NClone.ReplicationStrategies;
 using NClone.Shared;
 
@@ -39,21 +40,18 @@ namespace NClone.ObjectReplication
             }
         }
 
-        private class CircularReferenceDetector: IDisposable
+        private class CircularReferenceDetector
         {
             private readonly Stack<object> replicatingObjectsStack = new Stack<object>();
 
-            public void Dispose()
-            {
-                replicatingObjectsStack.Pop();
-            }
-
             public IDisposable EnterContext(object replicatingObject)
             {
-                if (replicatingObjectsStack.Contains(replicatingObject))
-                    throw new CircularReferenceFoundException();
+                if (replicatingObjectsStack.Contains(replicatingObject)) {
+                    var cycle = replicatingObjectsStack.SkipWhile(x => x != replicatingObject).ToArray();
+                    throw new CircularReferenceFoundException(replicatingObject, cycle);
+                }
                 replicatingObjectsStack.Push(replicatingObject);
-                return this;
+                return new DelegateDisposable(() => replicatingObjectsStack.Pop());
             }
         }
     }

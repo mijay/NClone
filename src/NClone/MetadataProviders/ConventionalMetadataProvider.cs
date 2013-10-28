@@ -44,11 +44,7 @@ namespace NClone.MetadataProviders
         private static void AssertIsNotLazyEnumerable(Type type)
         {
             if (LazyTypeDetector.IsLazyType(type))
-                throw new LazyTypeFoundException(string.Format(
-                    "Lazy type found: {0}.\n"
-                    + "You should not replicate lazy types. But if replicating of this type makes sense, "
-                    + "then mark it (or field that contains it) with CustomReplicationBehavior attribute.",
-                    type.FullName));
+                throw new LazyTypeFoundException(type);
         }
     }
 }

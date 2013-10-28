@@ -59,5 +59,13 @@ namespace NClone.Shared
                 return source;
             return source.ToArray();
         }
+
+        /// <summary>
+        /// Concatenates strings listed in <paramref name="source"/>, using the specified <paramref name="separator"/> between each member.
+        /// </summary>
+        public static string JoinStrings([InstantHandle] this IEnumerable<string> source, string separator)
+        {
+            return string.Join(separator, source);
+        }
     }
 }

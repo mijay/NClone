@@ -89,8 +89,9 @@ namespace NClone.Shared
                 string.Format("<{0}>k__BackingField", property.Name),
                 BindingFlags.Instance | BindingFlags.NonPublic);
             if (result == null)
-                throw new Exception(string.Format("Cannot find backing field for property {0} in {1}",
-                    property.Name, property.DeclaringType.FullName));
+                throw new ArgumentException(
+                    string.Format("Cannot find backing field for property {0} in {1}",
+                        property.Name, property.DeclaringType.FullName));
             return result;
         }
 

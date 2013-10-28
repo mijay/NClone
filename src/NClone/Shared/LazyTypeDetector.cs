@@ -27,8 +27,8 @@ namespace NClone.Shared
             return type.ImplementsGenericInterface(typeof (ICollection<>))
                    || typeof (ICollection).IsAssignableFrom(type)
                    || type.ImplementsGenericInterface(typeof (IReadOnlyCollection<>))
-                   || type.Name.EndsWith("Collection")
-                   || type.Name.EndsWith("List");
+                   || type.Name.EndsWith("Collection", StringComparison.InvariantCulture)
+                   || type.Name.EndsWith("List", StringComparison.InvariantCulture);
         }
     }
 }

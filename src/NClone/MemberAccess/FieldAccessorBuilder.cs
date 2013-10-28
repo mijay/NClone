@@ -55,9 +55,9 @@ namespace NClone.MemberAccess
             ILGenerator ilGenerator = method.GetILGenerator();
 
             ilGenerator.LoadArgument(0)
-                .CastDownReference(containerType)
+                .CastDownPointer(containerType)
                 .GetFieldValue(field)
-                .Box(field.FieldType)
+                .BoxValue(field.FieldType)
                 .Return();
 
             return (Func<object, object>) method.CreateDelegate(typeof (Func<object, object>));
@@ -72,14 +72,14 @@ namespace NClone.MemberAccess
             ILGenerator ilGenerator = method.GetILGenerator();
 
             ilGenerator.LoadArgument(0)
-                .CastDownReference(containerType)
+                .CastDownPointer(containerType)
                 .DuplicateItemOnStack()
                 .LoadArgument(1)
-                .CastDownReference(field.FieldType)
-                .LoadValueType(field.FieldType)
+                .CastDownPointer(field.FieldType)
+                .LoadValueByPointer(field.FieldType)
                 .SetFieldValue(field)
-                .LoadValueType(containerType)
-                .Box(containerType)
+                .LoadValueByPointer(containerType)
+                .BoxValue(containerType)
                 .Return();
 
             return (Func<object, object, object>) method.CreateDelegate(typeof (Func<object, object, object>));

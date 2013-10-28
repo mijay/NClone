@@ -30,7 +30,7 @@ namespace NClone.MemberAccess
             return ilGenerator;
         }
 
-        public static ILGenerator CastDownReference(this ILGenerator ilGenerator, Type targetType)
+        public static ILGenerator CastDownPointer(this ILGenerator ilGenerator, Type targetType)
         {
             if (targetType.IsValueType) {
                 ilGenerator.Emit(OpCodes.Unbox, targetType);
@@ -38,7 +38,7 @@ namespace NClone.MemberAccess
             return ilGenerator;
         }
 
-        public static ILGenerator LoadValueType(this ILGenerator ilGenerator, Type targetType)
+        public static ILGenerator LoadValueByPointer(this ILGenerator ilGenerator, Type targetType)
         {
             if (targetType.IsValueType) {
                 ilGenerator.Emit(OpCodes.Ldobj, targetType);
@@ -46,7 +46,7 @@ namespace NClone.MemberAccess
             return ilGenerator;
         }
 
-        public static ILGenerator Box(this ILGenerator ilGenerator, Type sourceType)
+        public static ILGenerator BoxValue(this ILGenerator ilGenerator, Type sourceType)
         {
             if (sourceType.IsValueType)
                 ilGenerator.Emit(OpCodes.Box, sourceType);

@@ -20,43 +20,44 @@ namespace NClone.MetadataProviders
     /// </remarks>
     public class DefaultMetadataProvider: IMetadataProvider
     {
-        public virtual ReplicationBehavior GetPerTypeBehavior(Type type)
+        public ReplicationBehavior GetPerTypeBehavior(Type type)
         {
-            ReplicationBehavior behavior;
-            if (TryGetDefaultBehavior(type, out behavior))
-                return behavior;
-            return ReplicationBehavior.Replicate;
+            Guard.AgainstNull(type, "type");
+            return TryGetPerTypeBehavior(type) ?? ReplicationBehavior.Replicate;
         }
 
-        public virtual IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
+        public IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
         {
-            return GetAllFields(type).Select(x => new FieldReplicationInfo(x.BackingField, ReplicationBehavior.Replicate));
+            Guard.AgainstNull(type, "type");
+
+            return type.GetHierarchy()
+                .SelectMany(GetFieldsDefinedIn)
+                .Select(x => new FieldReplicationInfo(x.BackingField,
+                    TryGetPerMemberReplicationBehavior(x) ?? ReplicationBehavior.Replicate));
         }
 
-        protected bool TryGetDefaultBehavior(Type entityType, out ReplicationBehavior behavior)
+        /// <summary>
+        /// Extension point. Try to find per-type <see cref="ReplicationBehavior"/> or
+        /// return <c>null</c>, if current <see cref="IMetadataProvider"/> does not specify it.
+        /// </summary>
+        protected virtual ReplicationBehavior? TryGetPerTypeBehavior(Type entityType)
         {
-            Guard.AgainstNull(entityType, "entityType");
-
-            if (entityType.IsPrimitive || entityType.IsEnum || entityType == typeof (string)) {
-                behavior = ReplicationBehavior.Copy;
-                return true;
-            }
+            if (entityType.IsPrimitive || entityType.IsEnum || entityType == typeof (string))
+                return ReplicationBehavior.Copy;
             if (entityType.IsNullable()) {
                 Type underlyingType = entityType.GetNullableUnderlyingType();
-                behavior = GetPerTypeBehavior(underlyingType);
-                return true;
+                return GetPerTypeBehavior(underlyingType);
             }
-            behavior = ReplicationBehavior.Replicate;
-            return false;
+            return null;
         }
 
-        protected static IEnumerable<CopyableFieldDescription> GetAllFields(Type entityType)
+        /// <summary>
+        /// Extension point. Try to find per-member <see cref="ReplicationBehavior"/> or
+        /// return <c>null</c>, if current <see cref="IMetadataProvider"/> does not specify it.
+        /// </summary>
+        protected virtual ReplicationBehavior? TryGetPerMemberReplicationBehavior(CopyableFieldDescription fieldDescription)
         {
-            Guard.AgainstNull(entityType, "entityType");
-
-            return entityType
-                .GetHierarchy()
-                .SelectMany(GetFieldsDefinedIn);
+            return null;
         }
 
         private static IEnumerable<CopyableFieldDescription> GetFieldsDefinedIn(Type type)

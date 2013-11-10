@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NClone.Shared;
 
@@ -10,8 +8,9 @@ namespace NClone.MetadataProviders
     /// Implementation of <see cref="IMetadataProvider"/> that uses information from <see cref="CustomReplicationBehaviorAttribute"/>s.
     /// </summary>
     /// <remarks>
-    /// <para>Method <see cref="GetPerTypeBehavior"/> consider type-level <see cref="CustomReplicationBehaviorAttribute"/>s,
-    /// while method <see cref="GetFieldsReplicationInfo"/> consider member-level <see cref="CustomReplicationBehaviorAttribute"/>s.</para>
+    /// <para>Method <see cref="IMetadataProvider.GetPerTypeBehavior"/> consider type-level
+    /// <see cref="CustomReplicationBehaviorAttribute"/>s, while method
+    /// <see cref="IMetadataProvider.GetFieldsReplicationInfo"/> consider only member-level attributes.</para>
     /// 
     /// <para>Note that <see cref="CustomReplicationBehaviorAttribute"/> has no effect on common properties,
     /// it only affects auto-properties.</para>
@@ -19,37 +18,29 @@ namespace NClone.MetadataProviders
     /// <seealso cref="CustomReplicationBehaviorAttribute"/>
     public class AttributeBasedMetadataProvider: DefaultMetadataProvider
     {
-        public override ReplicationBehavior GetPerTypeBehavior(Type type)
+        protected override ReplicationBehavior? TryGetPerTypeBehavior(Type type)
         {
-            ReplicationBehavior behavior;
-            if (TryGetDefaultBehavior(type, out behavior))
-                return behavior;
-            if (TryGetBehaviorFromAttribute(type, out behavior))
-                return behavior;
-            return ReplicationBehavior.Replicate;
+            return base.TryGetPerTypeBehavior(type)
+                   ?? TryGetBehaviorFromAttribute(type);
         }
 
-        public override IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
+        protected override ReplicationBehavior? TryGetPerMemberReplicationBehavior(CopyableFieldDescription fieldDescription)
         {
-            return GetAllFields(type)
-                .Select(x => {
-                            ReplicationBehavior behavior;
-                            if (!TryGetBehaviorFromAttribute(x.DeclaringMember, out behavior))
-                                behavior = ReplicationBehavior.Replicate;
-                            return new FieldReplicationInfo(x.BackingField, behavior);
-                        });
+            return base.TryGetPerMemberReplicationBehavior(fieldDescription)
+                   ?? TryGetBehaviorFromAttribute(fieldDescription.DeclaringMember);
         }
 
-        protected static bool TryGetBehaviorFromAttribute(MemberInfo memberOrType, out ReplicationBehavior behavior)
+        /// <summary>
+        /// Returns <see cref="ReplicationBehavior"/> defined via <see cref="CustomReplicationBehaviorAttribute"/>
+        /// on specific <paramref name="memberOrType"/> or <c>null</c> if no attribute is specified.
+        /// </summary>
+        protected static ReplicationBehavior? TryGetBehaviorFromAttribute(MemberInfo memberOrType)
         {
             CustomReplicationBehaviorAttribute customReplicationBehavior;
             if (memberOrType.GetCustomAttributes<CustomReplicationBehaviorAttribute>()
-                .TrySingle(out customReplicationBehavior)) {
-                behavior = customReplicationBehavior.GetReplicationBehavior();
-                return true;
-            }
-            behavior = ReplicationBehavior.Replicate;
-            return false;
+                .TrySingle(out customReplicationBehavior))
+                return customReplicationBehavior.GetReplicationBehavior();
+            return null;
         }
     }
 }

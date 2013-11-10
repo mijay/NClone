@@ -24,13 +24,11 @@ namespace NClone.MetadataProviders
     /// <seealso cref="CustomReplicationBehaviorAttribute"/>
     public class ConventionalMetadataProvider: AttributeBasedMetadataProvider
     {
-        public override ReplicationBehavior GetPerTypeBehavior(Type type)
+        protected override ReplicationBehavior? TryGetPerTypeBehavior(Type type)
         {
-            ReplicationBehavior behavior;
-            if (TryGetDefaultBehavior(type, out behavior))
-                return behavior;
-            if (TryGetBehaviorFromAttribute(type, out behavior))
-                return behavior;
+            var result = base.TryGetPerTypeBehavior(type);
+            if (result.HasValue)
+                return result.Value;
 
             AssertIsNotLazyEnumerable(type);
 
@@ -38,7 +36,7 @@ namespace NClone.MetadataProviders
                 return ReplicationBehavior.Ignore;
             if (type.IsValueType)
                 return ReplicationBehavior.Copy;
-            return ReplicationBehavior.Replicate;
+            return null;
         }
 
         private static void AssertIsNotLazyEnumerable(Type type)

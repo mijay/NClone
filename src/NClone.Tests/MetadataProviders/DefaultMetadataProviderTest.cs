@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NClone.MetadataProviders;
 using NUnit.Framework;
@@ -72,7 +73,9 @@ namespace NClone.Tests.MetadataProviders
             C
         }
 
-        private struct SomeValueType { }
+        private struct SomeValueType
+        {
+        }
 
         #endregion
 
@@ -157,7 +160,9 @@ namespace NClone.Tests.MetadataProviders
             private readonly int field;
         }
 
-        private class ClassWithPrivateInheritedField: ClassWithPrivateField { }
+        private class ClassWithPrivateInheritedField: ClassWithPrivateField
+        {
+        }
 
         private class ClassWithPrivateProperty
         {
@@ -174,7 +179,9 @@ namespace NClone.Tests.MetadataProviders
             public readonly int field;
         }
 
-        private class ClassWithPublicInheritedField: ClassWithPublicField { }
+        private class ClassWithPublicInheritedField: ClassWithPublicField
+        {
+        }
 
         private class ClassWithStaticField
         {
@@ -183,9 +190,21 @@ namespace NClone.Tests.MetadataProviders
 
         private class TestingMetadataProvider: DefaultMetadataProvider
         {
+            private readonly IList<CopyableFieldDescription> allFields = new List<CopyableFieldDescription>();
+
             public static CopyableFieldDescription[] GetAllFields<T>()
             {
-                return GetAllFields(typeof (T)).ToArray();
+                var spyProvider = new TestingMetadataProvider();
+                spyProvider
+                    .GetFieldsReplicationInfo(typeof (T))
+                    .ToArray();
+                return spyProvider.allFields.ToArray();
+            }
+
+            protected override ReplicationBehavior? TryGetPerMemberReplicationBehavior(CopyableFieldDescription fieldDescription)
+            {
+                allFields.Add(fieldDescription);
+                return base.TryGetPerMemberReplicationBehavior(fieldDescription);
             }
         }
 

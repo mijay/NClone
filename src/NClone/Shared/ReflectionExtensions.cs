@@ -20,7 +20,7 @@ namespace NClone.Shared
         }
 
         /// <summary>
-        /// Checks whether the given <see cref="type"/> is <see cref="Nullable{T}"/>.
+        /// Checks whether the given <paramref name="type"/> cref="type"/> is <see cref="Nullable{T}"/>.
         /// </summary>
         public static bool IsNullable(this Type type)
         {

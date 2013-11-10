@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone", "NClone\NClone.csproj", "{28CAA240-65C7-46ED-8E73-B9AA1B3DD535}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone.Tests", "NClone.Tests\NClone.Tests.csproj", "{0E523A67-C6C3-4B08-A085-D39B10A51465}"
@@ -19,12 +21,10 @@ Global
 		{28CAA240-65C7-46ED-8E73-B9AA1B3DD535}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E523A67-C6C3-4B08-A085-D39B10A51465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E523A67-C6C3-4B08-A085-D39B10A51465}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E523A67-C6C3-4B08-A085-D39B10A51465}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E523A67-C6C3-4B08-A085-D39B10A51465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E523A67-C6C3-4B08-A085-D39B10A51465}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{75D517CB-C930-470B-928B-089D1D32FE9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{75D517CB-C930-470B-928B-089D1D32FE9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75D517CB-C930-470B-928B-089D1D32FE9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75D517CB-C930-470B-928B-089D1D32FE9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75D517CB-C930-470B-928B-089D1D32FE9C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

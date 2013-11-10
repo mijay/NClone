@@ -89,12 +89,18 @@ namespace NClone.MetadataProviders
         // marked internal for testing purposes
         protected internal class CopyableFieldDescription
         {
+            /// <summary>
+            /// Create <see cref="CopyableFieldDescription"/> for common field.
+            /// </summary>
             public CopyableFieldDescription(FieldInfo field)
             {
                 BackingField = field;
                 DeclaringMember = field;
             }
 
+            /// <summary>
+            /// Create <see cref="CopyableFieldDescription"/> for property with backing field.
+            /// </summary>
             public CopyableFieldDescription(PropertyInfo autoProperty, FieldInfo backingField)
             {
                 BackingField = backingField;

@@ -99,6 +99,6 @@
       <Output TaskParameter="Include" ItemName="IlmergeAssemblies" />
     </CreateItem>
     <Message Text="MERGING: @(IlmergeAssemblies->'%(FullPath)') to @(MainAssembly)" Importance="Normal" />
-    <Exec Command=" &quot;$(SolutionDir)packages\ilmerge.2.13.0307\ILMerge.exe&quot; /out:&quot;@(MainAssembly)&quot; &quot;@(IntermediateAssembly)&quot; @(IlmergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" />
+    <Exec Command=" &quot;$(SolutionDir)packages\ilmerge.2.13.0307\ILMerge.exe&quot; /keyfile:&quot;$(SolutionDir)nclone.snk&quot; /copyAttrs /keepFirst /out:&quot;@(MainAssembly)&quot; &quot;@(IntermediateAssembly)&quot; @(IlmergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" />
   </Target>
 </Project>

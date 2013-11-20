@@ -11,7 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone.Tests.ExternalAssemb
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CD37A3C8-7535-4D73-85A0-5D6449FEBA5C}"
 	ProjectSection(SolutionItems) = preProject
+		NClone.nuspec = NClone.nuspec
 		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{78C4E33D-BDE5-4206-8220-3381BFD7F432}"
+	ProjectSection(SolutionItems) = preProject
+		nclone.snk = nclone.snk
 	EndProjectSection
 EndProject
 Global

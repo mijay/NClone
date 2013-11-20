@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -8,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("NClone")]
-[assembly: AssemblyDescription("NClone - implementation of deep clone for generic .NET objects")]
+[assembly: AssemblyDescription("NClone - fast and flexible deep clone for arbitrary .NET objects")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dmitry Kononchuk")]
 [assembly: AssemblyProduct("NClone")]

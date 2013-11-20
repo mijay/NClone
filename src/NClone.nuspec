@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NClone</id>
+    <version>1.0.0</version>
+    <authors>Dmitry Kononchuk</authors>
+    <owners>Dmitry Kononchuk</owners>
+    <licenseUrl>https://github.com/mijay/NClone/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/mijay/NClone</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package description</description>
+    <summary>NClone - fast and flexible deep clone for arbitrary .NET objects</summary>
+    <copyright>Copyright © Dmitry Kononchuk 2013</copyright>
+    <tags>Clone DeppClone Copy Replicate ICloneable Tools</tags>
+    <dependencies />
+  </metadata>
+  <files>
+    <file src="NClone\bin\release\*.dll" target="lib\net45" />
+    <file src="NClone\bin\release\*.xml" target="lib\net45" />
+  </files>
+</package>

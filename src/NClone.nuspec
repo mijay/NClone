@@ -8,7 +8,7 @@
     <licenseUrl>https://github.com/mijay/NClone/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/mijay/NClone</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Package description</description>
+    <description>NClone is a library that takes care of cloning .NET objects and object trees. It saves you from writing boilerplate and error-prone Clone methods and does not harm the performance of your application.</description>
     <summary>NClone - fast and flexible deep clone for arbitrary .NET objects</summary>
     <copyright>Copyright © Dmitry Kononchuk 2013</copyright>
     <tags>Clone DeppClone Copy Replicate ICloneable Tools</tags>

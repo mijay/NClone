@@ -86,15 +86,13 @@ namespace NClone.Utils
         public static FieldInfo GetBackingField(this PropertyInfo property)
         {
             Guard.AgainstNull(property, "property");
-            Guard.AgainstViolation(property.IsAutoProperty(), "Only auto-properties can have backing field");
 
             FieldInfo result = property.DeclaringType.GetField(
                 string.Format("<{0}>k__BackingField", property.Name),
                 BindingFlags.Instance | BindingFlags.NonPublic);
-            if (result == null)
-                throw new ArgumentException(
-                    string.Format("Cannot find backing field for property {0} in {1}",
-                        property.Name, property.DeclaringType.FullName));
+            Guard.AgainstViolation(result != null, "No backing field found for property {0} in {1}",
+                property.Name, property.DeclaringType.FullName);
+
             return result;
         }
 

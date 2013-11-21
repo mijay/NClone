@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace NClone.Utils
 {
     /// <summary>
     /// Collection of guard methods that aim to protect against invalid arguments/states.
-    /// Executed only if project is compiled in debug mode.
     /// </summary>
     internal static class Guard
     {
@@ -14,7 +12,7 @@ namespace NClone.Utils
         /// Verifies that <paramref name="condition"/> is <c>true</c>.
         /// Otherwise throw <see cref="ArgumentException"/> with <see cref="Exception.Message"/> build from <paramref name="errorDescriptionFormat"/>.
         /// </summary>
-        [Conditional("DEBUG"), StringFormatMethod("errorDescriptionFormat")]
+        [StringFormatMethod("errorDescriptionFormat"), ContractAnnotation("condition: false => halt")]
         public static void AgainstViolation(bool condition, string errorDescriptionFormat, params object[] args)
         {
             if (!condition)
@@ -25,7 +23,7 @@ namespace NClone.Utils
         /// Verifies that <paramref name="argument"/> named as <paramref name="argumentName"/> is not <c>null</c>.
         /// Throws <see cref="NullReferenceException"/> otherwise.
         /// </summary>
-        [Conditional("DEBUG")]
+        [ContractAnnotation("argument: null => halt")]
         public static void AgainstNull(object argument, [InvokerParameterName] string argumentName)
         {
             if (argument == null)

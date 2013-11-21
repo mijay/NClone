@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using NClone.MetadataProviders;
-using NClone.Shared;
+using NClone.Utils;
 
 namespace NClone.ReplicationStrategies
 {

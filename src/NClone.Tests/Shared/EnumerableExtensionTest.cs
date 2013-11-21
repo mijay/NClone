@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using NClone.Shared;
+using NClone.Utils;
 using NUnit.Framework;
 
 namespace NClone.Tests.Shared

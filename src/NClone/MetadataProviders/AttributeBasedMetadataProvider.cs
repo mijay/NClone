@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using NClone.Shared;
+using NClone.Utils;
 
 namespace NClone.MetadataProviders
 {

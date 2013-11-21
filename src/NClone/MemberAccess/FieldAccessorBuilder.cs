@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using NClone.Shared;
+using NClone.Utils;
 
 namespace NClone.MemberAccess
 {

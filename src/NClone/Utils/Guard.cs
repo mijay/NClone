@@ -2,13 +2,13 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 
-namespace NClone.Shared
+namespace NClone.Utils
 {
     /// <summary>
     /// Collection of guard methods that aim to protect against invalid arguments/states.
     /// Executed only if project is compiled in debug mode.
     /// </summary>
-    public static class Guard
+    internal static class Guard
     {
         /// <summary>
         /// Verifies that <paramref name="condition"/> is <c>true</c>.

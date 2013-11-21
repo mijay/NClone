@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NClone.Shared
+namespace NClone.Utils
 {
     internal static class LazyTypeDetector
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NClone.ReplicationStrategies;
-using NClone.Shared;
+using NClone.Utils;
 
 namespace NClone.ObjectReplication
 {

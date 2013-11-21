@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using NClone.Shared;
+using NClone.Utils;
 
 namespace NClone.ObjectReplication
 {

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using BenchmarkDotNet;
-using NClone.Shared;
+using NClone.Utils;
 using NUnit.Framework;
 
 namespace NClone.Tests.Benchmarks

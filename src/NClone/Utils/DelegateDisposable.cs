@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace NClone.Shared
+namespace NClone.Utils
 {
     /// <summary>
     /// Adapter that expose <see cref="IDisposable"/>, but proxies the <see cref="Dispose"/> call to provided delegate.
@@ -9,7 +9,7 @@ namespace NClone.Shared
     /// <remarks>
     /// Provided delegate will be called at most once.
     /// </remarks>
-    public class DelegateDisposable: IDisposable
+    internal class DelegateDisposable: IDisposable
     {
         private readonly Action onDispose;
         private int disposed;

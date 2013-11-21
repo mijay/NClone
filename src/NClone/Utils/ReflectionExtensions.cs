@@ -5,9 +5,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
-namespace NClone.Shared
+namespace NClone.Utils
 {
-    public static class ReflectionExtensions
+    /// <summary>
+    /// Collection of extension and helper methods for types from <see cref="System.Reflection"/>.
+    /// </summary>
+    internal static class ReflectionExtensions
     {
         private static readonly Regex backingFieldRegex = new Regex(@"\<(\w+)\>k__BackingField", RegexOptions.Compiled);
 

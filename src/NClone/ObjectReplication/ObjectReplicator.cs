@@ -1,6 +1,6 @@
 ﻿using NClone.MetadataProviders;
 using NClone.ReplicationStrategies;
-using NClone.Shared;
+using NClone.Utils;
 
 namespace NClone.ObjectReplication
 {

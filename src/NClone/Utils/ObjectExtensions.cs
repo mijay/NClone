@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics;
 
-namespace NClone.Shared
+namespace NClone.Utils
 {
+    /// <summary>
+    /// Collection of extensions methods for objects of any type.
+    /// </summary>
     [DebuggerStepThrough]
     public static class ObjectExtensions
     {

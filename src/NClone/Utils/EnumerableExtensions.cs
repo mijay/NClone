@@ -5,10 +5,13 @@ using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace NClone.Shared
+namespace NClone.Utils
 {
+    /// <summary>
+    /// Collection of extension methods for <see cref="IEnumerable{T}"/>s and <see cref="IEnumerable"/>s.
+    /// </summary>
     [DebuggerStepThrough]
-    public static class EnumerableExtensions
+    internal static class EnumerableExtensions
     {
         /// <summary>
         /// Executes <paramref name="action"/> for each element of the <paramref name="source"/>.
@@ -46,8 +49,7 @@ namespace NClone.Shared
                                                                      Func<TSource, TKey> keySelector,
                                                                      IEqualityComparer<TKey> keyComparer = null)
         {
-            return source.Distinct(new DelegatedEqualityComparer<TSource, TKey>(
-                keySelector, keyComparer ?? EqualityComparer<TKey>.Default));
+            return source.Distinct(new WrapperEqualityComparer<TSource, TKey>(keySelector, keyComparer));
         }
 
         /// <summary>

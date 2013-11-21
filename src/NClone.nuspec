@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>NClone</id>
+    <id>mijay.NClone</id>
     <version>1.0.0</version>
     <authors>Dmitry Kononchuk</authors>
     <owners>Dmitry Kononchuk</owners>

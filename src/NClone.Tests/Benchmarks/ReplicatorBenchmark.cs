@@ -13,7 +13,6 @@ namespace NClone.Tests.Benchmarks
         {
             public int field;
             public SomeClass2 Property { get; set; }
-            //public event Action Event;
         }
 
         private class SomeClass2
@@ -26,20 +25,20 @@ namespace NClone.Tests.Benchmarks
             public int field;
         }
 
-        //[Benchmark]
-        //public Action OneRun()
-        //{
-        //    var source = new SomeClass
-        //                 {
-        //                     field = 42,
-        //                     Property = new SomeClass2 { Property = new SomeClass3 { field = 12 } }
-        //                 };
+        [Benchmark]
+        public Action OneRun()
+        {
+            var source = new SomeClass
+                         {
+                             field = 42,
+                             Property = new SomeClass2 { Property = new SomeClass3 { field = 12 } }
+                         };
 
-        //    var replicator = new ObjectReplicator(new ConventionalMetadataProvider());
-        //    replicator.Replicate("12");
+            var replicator = new ObjectReplicator(new ConventionalMetadataProvider());
+            replicator.Replicate("12");
 
-        //    return () => replicator.Replicate(source);
-        //}
+            return () => replicator.Replicate(source);
+        }
 
         [Benchmark]
         public Action ManyRuns()
@@ -51,7 +50,6 @@ namespace NClone.Tests.Benchmarks
                          };
 
             var replicator = new ObjectReplicator(new ConventionalMetadataProvider());
-            replicator.Replicate("12");
 
             return () => {
                        for (int i = 0; i < iterationCount; ++i)
@@ -67,9 +65,6 @@ namespace NClone.Tests.Benchmarks
                              field = 42,
                              Property = new SomeClass2 { Property = new SomeClass3 { field = 12 } }
                          };
-
-            var replicator = new ObjectReplicator(new ConventionalMetadataProvider());
-            replicator.Replicate("12");
 
             return () => {
                        for (int i = 0; i < iterationCount; ++i)

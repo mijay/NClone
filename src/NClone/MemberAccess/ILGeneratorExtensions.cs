@@ -12,6 +12,18 @@ namespace NClone.MemberAccess
             return ilGenerator;
         }
 
+        public static ILGenerator LoadArrayElement(this ILGenerator ilGenerator, Type elementType)
+        {
+            ilGenerator.Emit(OpCodes.Ldelem, elementType);
+            return ilGenerator;
+        }
+
+        public static ILGenerator StoreArrayElement(this ILGenerator ilGenerator, Type elementType)
+        {
+            ilGenerator.Emit(OpCodes.Stelem, elementType);
+            return ilGenerator;
+        }
+
         public static ILGenerator LoadArgument(this ILGenerator ilGenerator, int argumentIndex)
         {
             ilGenerator.Emit(OpCodes.Ldarg, argumentIndex);
@@ -32,17 +44,17 @@ namespace NClone.MemberAccess
 
         public static ILGenerator CastDownPointer(this ILGenerator ilGenerator, Type targetType)
         {
-            if (targetType.IsValueType) {
+            if (targetType.IsValueType)
                 ilGenerator.Emit(OpCodes.Unbox, targetType);
-            }
+            else
+                ilGenerator.Emit(OpCodes.Castclass, targetType);
             return ilGenerator;
         }
 
         public static ILGenerator LoadValueByPointer(this ILGenerator ilGenerator, Type targetType)
         {
-            if (targetType.IsValueType) {
+            if (targetType.IsValueType)
                 ilGenerator.Emit(OpCodes.Ldobj, targetType);
-            }
             return ilGenerator;
         }
 

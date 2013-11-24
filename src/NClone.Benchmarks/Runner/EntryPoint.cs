@@ -8,6 +8,8 @@ namespace NClone.Benchmarks.Runner
 {
     internal static class EntryPoint
     {
+        private static readonly string[] runOnly = new string[0]; //{ "ArrayAccessCompetition" };
+
         public static void Main()
         {
             BenchmarkSettings.Instance.DefaultPrintBenchmarkBodyToConsole = false;
@@ -18,6 +20,7 @@ namespace NClone.Benchmarks.Runner
             Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(x => !x.IsAbstract && typeof (CompetitionBase).IsAssignableFrom(x))
+                .Where(x => !runOnly.Any() || runOnly.Contains(x.Name))
                 .Select(type => {
                             try {
                                 return new { type, instance = Activator.CreateInstance(type) };

@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
-
-namespace NClone.Benchmarks.Runner
+﻿namespace NClone.Benchmarks.Runner
 {
-    [MeansImplicitUse]
     public abstract class CompetitionBase
     {
     }

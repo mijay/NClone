@@ -59,6 +59,17 @@ namespace NClone.Tests.ObjectReplication
         }
 
         [Test]
+        public void SourceIsArray_ItIsReplicated()
+        {
+            var source = new[] { 1, 2, 3, 4 };
+
+            int[] result = objectReplicator.Replicate(source);
+
+            Assert.That(result, Is.Not.SameAs(source));
+            CollectionAssert.AreEqual(source, result);
+        }
+
+        [Test]
         public void SourceHasObjectFieldWithCopyOnlyObjectInIt_ItsValueIsCopied()
         {
             var source = new Class { field = new ClassWithAttribute() };

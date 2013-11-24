@@ -21,7 +21,8 @@ namespace NClone.ReplicationStrategies
         {
             Guard.AgainstNull(metadataProvider, "metadataProvider");
             Guard.AgainstNull(entityType, "entityType");
-            Guard.AgainstViolation(!entityType.IsNullable(), "CommonReplicationStrategy is not applicable to nullable types");
+            Guard.AgainstViolation(!entityType.IsNullable() && !entityType.IsArray,
+                "CommonReplicationStrategy is not applicable to nullable or array types");
 
             this.entityType = entityType;
 
@@ -33,7 +34,6 @@ namespace NClone.ReplicationStrategies
 
         public object Replicate(object source, IReplicationContext context)
         {
-            Guard.AgainstNull(source, "source");
             Guard.AgainstViolation(source.GetType() == entityType,
                 "This replicator can copy only entities of type {0}, but {1} received",
                 entityType, source.GetType());

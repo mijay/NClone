@@ -63,6 +63,16 @@ namespace NClone.Tests.ReplicationStrategies
             Assert.That(result2, Is.SameAs(result1));
         }
 
+        [Test]
+        public void SourceIsArray_ArrayStrategyReturned()
+        {
+            ReplicationStrategyFactory strategyFactory = StrategyWhere<Class[]>(isMarkedAs: ReplicationBehavior.DeepCopy);
+
+            IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Class[]));
+
+            Assert.That(result, Is.InstanceOf<ArrayReplicationStrategy>());
+        }
+
         private class Class
         {
             public object field;

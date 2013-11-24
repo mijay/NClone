@@ -2,9 +2,11 @@
 using GeorgeCloney;
 using NClone.MetadataProviders;
 using NClone.ObjectReplication;
+using NUnit.Framework;
 
 namespace NClone.Tests.Benchmarks
 {
+    [Ignore]
     public class ReplicatorBenchmark: BenchmarkBase
     {
         private const int iterationCount = 200000;
@@ -22,7 +24,7 @@ namespace NClone.Tests.Benchmarks
 
         private class SomeClass3
         {
-            public int field;
+            public int[] field;
         }
 
         [Benchmark]
@@ -31,7 +33,7 @@ namespace NClone.Tests.Benchmarks
             var source = new SomeClass
                          {
                              field = 42,
-                             Property = new SomeClass2 { Property = new SomeClass3 { field = 12 } }
+                             Property = new SomeClass2 { Property = new SomeClass3 { field = new int[1240] } }
                          };
 
             var replicator = new ObjectReplicator(new ConventionalMetadataProvider());
@@ -46,7 +48,7 @@ namespace NClone.Tests.Benchmarks
             var source = new SomeClass
                          {
                              field = 42,
-                             Property = new SomeClass2 { Property = new SomeClass3 { field = 12 } }
+                             Property = new SomeClass2 { Property = new SomeClass3 { field = new int[1240] } }
                          };
 
             var replicator = new ObjectReplicator(new ConventionalMetadataProvider());
@@ -63,7 +65,7 @@ namespace NClone.Tests.Benchmarks
             var source = new SomeClass
                          {
                              field = 42,
-                             Property = new SomeClass2 { Property = new SomeClass3 { field = 12 } }
+                             Property = new SomeClass2 { Property = new SomeClass3 { field = new int[1240] } }
                          };
 
             return () => {

@@ -2,9 +2,11 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using NClone.MemberAccess;
+using NUnit.Framework;
 
 namespace NClone.Tests.Benchmarks
 {
+    [Ignore]
     public class SetFieldBenchmark: BenchmarkBase
     {
         private const int iterationCount = 200000;

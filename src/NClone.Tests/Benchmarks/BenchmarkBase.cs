@@ -8,8 +8,8 @@ using NUnit.Framework;
 
 namespace NClone.Tests.Benchmarks
 {
-    [TestFixture, Ignore]
-    public class BenchmarkBase
+    [TestFixture]
+    public abstract class BenchmarkBase
     {
         private class HackTextWriter: TextWriter
         {

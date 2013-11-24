@@ -62,7 +62,7 @@
     <Compile Include="ReplicationStrategies\CopyOnlyReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\IReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\IgnoringReplicationStrategy.cs" />
-    <Compile Include="DefaultObjectReplicator.cs" />
+    <Compile Include="Clone.cs" />
     <Compile Include="MetadataProviders\AttributeBasedMetadataProvider.cs" />
     <Compile Include="MetadataProviders\IMetadataProvider.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilder.cs" />

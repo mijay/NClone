@@ -9,15 +9,15 @@ using NUnit.Framework;
 
 namespace NClone.Tests.ReplicationStrategies
 {
-    public class ArrayReplicationStrategyTest: TestBase
+    public class CloneArrayReplicationStrategyTest: TestBase
     {
-        private ArrayReplicationStrategy replicator;
+        private CloneArrayReplicationStrategy replicator;
         private IReplicationContext dummyContext;
 
         protected override void SetUp()
         {
             base.SetUp();
-            replicator = new ArrayReplicationStrategy(typeof (Class[]));
+            replicator = new CloneArrayReplicationStrategy(typeof(Class));
             dummyContext = A.Fake<IReplicationContext>(x => x.Strict());
         }
 

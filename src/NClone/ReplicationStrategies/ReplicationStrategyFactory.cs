@@ -37,10 +37,25 @@ namespace NClone.ReplicationStrategies
                     return CopyOnlyReplicationStrategy.Instance;
                 case ReplicationBehavior.DeepCopy:
                     if (type.IsArray)
-                        return new ArrayReplicationStrategy(type);
+                        return BuildArrayReplicator(type);
                     if (type.IsNullable())
                         return new CommonReplicationStrategy(metadataProvider, type.GetNullableUnderlyingType());
                     return new CommonReplicationStrategy(metadataProvider, type);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private IReplicationStrategy BuildArrayReplicator(Type type)
+        {
+            Type elementType = type.GetElementType();
+            switch (metadataProvider.GetPerTypeBehavior(elementType)) {
+                case ReplicationBehavior.Ignore:
+                    return IgnoringReplicationStrategy.Instance;
+                case ReplicationBehavior.Copy:
+                    return CopyArrayReplicationStrategy.Instance;
+                case ReplicationBehavior.DeepCopy:
+                    return new CloneArrayReplicationStrategy(elementType);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

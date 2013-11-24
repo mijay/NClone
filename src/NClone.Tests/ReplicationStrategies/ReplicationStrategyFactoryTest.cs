@@ -16,7 +16,22 @@ namespace NClone.Tests.ReplicationStrategies
                 .Returns(isMarkedAs);
             metadataProvider
                 .CallsTo(x => x.GetFieldsReplicationInfo(typeof (T)))
-                .WithAnyArguments()
+                .Returns(new FieldReplicationInfo[0]);
+
+            return new ReplicationStrategyFactory(metadataProvider);
+        }
+
+        private static ReplicationStrategyFactory StrategyForArrayOf<T>(ReplicationBehavior whereElementsAreMarkedAs)
+        {
+            var metadataProvider = A.Fake<IMetadataProvider>(x => x.Strict());
+            metadataProvider
+                .CallsTo(x => x.GetPerTypeBehavior(typeof (T[])))
+                .Returns(ReplicationBehavior.DeepCopy);
+            metadataProvider
+                .CallsTo(x => x.GetPerTypeBehavior(typeof (T)))
+                .Returns(whereElementsAreMarkedAs);
+            metadataProvider
+                .CallsTo(x => x.GetFieldsReplicationInfo(typeof(T)))
                 .Returns(new FieldReplicationInfo[0]);
 
             return new ReplicationStrategyFactory(metadataProvider);
@@ -64,13 +79,33 @@ namespace NClone.Tests.ReplicationStrategies
         }
 
         [Test]
-        public void SourceIsArray_ArrayStrategyReturned()
+        public void SourceIsArrayOfIgnoredTypes_CopyArrayStrategyReturned()
         {
-            ReplicationStrategyFactory strategyFactory = StrategyWhere<Class[]>(isMarkedAs: ReplicationBehavior.DeepCopy);
+            ReplicationStrategyFactory strategyFactory = StrategyForArrayOf<Class>(whereElementsAreMarkedAs: ReplicationBehavior.Ignore);
 
             IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Class[]));
 
-            Assert.That(result, Is.InstanceOf<ArrayReplicationStrategy>());
+            Assert.That(result, Is.InstanceOf<IgnoringReplicationStrategy>());
+        }
+
+        [Test]
+        public void SourceIsArrayOfCopiedTypes_CopyArrayStrategyReturned()
+        {
+            ReplicationStrategyFactory strategyFactory = StrategyForArrayOf<Class>(whereElementsAreMarkedAs: ReplicationBehavior.Copy);
+
+            IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Class[]));
+
+            Assert.That(result, Is.InstanceOf<CopyArrayReplicationStrategy>());
+        }
+
+        [Test]
+        public void SourceIsArrayOfClonnedTypes_CloneArrayStrategyReturned()
+        {
+            ReplicationStrategyFactory strategyFactory = StrategyForArrayOf<Class>(whereElementsAreMarkedAs : ReplicationBehavior.DeepCopy);
+
+            IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Class[]));
+
+            Assert.That(result, Is.InstanceOf<CloneArrayReplicationStrategy>());
         }
 
         private class Class

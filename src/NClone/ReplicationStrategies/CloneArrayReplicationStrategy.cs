@@ -5,16 +5,15 @@ using NClone.Utils;
 namespace NClone.ReplicationStrategies
 {
     /// <summary>
-    /// Implementation of <see cref="IReplicationStrategy"/> for arrays.
+    /// Implementation of <see cref="IReplicationStrategy"/> that deep copying arrays.
     /// </summary>
-    internal class ArrayReplicationStrategy: IReplicationStrategy
+    internal class CloneArrayReplicationStrategy: IReplicationStrategy
     {
         private readonly Type elementType;
 
-        public ArrayReplicationStrategy(Type arrayType)
+        public CloneArrayReplicationStrategy(Type elementType)
         {
-            Guard.AgainstViolation(arrayType.IsArray, "ArrayReplicationStrategy is applicable only to array types");
-            elementType = arrayType.GetElementType();
+            this.elementType = elementType;
         }
 
         public object Replicate(object source, IReplicationContext context)
@@ -24,9 +23,9 @@ namespace NClone.ReplicationStrategies
                 elementType, source.GetType().GetElementType());
 
             var sourceArray = source.As<Array>();
-            var result = Array.CreateInstance(elementType, sourceArray.Length);
+            Array result = Array.CreateInstance(elementType, sourceArray.Length);
             for (int i = sourceArray.Length - 1; i >= 0; i--) {
-                var sourceElement = sourceArray.GetValue(i);
+                object sourceElement = sourceArray.GetValue(i);
                 result.SetValue(context.Replicate(sourceElement), i);
             }
             return result;

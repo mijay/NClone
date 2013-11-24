@@ -2,9 +2,9 @@
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace NClone.MemberAccess
+namespace mijay.Utils.Reflection
 {
-    internal static class ILGeneratorExtensions
+    public static class ILGeneratorExtensions
     {
         public static ILGenerator LoadArgumentAddress(this ILGenerator ilGenerator, Type argumentType, int argumentIndex)
         {

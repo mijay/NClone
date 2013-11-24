@@ -4,18 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B4C4E5C5-D27A-407D-845D-0F0A406CFD88}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{8DF7AFC0-F9CF-4272-A581-0B6ED674A5B3}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NClone.Benchmarks</RootNamespace>
-    <AssemblyName>NClone.Benchmarks</AssemblyName>
+    <RootNamespace>mijay.Utils</RootNamespace>
+    <AssemblyName>mijay.Utils</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,42 +30,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BenchmarkDotNet">
-      <HintPath>..\packages\BenchmarkDotNet.0.5.1\lib\net35\BenchmarkDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="GeorgeCloney">
-      <HintPath>..\packages\GeorgeCloney.1.0.0.11\lib\net40\GeorgeCloney.dll</HintPath>
-    </Reference>
     <Reference Include="JetBrains.Annotations">
       <HintPath>..\packages\ReSharper.Annotations.7.1.3.130415\lib\net\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArrayAccessCompetition.cs" />
+    <Compile Include="Collections\EnumerableExtensions.cs" />
+    <Compile Include="Reflection\AttributeExtensions.cs" />
+    <Compile Include="DelegateDisposable.cs" />
+    <Compile Include="Guard.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\BenchmarkAttribute.cs" />
-    <Compile Include="Runner\CompetitionBase.cs" />
-    <Compile Include="Runner\EntryPoint.cs" />
-    <Compile Include="SimpleGraphReplicationCompetition.cs" />
-    <Compile Include="SetFieldCompetition.cs" />
+    <Compile Include="Reflection\ILGeneratorExtensions.cs" />
+    <Compile Include="Reflection\ReflectionExtensions.cs" />
+    <Compile Include="WrapperEqualityComparer.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\mijay.Utils\mijay.Utils.csproj">
-      <Project>{8df7afc0-f9cf-4272-a581-0b6ed674a5b3}</Project>
-      <Name>mijay.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NClone\NClone.csproj">
-      <Project>{28caa240-65c7-46ed-8e73-b9aa1b3dd535}</Project>
-      <Name>NClone</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

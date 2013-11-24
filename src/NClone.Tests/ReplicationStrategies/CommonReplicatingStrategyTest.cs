@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax.Full;
+using mijay.Utils;
 using NClone.MetadataProviders;
 using NClone.ObjectReplication;
 using NClone.ReplicationStrategies;

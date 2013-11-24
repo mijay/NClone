@@ -5,13 +5,13 @@ using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace NClone.Utils
+namespace mijay.Utils.Collections
 {
     /// <summary>
     /// Collection of extension methods for <see cref="IEnumerable{T}"/>s and <see cref="IEnumerable"/>s.
     /// </summary>
     [DebuggerStepThrough]
-    internal static class EnumerableExtensions
+    public static class EnumerableExtensions
     {
         /// <summary>
         /// Executes <paramref name="action"/> for each element of the <paramref name="source"/>.
@@ -53,21 +53,11 @@ namespace NClone.Utils
         }
 
         /// <summary>
-        /// Materialize, i.e. make non-lazy, the given <paramref name="source"/>.
-        /// </summary>
-        public static IEnumerable<T> Materialize<T>([InstantHandle] this IEnumerable<T> source)
-        {
-            if (source is ICollection<T> || source is IReadOnlyCollection<T> || source is ICollection)
-                return source;
-            return source.ToArray();
-        }
-
-        /// <summary>
         /// Concatenates strings listed in <paramref name="source"/>, using the specified <paramref name="separator"/> between each member.
         /// </summary>
         public static string JoinStrings([InstantHandle] this IEnumerable<string> source, string separator)
         {
-            return string.Join(separator, source);
+            return String.Join(separator, source);
         }
 
         /// <summary>
@@ -76,6 +66,16 @@ namespace NClone.Utils
         public static IEnumerable<T> Append<T>(this IEnumerable<T> source, T item)
         {
             return source.Concat(new[] { item });
+        }
+
+        /// <summary>
+        /// Materialize, i.e. make non-lazy, the given <paramref name="source"/>.
+        /// </summary>
+        public static IEnumerable<T> Materialize<T>([InstantHandle] this IEnumerable<T> source)
+        {
+            if (source is ICollection<T> || source is IReadOnlyCollection<T> || source is ICollection)
+                return source;
+            return source.ToArray();
         }
     }
 }

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using mijay.Utils;
+using mijay.Utils.Collections;
+using mijay.Utils.Reflection;
 using NClone.MemberAccess;
 using NClone.MetadataProviders;
 using NClone.ObjectReplication;
-using NClone.Utils;
 
 namespace NClone.ReplicationStrategies
 {

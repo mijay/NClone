@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NClone.Utils
+namespace mijay.Utils
 {
     /// <summary>
     /// <see cref="IEqualityComparer{T}"/> that compares object of type <typeparamref name="TSource"/> by converting them
     /// into <typeparamref name="TComparable"/> and then applying existing comparer.
     /// </summary>
-    internal class WrapperEqualityComparer<TSource, TComparable>: IEqualityComparer<TSource>
+    public class WrapperEqualityComparer<TSource, TComparable>: IEqualityComparer<TSource>
     {
         private readonly Func<TSource, TComparable> selector;
         private readonly IEqualityComparer<TComparable> underlyingComparer;

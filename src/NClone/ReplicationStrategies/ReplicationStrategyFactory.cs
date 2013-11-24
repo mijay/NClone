@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using mijay.Utils;
+using mijay.Utils.Reflection;
 using NClone.MetadataProviders;
-using NClone.Utils;
 
 namespace NClone.ReplicationStrategies
 {

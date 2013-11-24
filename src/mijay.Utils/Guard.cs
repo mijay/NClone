@@ -1,12 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace NClone.Utils
+namespace mijay.Utils
 {
     /// <summary>
     /// Collection of guard methods that aim to protect against invalid arguments/states.
     /// </summary>
-    internal static class Guard
+    public static class Guard
     {
         /// <summary>
         /// Verifies that <paramref name="condition"/> is <c>true</c>.

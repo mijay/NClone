@@ -53,6 +53,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\mijay.Utils\mijay.Utils.csproj">
+      <Project>{8df7afc0-f9cf-4272-a581-0b6ed674a5b3}</Project>
+      <Name>mijay.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NClone.Tests.ExternalAssembly\NClone.Tests.ExternalAssembly.csproj">
       <Project>{75d517cb-c930-470b-928b-089d1d32fe9c}</Project>
       <Name>NClone.Tests.ExternalAssembly</Name>

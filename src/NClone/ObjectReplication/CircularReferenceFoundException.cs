@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using NClone.Utils;
+using mijay.Utils.Collections;
 
 namespace NClone.ObjectReplication
 {

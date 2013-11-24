@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using BenchmarkDotNet;
-using NClone.Utils;
+using mijay.Utils.Collections;
+using mijay.Utils.Reflection;
 
 namespace NClone.Benchmarks.Runner
 {

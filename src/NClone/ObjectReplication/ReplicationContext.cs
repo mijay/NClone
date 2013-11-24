@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using mijay.Utils;
+using mijay.Utils.Collections;
 using NClone.ReplicationStrategies;
-using NClone.Utils;
 
 namespace NClone.ObjectReplication
 {
@@ -31,7 +32,6 @@ namespace NClone.ObjectReplication
                 return result;
 
             using (circularReferenceDetector.EnterContext(source)) {
-
                 IReplicationStrategy replicationStrategy = replicationStrategyFactory.StrategyForType(source.GetType());
                 result = replicationStrategy.Replicate(source, this);
 
@@ -47,8 +47,8 @@ namespace NClone.ObjectReplication
             public IDisposable EnterContext(object replicatingObject)
             {
                 if (replicatingObjectsStack.Contains(replicatingObject)) {
-                    var beforeCycle = replicatingObjectsStack.TakeWhile(x => x != replicatingObject).ToArray();
-                    var cycle = replicatingObjectsStack.Skip(beforeCycle.Length).Append(replicatingObject).ToArray();
+                    object[] beforeCycle = replicatingObjectsStack.TakeWhile(x => x != replicatingObject).ToArray();
+                    object[] cycle = replicatingObjectsStack.Skip(beforeCycle.Length).Append(replicatingObject).ToArray();
                     throw new CircularReferenceFoundException(beforeCycle, cycle);
                 }
                 replicatingObjectsStack.Push(replicatingObject);

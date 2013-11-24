@@ -1,6 +1,6 @@
 ﻿using System;
+using mijay.Utils;
 using NClone.ObjectReplication;
-using NClone.Utils;
 
 namespace NClone.ReplicationStrategies
 {

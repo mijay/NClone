@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NClone.Benchmarks", "NClone.Benchmarks\NClone.Benchmarks.csproj", "{B4C4E5C5-D27A-407D-845D-0F0A406CFD88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mijay.Utils", "mijay.Utils\mijay.Utils.csproj", "{8DF7AFC0-F9CF-4272-A581-0B6ED674A5B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{B4C4E5C5-D27A-407D-845D-0F0A406CFD88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4C4E5C5-D27A-407D-845D-0F0A406CFD88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4C4E5C5-D27A-407D-845D-0F0A406CFD88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DF7AFC0-F9CF-4272-A581-0B6ED674A5B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DF7AFC0-F9CF-4272-A581-0B6ED674A5B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DF7AFC0-F9CF-4272-A581-0B6ED674A5B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DF7AFC0-F9CF-4272-A581-0B6ED674A5B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

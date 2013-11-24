@@ -53,8 +53,6 @@
     <Compile Include="MetadataProviders\LazyTypeFoundException.cs" />
     <Compile Include="ReplicationStrategies\CloneArrayReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\CopyArrayReplicationStrategy.cs" />
-    <Compile Include="Utils\AttributeExtensions.cs" />
-    <Compile Include="Utils\DelegateDisposable.cs" />
     <Compile Include="Utils\LazyTypeDetector.cs" />
     <Compile Include="MetadataProviders\ReplicationBehavior.cs" />
     <Compile Include="ObjectReplication\CircularReferenceFoundException.cs" />
@@ -74,15 +72,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplicationStrategies\CommonReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\ReplicationStrategyFactory.cs" />
-    <Compile Include="Utils\WrapperEqualityComparer.cs" />
-    <Compile Include="Utils\EnumerableExtensions.cs" />
-    <Compile Include="Utils\Guard.cs" />
-    <Compile Include="MemberAccess\ILGeneratorExtensions.cs" />
-    <Compile Include="Utils\ObjectExtensions.cs" />
-    <Compile Include="Utils\ReflectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\mijay.Utils\mijay.Utils.csproj">
+      <Project>{8df7afc0-f9cf-4272-a581-0b6ed674a5b3}</Project>
+      <Name>mijay.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

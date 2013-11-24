@@ -2,6 +2,8 @@
 using System.Linq;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax;
+using mijay.Utils;
+using mijay.Utils.Collections;
 using NClone.ObjectReplication;
 using NClone.ReplicationStrategies;
 using NClone.Utils;

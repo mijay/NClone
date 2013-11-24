@@ -25,7 +25,7 @@ namespace NClone.MetadataProviders
     {
         protected override ReplicationBehavior? TryGetPerTypeBehavior(Type type)
         {
-            var result = base.TryGetPerTypeBehavior(type);
+            ReplicationBehavior? result = base.TryGetPerTypeBehavior(type);
             if (result.HasValue)
                 return result.Value;
 

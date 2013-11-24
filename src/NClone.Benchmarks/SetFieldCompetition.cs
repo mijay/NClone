@@ -10,11 +10,6 @@ namespace NClone.Benchmarks
     {
         private const int iterationCount = 200000;
 
-        private class SomeClass
-        {
-            private int field;
-        }
-
         [Benchmark]
         public Action ViaExpression()
         {
@@ -74,6 +69,11 @@ namespace NClone.Benchmarks
                        for (int i = 0; i < iterationCount; i++)
                            someClass = setMemberDelegate(someClass, i);
                    };
+        }
+
+        private class SomeClass
+        {
+            private int field;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using JetBrains.Annotations;
-using NClone.Utils;
+using mijay.Utils.Collections;
 
 namespace NClone.MetadataProviders
 {

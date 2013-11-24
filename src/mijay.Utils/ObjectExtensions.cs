@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace NClone.Utils
+namespace mijay.Utils
 {
     /// <summary>
     /// Collection of extensions methods for objects of any type.

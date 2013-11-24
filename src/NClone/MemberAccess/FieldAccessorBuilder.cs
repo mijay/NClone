@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using NClone.Utils;
+using mijay.Utils;
+using mijay.Utils.Reflection;
 
 namespace NClone.MemberAccess
 {

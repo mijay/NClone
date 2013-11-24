@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NClone.Utils;
+using mijay.Utils;
+using mijay.Utils.Reflection;
 
 namespace NClone.MetadataProviders
 {

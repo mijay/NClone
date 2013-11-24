@@ -8,6 +8,16 @@ namespace NClone.MemberAccess
     public interface IMemberAccessor
     {
         /// <summary>
+        /// Indicates whether current <see cref="IMemberAccessor"/> can <see cref="GetMember"/>.
+        /// </summary>
+        bool CanGet { get; }
+
+        /// <summary>
+        /// Indicates whether current <see cref="IMemberAccessor"/> can <see cref="SetMember"/>.
+        /// </summary>
+        bool CanSet { get; }
+
+        /// <summary>
         /// Sets value of accessed member in <paramref name="container"/> to <paramref name="memberValue"/>
         /// and returns modified <paramref name="container"/>.
         /// </summary>
@@ -26,15 +36,5 @@ namespace NClone.MemberAccess
         /// </summary>
         /// <exception cref="InvalidOperationException">When <see cref="CanGet"/> is <c>false</c>.</exception>
         object GetMember(object container);
-
-        /// <summary>
-        /// Indicates whether current <see cref="IMemberAccessor"/> can <see cref="GetMember"/>.
-        /// </summary>
-        bool CanGet { get; }
-
-        /// <summary>
-        /// Indicates whether current <see cref="IMemberAccessor"/> can <see cref="SetMember"/>.
-        /// </summary>
-        bool CanSet { get; }
     }
 }

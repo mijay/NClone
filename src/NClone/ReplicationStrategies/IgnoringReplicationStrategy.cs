@@ -12,7 +12,9 @@ namespace NClone.ReplicationStrategies
         /// </summary>
         public static readonly IReplicationStrategy Instance = new IgnoringReplicationStrategy();
 
-        private IgnoringReplicationStrategy() { }
+        private IgnoringReplicationStrategy()
+        {
+        }
 
         public object Replicate(object source, IReplicationContext context)
         {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection.Emit;
+using mijay.Utils.Reflection;
 using NClone.Benchmarks.Runner;
-using NClone.MemberAccess;
 
 namespace NClone.Benchmarks
 {

@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
-namespace NClone.Utils
+namespace mijay.Utils.Reflection
 {
     /// <summary>
     /// Collection of extension and helper methods for types from <see cref="System.Reflection"/>.
     /// </summary>
-    internal static class ReflectionExtensions
+    public static class ReflectionExtensions
     {
         private static readonly Regex backingFieldRegex = new Regex(@"^\<(?<propertyName>\w+)\>k__BackingField$",
             RegexOptions.Compiled | RegexOptions.Singleline);
 
         private static readonly BindingFlags instanceMember = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
 
         /// <summary>
         /// Checks whether the given <paramref name="type"/> cref="type"/> is <see cref="Nullable{T}"/>.
@@ -113,7 +111,7 @@ namespace NClone.Utils
                 declaringProperty = null;
                 return false;
             }
-            var match = backingFieldRegex.Match(field.Name);
+            Match match = backingFieldRegex.Match(field.Name);
             if (!match.Success) {
                 declaringProperty = null;
                 return false;

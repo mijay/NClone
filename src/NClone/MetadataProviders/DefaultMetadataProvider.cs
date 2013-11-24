@@ -12,9 +12,9 @@ namespace NClone.MetadataProviders
     /// <remarks>
     /// <para><see cref="DefaultMetadataProvider"/> defines that:
     /// <list type="number">
-    /// <item>Primitive types, enums and <c>string</c> should be just <see cref="ReplicationBehavior.Copy"/>.</item>
-    /// <item><see cref="Nullable{T}"/> types inherit <see cref="ReplicationBehavior"/> from underlying type.</item>
-    /// <item>When type is replicated, all its fields should be replicated.</item>
+    /// <item>Primitive types, enums and <c>string</c> use <see cref="ReplicationBehavior.Copy"/>.</item>
+    /// <item><see cref="Nullable{T}"/> types inherit <see cref="ReplicationBehavior"/> from the underlying type.</item>
+    /// <item>For each <see cref="ReplicationBehavior.DeepCopy"/>-ied type all fields should be deep copied.</item>
     /// </list>
     /// </para>
     /// </remarks>
@@ -23,7 +23,7 @@ namespace NClone.MetadataProviders
         public ReplicationBehavior GetPerTypeBehavior(Type type)
         {
             Guard.AgainstNull(type, "type");
-            return TryGetPerTypeBehavior(type) ?? ReplicationBehavior.Replicate;
+            return TryGetPerTypeBehavior(type) ?? ReplicationBehavior.DeepCopy;
         }
 
         public IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
@@ -33,7 +33,7 @@ namespace NClone.MetadataProviders
             return type.GetHierarchy()
                 .SelectMany(GetFieldsDefinedIn)
                 .Select(x => new FieldReplicationInfo(x.BackingField,
-                    TryGetPerMemberReplicationBehavior(x) ?? ReplicationBehavior.Replicate));
+                    TryGetPerMemberReplicationBehavior(x) ?? ReplicationBehavior.DeepCopy));
         }
 
         /// <summary>
@@ -83,8 +83,8 @@ namespace NClone.MetadataProviders
         /// Description of one field in replicated type.
         /// </summary>
         /// <remarks>
-        /// The main need of these class is to bind compiler-generated fields to 
-        /// auto-implemented properties that causes their generation.
+        /// The main need of this class is to bind compiler-generated fields to 
+        /// members that causes their generation.
         /// </remarks>
         // marked internal for testing purposes
         protected internal class CopyableFieldDescription

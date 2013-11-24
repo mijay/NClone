@@ -47,8 +47,9 @@ namespace NClone.ObjectReplication
             public IDisposable EnterContext(object replicatingObject)
             {
                 if (replicatingObjectsStack.Contains(replicatingObject)) {
-                    var cycle = replicatingObjectsStack.SkipWhile(x => x != replicatingObject).ToArray();
-                    throw new CircularReferenceFoundException(replicatingObject, cycle);
+                    var beforeCycle = replicatingObjectsStack.TakeWhile(x => x != replicatingObject).ToArray();
+                    var cycle = replicatingObjectsStack.Skip(beforeCycle.Length).Append(replicatingObject).ToArray();
+                    throw new CircularReferenceFoundException(beforeCycle, cycle);
                 }
                 replicatingObjectsStack.Push(replicatingObject);
                 return new DelegateDisposable(() => replicatingObjectsStack.Pop());

@@ -45,7 +45,7 @@ namespace NClone.Tests.ReplicationStrategies
         [Test]
         public void SourceIsMarkedAsReplicate_CommonStrategyReturned()
         {
-            ReplicationStrategyFactory strategyFactory = StrategyWhere<Class>(isMarkedAs: ReplicationBehavior.Replicate);
+            ReplicationStrategyFactory strategyFactory = StrategyWhere<Class>(isMarkedAs: ReplicationBehavior.DeepCopy);
 
             IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Class));
 
@@ -55,7 +55,7 @@ namespace NClone.Tests.ReplicationStrategies
         [Test]
         public void GetStrategyTwiceForTheSameType_SameStrategiesReturned()
         {
-            ReplicationStrategyFactory strategyFactory = StrategyWhere<Class>(isMarkedAs: ReplicationBehavior.Replicate);
+            ReplicationStrategyFactory strategyFactory = StrategyWhere<Class>(isMarkedAs: ReplicationBehavior.DeepCopy);
 
             IReplicationStrategy result1 = strategyFactory.StrategyForType(typeof (Class));
             IReplicationStrategy result2 = strategyFactory.StrategyForType(typeof (Class));

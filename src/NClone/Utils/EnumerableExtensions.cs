@@ -69,5 +69,13 @@ namespace NClone.Utils
         {
             return string.Join(separator, source);
         }
+
+        /// <summary>
+        /// Adds <paramref name="item"/> to the tail of <paramref name="source"/> and returns new <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        public static IEnumerable<T> Append<T>(this IEnumerable<T> source, T item)
+        {
+            return source.Concat(new[] { item });
+        }
     }
 }

@@ -87,7 +87,7 @@ namespace NClone.Tests.ReplicationStrategies
             var sourceField = new Class();
             var resultField = new Class();
 
-            IMetadataProvider metadataProvider = MetadataProviderFor<ClassWithField>(x => x.field, ReplicationBehavior.Replicate);
+            IMetadataProvider metadataProvider = MetadataProviderFor<ClassWithField>(x => x.field, ReplicationBehavior.DeepCopy);
             CommonReplicationStrategy replicator = ReplicatorFor<ClassWithField>(metadataProvider);
             IReplicationContext context = ReplicationContextThat(onReceiving: sourceField, returns: resultField);
 
@@ -103,7 +103,7 @@ namespace NClone.Tests.ReplicationStrategies
             DateTime sourceField = DateTime.Today;
             DateTime resultField = DateTime.Today.AddDays(1);
 
-            IMetadataProvider metadataProvider = MetadataProviderFor<Struct>(x => x.field, ReplicationBehavior.Replicate);
+            IMetadataProvider metadataProvider = MetadataProviderFor<Struct>(x => x.field, ReplicationBehavior.DeepCopy);
             CommonReplicationStrategy replicator = ReplicatorFor<Struct>(metadataProvider);
             IReplicationContext context = ReplicationContextThat(onReceiving: sourceField, returns: resultField);
 

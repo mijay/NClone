@@ -8,25 +8,26 @@ namespace NClone.ObjectReplication
     /// Object that is able to replicate acyclic object graphs.
     /// </summary>
     /// <remarks>
-    /// <para>Replica (or clone, or deep copy) of the given object graph is other object graph, which is semantically equal
-    /// to the given one, but not equal to it by-reference. Deep copying can be understood as creating <see cref="object.MemberwiseClone"/>
-    /// of the given object and then replacing each object it is referencing by its <see cref="object.MemberwiseClone"/>.</para>
-    /// 
-    /// <para><see cref="ObjectReplicator"/> is more smart than just recursive call of <see cref="object.MemberwiseClone"/>. First, it is able
-    /// to detect double referencing of the same object. For example, when objectA references objectB and objectC, which both references objectD,
-    /// then in replicated object graph replicas of objectB and objectC will also reference single object - replica of objectD.</para>
-    /// 
-    /// <para>Second, <see cref="ObjectReplicator"/> is extensible. It takes into account <see cref="ReplicationBehavior"/>s for types
-    /// and type members it is replicating. Depending on <see cref="ReplicationBehavior"/> objects are either ignored
-    /// (default value used in resulting object graph), copied to resulted graph or recursively replicated. <see cref="IMetadataProvider"/>
-    /// is used to determine which <see cref="ReplicationBehavior"/> to use for type and/or member.</para>
+    /// <para>Deep copy of the given object graph is other object graph, which is semantically equal (isomorphic) to the given one,
+    /// but is not reference equal to it. And hence, if some object in the original object graph is modified, it does not affect cloned 
+    /// object graph. Note that object graph topology is preserved during cloning. That is, if in original graph two objects (say objectA
+    /// and objectB) reference single object (objectC), then in the cloned graph clone(objectA) and clone(objectB) will reference single
+    /// clone(objectC).</para>
+    ///  
+    /// <para>The way how <see cref="ObjectReplicator"/> replicates objects is configurable. It takes into account
+    /// <see cref="ReplicationBehavior"/>s for types and type members provided by <see cref="IMetadataProvider"/>. Depending on
+    /// <see cref="ReplicationBehavior"/> objects are either deep copied, by-value copied or ignored (default value is used in resulting
+    /// object graph). Note that for each object in a source graph (except top-level object) two <see cref="ReplicationBehavior"/>s are
+    /// provided: defined for object type and for member, where object is stored. Actual <see cref="ReplicationBehavior"/> is computed
+    /// as a minimum of them.</para>
     /// 
     /// <para><see cref="ObjectReplicator"/> intensively uses caching. Usually second replication of object of the same type
-    /// is 5-100 times faster than the first one. Consequently, it is strongly recommended to reuse single instance of
+    /// is 5-100 times faster than the first one. Consequently, it is strongly recommended to reuse a single instance of
     /// <see cref="ObjectReplicator"/>. For the most of the cases you can avoid creating instance of <see cref="ObjectReplicator"/>
-    /// manually, but ot use static API to default instance via <see cref="DefaultObjectReplicator"/>.</para>
+    /// manually, but to use static API to the single instance via <see cref="Clone"/> class.</para>
     /// </remarks>
-    /// <seealso cref="DefaultObjectReplicator"/>
+    /// <seealso cref="Clone"/>
+    /// <seealso cref="IMetadataProvider"/>
     public class ObjectReplicator
     {
         private readonly ReplicationStrategyFactory replicationStrategyFactory;

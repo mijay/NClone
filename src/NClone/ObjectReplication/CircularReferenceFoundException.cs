@@ -5,19 +5,17 @@ using NClone.Utils;
 namespace NClone.ObjectReplication
 {
     /// <summary>
-    /// Indicates that object graph, which should be replicated, contains some cycles.
+    /// Indicates that object graph, which should be replicated, contains a cycle.
     /// </summary>
-    /// <remarks>
-    /// Currently <see cref="ObjectReplicator"/> does not support replicating of cyclic object graphs.
-    /// </remarks>
     public class CircularReferenceFoundException: Exception
     {
-        public CircularReferenceFoundException(object replicatingObject, object[] cycle)
+        public CircularReferenceFoundException(object[] cyclePrefix, object[] cycle)
             : base(string.Format(
                 //note: when hooks will be added - change this message
-                "Reference cycle found while cloning object {0}:\n{1}\n"
+                "The following reference cycle found during replication (cycle part is in parentheses):\n{0}({1})\n"
                 + "Currently copying cyclic object graph is not supported.",
-                replicatingObject, cycle.Select(x => x.ToString()).JoinStrings(" -> ")))
+                cyclePrefix.Any() ? cyclePrefix.Select(x => x.ToString()).JoinStrings(" -> ") + " -> " : "",
+                cycle.Select(x => x.ToString()).JoinStrings(" -> ")))
         {
         }
     }

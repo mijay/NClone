@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NClone.MetadataProviders;
 using NUnit.Framework;
 
@@ -55,7 +56,7 @@ namespace NClone.Tests.MetadataProviders
         {
             ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (SomeValueType?));
 
-            Assert.That(result, Is.EqualTo(ReplicationBehavior.Replicate));
+            Assert.That(result, Is.EqualTo(ReplicationBehavior.DeepCopy));
         }
 
         [Test]
@@ -63,7 +64,7 @@ namespace NClone.Tests.MetadataProviders
         {
             ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (char[]));
 
-            Assert.That(result, Is.EqualTo(ReplicationBehavior.Replicate));
+            Assert.That(result, Is.EqualTo(ReplicationBehavior.DeepCopy));
         }
 
         private enum Enum: long
@@ -151,7 +152,8 @@ namespace NClone.Tests.MetadataProviders
                 TestingMetadataProvider.GetAllFields<ClassWithPublicEvent>();
 
             Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(result.Single().BackingField, Is.SameAs(result.Single().DeclaringMember));
+            Assert.That(result.Single().BackingField, Is.Not.SameAs(result.Single().DeclaringMember));
+            Assert.That(result.Single().DeclaringMember.MemberType, Is.EqualTo(MemberTypes.Event));
             Assert.That(result.Single().DeclaringMember.Name, Is.EqualTo("Event"));
         }
 
@@ -217,7 +219,7 @@ namespace NClone.Tests.MetadataProviders
         {
             FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPublicInheritedField)).Single();
 
-            Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Replicate));
+            Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.DeepCopy));
             Assert.That(result.Member.Name, Is.EqualTo("field"));
         }
 

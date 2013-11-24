@@ -36,7 +36,7 @@ namespace NClone.Tests.MetadataProviders
         {
             ReplicationBehavior result = metadataProvider.GetPerTypeBehavior(typeof (AnnotatedStruct));
 
-            Assert.That(result, Is.EqualTo(ReplicationBehavior.Replicate));
+            Assert.That(result, Is.EqualTo(ReplicationBehavior.DeepCopy));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace NClone.Tests.MetadataProviders
             Assert.That(action, Throws.InstanceOf<LazyTypeFoundException>());
         }
 
-        [CustomReplicationBehavior(ReplicationBehavior.Replicate)]
+        [CustomReplicationBehavior(ReplicationBehavior.DeepCopy)]
         private struct AnnotatedStruct { }
     }
 }

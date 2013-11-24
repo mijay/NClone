@@ -5,19 +5,18 @@ using NClone.Utils;
 namespace NClone.MetadataProviders
 {
     /// <summary>
-    /// Implementation of <see cref="IMetadataProvider"/> that is based on conventions
+    /// Implementation of <see cref="IMetadataProvider"/> that uses conventions
     /// and information from <see cref="CustomReplicationBehaviorAttribute"/>s.
     /// </summary>
     /// <remarks>
-    /// <para>Used conventions:
+    /// <para>Used conventions are:
     /// <list type="bullet">
-    /// <item>All structures are immutable => use <see cref="ReplicationBehavior.Copy"/> behavior.</item>
-    /// <item>All <see cref="Delegate"/>s are not copied during replication.</item>
-    /// <item>Lazy <see cref="IEnumerable"/> are illegal inside replicating types (causes exception).</item>
-    /// </list>
-    /// </para>
+    /// <item>Structures are copied by-value during cloning.</item>
+    /// <item><see cref="Delegate"/>s are not copied during cloning.</item>
+    /// <item>Lazy <see cref="IEnumerable"/> inside cloning types causes exception.</item>
+    /// </list></para>
     /// 
-    /// <para>If you want to override conventional behavior for some type or member, just apply
+    /// <para>If you want to override conventional behavior for some type or member, apply
     /// <see cref="CustomReplicationBehaviorAttribute"/> to it.</para>
     /// </remarks>
     /// <seealso cref="AttributeBasedMetadataProvider"/>

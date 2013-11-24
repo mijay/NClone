@@ -12,7 +12,8 @@ namespace NClone.Utils
     /// </summary>
     internal static class ReflectionExtensions
     {
-        private static readonly Regex backingFieldRegex = new Regex(@"\<(\w+)\>k__BackingField", RegexOptions.Compiled);
+        private static readonly Regex backingFieldRegex = new Regex(@"\<(\w+)\>k__BackingField",
+            RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// Checks whether <paramref name="member"/> has attribute <typeparamref name="TAttribute"/>.

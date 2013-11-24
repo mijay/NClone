@@ -8,7 +8,7 @@ namespace NClone.MetadataProviders
     public enum ReplicationBehavior
     {
         /// <summary>
-        /// Ignore during replication: default value used for fields, default value returned for types.
+        /// Ignore during cloning: default value used for fields, default value returned for types.
         /// </summary>
         Ignore,
 
@@ -18,8 +18,8 @@ namespace NClone.MetadataProviders
         Copy,
 
         /// <summary>
-        /// Value should be replicated (deep copied).
+        /// Value should be deep copied.
         /// </summary>
-        Replicate
+        DeepCopy
     }
 }

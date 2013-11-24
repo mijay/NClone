@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
+using mijay.Utils.Comparers;
 
 namespace mijay.Utils.Collections
 {
@@ -69,6 +70,14 @@ namespace mijay.Utils.Collections
         }
 
         /// <summary>
+        /// Adds <paramref name="item"/> to the head of <paramref name="source"/> and returns new <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source, T item)
+        {
+            return new[] { item }.Concat(source);
+        }
+
+        /// <summary>
         /// Materialize, i.e. make non-lazy, the given <paramref name="source"/>.
         /// </summary>
         public static IEnumerable<T> Materialize<T>([InstantHandle] this IEnumerable<T> source)
@@ -76,6 +85,14 @@ namespace mijay.Utils.Collections
             if (source is ICollection<T> || source is IReadOnlyCollection<T> || source is ICollection)
                 return source;
             return source.ToArray();
+        }
+
+        /// <summary>
+        /// Checks whether the given <paramref name="source"/> is empty.
+        /// </summary>
+        public static bool IsEmpty<T>(this IEnumerable<T> source)
+        {
+            return !source.Any();
         }
     }
 }

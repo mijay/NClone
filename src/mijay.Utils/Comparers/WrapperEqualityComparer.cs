@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace mijay.Utils
+namespace mijay.Utils.Comparers
 {
     /// <summary>
     /// <see cref="IEqualityComparer{T}"/> that compares object of type <typeparamref name="TSource"/> by converting them

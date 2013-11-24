@@ -1,31 +1,14 @@
 ﻿using System;
 using GeorgeCloney;
+using NClone.Benchmarks.Runner;
 using NClone.MetadataProviders;
 using NClone.ObjectReplication;
-using NUnit.Framework;
 
-namespace NClone.Tests.Benchmarks
+namespace NClone.Benchmarks
 {
-    [Ignore]
-    public class ReplicatorBenchmark: BenchmarkBase
+    public class SimpleGraphReplicationCompetition: CompetitionBase
     {
         private const int iterationCount = 200000;
-
-        private class SomeClass
-        {
-            public int field;
-            public SomeClass2 Property { get; set; }
-        }
-
-        private class SomeClass2
-        {
-            public SomeClass3 Property { get; set; }
-        }
-
-        private class SomeClass3
-        {
-            public int[] field;
-        }
 
         [Benchmark]
         public Action OneRun()
@@ -72,6 +55,22 @@ namespace NClone.Tests.Benchmarks
                        for (int i = 0; i < iterationCount; ++i)
                            source = source.DeepClone();
                    };
+        }
+
+        private class SomeClass
+        {
+            public int field;
+            public SomeClass2 Property { get; set; }
+        }
+
+        private class SomeClass2
+        {
+            public SomeClass3 Property { get; set; }
+        }
+
+        private class SomeClass3
+        {
+            public int[] field;
         }
     }
 }

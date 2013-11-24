@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using NClone.Benchmarks.Runner;
 using NClone.MemberAccess;
-using NUnit.Framework;
 
-namespace NClone.Tests.Benchmarks
+namespace NClone.Benchmarks
 {
-    [Ignore]
-    public class SetFieldBenchmark: BenchmarkBase
+    public class SetFieldCompetition: CompetitionBase
     {
         private const int iterationCount = 200000;
 

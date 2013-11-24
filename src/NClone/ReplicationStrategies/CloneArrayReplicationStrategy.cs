@@ -1,5 +1,6 @@
 ﻿using System;
 using mijay.Utils;
+using NClone.MemberAccess;
 using NClone.ObjectReplication;
 
 namespace NClone.ReplicationStrategies
@@ -10,10 +11,14 @@ namespace NClone.ReplicationStrategies
     internal class CloneArrayReplicationStrategy: IReplicationStrategy
     {
         private readonly Type elementType;
+        private readonly Func<Array, int, object> arrayElementReader;
+        private readonly Action<Array, int, object> arrayElementWriter;
 
         public CloneArrayReplicationStrategy(Type elementType)
         {
             this.elementType = elementType;
+            arrayElementReader = ArrayAccessorBuilder.BuildArrayElementReader(elementType);
+            arrayElementWriter = ArrayAccessorBuilder.BuildArrayElementWriter(elementType);
         }
 
         public object Replicate(object source, IReplicationContext context)
@@ -23,12 +28,13 @@ namespace NClone.ReplicationStrategies
                 elementType, source.GetType().GetElementType());
 
             var sourceArray = source.As<Array>();
-            Array result = Array.CreateInstance(elementType, sourceArray.Length);
+            Array resultingArray = Array.CreateInstance(elementType, sourceArray.Length);
             for (int i = sourceArray.Length - 1; i >= 0; i--) {
-                object sourceElement = sourceArray.GetValue(i);
-                result.SetValue(context.Replicate(sourceElement), i);
+                object sourceElement = arrayElementReader(sourceArray, i);
+                var resultingElement = context.Replicate(sourceElement);
+                arrayElementWriter(resultingArray, i, resultingElement);
             }
-            return result;
+            return resultingArray;
         }
     }
 }

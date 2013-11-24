@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection.Emit;
-using mijay.Utils.Reflection;
 using NClone.Benchmarks.Runner;
+using NClone.MemberAccess;
 
 namespace NClone.Benchmarks
 {
@@ -45,38 +44,8 @@ namespace NClone.Benchmarks
             Array source = CreateSource();
             var destination = (Array) new int[arraySize];
 
-            var getMethodDeclaration = new DynamicMethod(
-                "getFromArray",
-                typeof (object), new[] { typeof (Array), typeof (int) },
-                GetType(), true);
-            ILGenerator getMethodGenerator = getMethodDeclaration.GetILGenerator();
-
-            getMethodGenerator
-                .LoadArgument(0)
-                .CastDownPointer(typeof (int[]))
-                .LoadArgument(1)
-                .LoadArrayElement(typeof (int))
-                .BoxValue(typeof (int))
-                .Return();
-
-            var getMethod = (Func<Array, int, object>) getMethodDeclaration.CreateDelegate(typeof (Func<Array, int, object>));
-
-            var setMethodDeclaration = new DynamicMethod(
-                "getFromArray",
-                null, new[] { typeof (Array), typeof (int), typeof (object) },
-                GetType(), true);
-            ILGenerator setMethodGenerator = setMethodDeclaration.GetILGenerator();
-
-            setMethodGenerator
-                .LoadArgument(0)
-                .CastDownPointer(typeof (int[]))
-                .LoadArgument(1)
-                .LoadArgument(2)
-                .CastDownPointer(typeof (int))
-                .StoreArrayElement(typeof (int))
-                .Return();
-
-            var setMethod = (Action<Array, int, object>) setMethodDeclaration.CreateDelegate(typeof (Action<Array, int, object>));
+            Func<Array, int, object> getMethod = ArrayAccessorBuilder.BuildArrayElementReader(typeof (int));
+            Action<Array, int, object> setMethod = ArrayAccessorBuilder.BuildArrayElementWriter(typeof (int));
 
             return () => {
                        for (int i = 0; i < arraySize; ++i) {

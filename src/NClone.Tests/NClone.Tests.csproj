@@ -34,6 +34,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MemberAccess\ArrayAccessorBuilderTest.cs" />
     <Compile Include="MetadataProviders\AttributeBasedMetadataProviderTest.cs" />
     <Compile Include="MetadataProviders\ConventionalMetadataProviderTest.cs" />
     <Compile Include="MetadataProviders\DefaultMetadataProviderTest.cs" />

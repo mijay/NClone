@@ -51,6 +51,7 @@
     <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />
     <Compile Include="MetadataProviders\FieldReplicationInfo.cs" />
     <Compile Include="MetadataProviders\LazyTypeFoundException.cs" />
+    <Compile Include="Utils\AttributeExtensions.cs" />
     <Compile Include="Utils\DelegateDisposable.cs" />
     <Compile Include="Utils\LazyTypeDetector.cs" />
     <Compile Include="MetadataProviders\ReplicationBehavior.cs" />

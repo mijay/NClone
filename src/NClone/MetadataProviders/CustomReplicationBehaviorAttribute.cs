@@ -12,7 +12,8 @@ namespace NClone.MetadataProviders
     /// <para>When applied to auto-implemented properties or events actually affects their backing fields. When applied to normal properties
     /// or events does not have any affect.</para>
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Property |AttributeTargets.Event,
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct |
+                    AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Event,
         AllowMultiple = false, Inherited = true)]
     public sealed class CustomReplicationBehaviorAttribute: Attribute
     {

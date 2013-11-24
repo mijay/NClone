@@ -66,17 +66,19 @@ namespace NClone.MetadataProviders
                 .GetMembers(BindingFlags.Public | BindingFlags.NonPublic
                             | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-            IEnumerable<CopyableFieldDescription> fieldsInfo = typeMembers
+            return typeMembers
                 .OfType<FieldInfo>()
-                .Where(field => !field.IsBackingField())
-                .Select(field => new CopyableFieldDescription(field));
+                .Select(field => {
+                            PropertyInfo declaringProperty;
+                            if (field.TryGetDeclaringProperty(out declaringProperty))
+                                return new CopyableFieldDescription(declaringProperty, field);
 
-            IEnumerable<CopyableFieldDescription> propertiesInfo = typeMembers
-                .OfType<PropertyInfo>()
-                .Where(prop => prop.IsAutoProperty())
-                .Select(prop => new CopyableFieldDescription(prop, prop.GetBackingField()));
+                            EventInfo declaringEvent;
+                            if (field.TryGetDeclaringEvent(out declaringEvent))
+                                return new CopyableFieldDescription(declaringEvent, field);
 
-            return propertiesInfo.Concat(fieldsInfo);
+                            return new CopyableFieldDescription(field);
+                        });
         }
 
         /// <summary>
@@ -105,6 +107,15 @@ namespace NClone.MetadataProviders
             {
                 BackingField = backingField;
                 DeclaringMember = autoProperty;
+            }
+
+            /// <summary>
+            /// Create <see cref="CopyableFieldDescription"/> for event with backing field.
+            /// </summary>
+            public CopyableFieldDescription(EventInfo autoEvent, FieldInfo backingField)
+            {
+                BackingField = backingField;
+                DeclaringMember = autoEvent;
             }
 
             public FieldInfo BackingField { get; private set; }

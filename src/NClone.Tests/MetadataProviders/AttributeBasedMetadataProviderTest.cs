@@ -75,7 +75,7 @@ namespace NClone.Tests.MetadataProviders
 
         private class ClassWithEvent
         {
-            [field: CustomReplicationBehavior(ReplicationBehavior.Copy)]
+            [CustomReplicationBehavior(ReplicationBehavior.Copy)]
             public event Action Event;
         }
     }

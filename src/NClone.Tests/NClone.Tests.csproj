@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Benchmarks\BenchmarkAttribute.cs" />
     <Compile Include="Benchmarks\BenchmarkBase.cs" />
+    <Compile Include="Benchmarks\ReplicatorBenchmark.cs" />
     <Compile Include="Benchmarks\SetFieldBenchmark.cs" />
     <Compile Include="MetadataProviders\AttributeBasedMetadataProviderTest.cs" />
     <Compile Include="MetadataProviders\ConventionalMetadataProviderTest.cs" />

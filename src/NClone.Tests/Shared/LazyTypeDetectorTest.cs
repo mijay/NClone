@@ -21,7 +21,7 @@ namespace NClone.Tests.Shared
         [Test]
         public void Queryable_IsLazy()
         {
-            Assert.That(LazyTypeDetector.IsLazyType(typeof (SomeQueryable<int>)), Is.True);
+            Assert.That(LazyTypeDetector.IsLazyType(typeof (SomeQueryable)), Is.True);
         }
 
         [Test]
@@ -40,22 +40,22 @@ namespace NClone.Tests.Shared
         [Test]
         public void Collection_IsNotLazy()
         {
-            Assert.That(LazyTypeDetector.IsLazyType(typeof(Collection<int>)), Is.False);
+            Assert.That(LazyTypeDetector.IsLazyType(typeof (Collection<int>)), Is.False);
         }
 
         [Test]
         public void ReadonlyCollection_IsNotLazy()
         {
-            Assert.That(LazyTypeDetector.IsLazyType(typeof(ReadOnlyCollection<int>)), Is.False);
+            Assert.That(LazyTypeDetector.IsLazyType(typeof (ReadOnlyCollection<int>)), Is.False);
         }
 
         [Test]
         public void UserCollection_IsNotLazy()
         {
-            Assert.That(LazyTypeDetector.IsLazyType(typeof(SomeCollection)), Is.False);
+            Assert.That(LazyTypeDetector.IsLazyType(typeof (SomeCollection)), Is.False);
         }
 
-        private class SomeCollection: IEnumerable<int>
+        private class SomeCollection: IQueryable<int>, IEnumerable<int>
         {
             public IEnumerator<int> GetEnumerator()
             {
@@ -67,13 +67,22 @@ namespace NClone.Tests.Shared
             {
                 return GetEnumerator();
             }
+
+            public Expression Expression { get; private set; }
+            public Type ElementType { get; private set; }
+            public IQueryProvider Provider { get; private set; }
         }
 
-        private class SomeQueryable<T>: List<T>, IQueryable
+        private class SomeQueryable: IQueryable
         {
             public Expression Expression { get; private set; }
             public Type ElementType { get; private set; }
             public IQueryProvider Provider { get; private set; }
+
+            public IEnumerator GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

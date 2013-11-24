@@ -9,13 +9,11 @@ namespace NClone.Utils
     {
         public static bool IsLazyType(Type type)
         {
-            if (type.ImplementsGenericInterface(typeof (IEnumerator<>)) || typeof (IEnumerator).IsAssignableFrom(type))
-                return true;
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Lazy<>))
                 return true;
-            if (type.ImplementsGenericInterface(typeof (IQueryable<>)) || typeof (IQueryable).IsAssignableFrom(type))
-                return true;
-            if (type.ImplementsGenericInterface(typeof (IEnumerable<>)) || typeof (IEnumerable).IsAssignableFrom(type))
+            if (type.ImplementsGenericInterface(typeof (IQueryable<>)) || typeof (IQueryable).IsAssignableFrom(type) ||
+                type.ImplementsGenericInterface(typeof (IEnumerable<>)) || typeof (IEnumerable).IsAssignableFrom(type) ||
+                type.ImplementsGenericInterface(typeof (IEnumerator<>)) || typeof (IEnumerator).IsAssignableFrom(type))
                 if (!IsCollection(type))
                     return true;
 

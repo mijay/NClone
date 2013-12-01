@@ -1,4 +1,5 @@
 ﻿using System;
+using mijay.Utils;
 
 namespace NClone.MemberAccess
 {
@@ -18,15 +19,13 @@ namespace NClone.MemberAccess
 
         public object SetMember(object container, object memberValue)
         {
-            if (!CanSet)
-                throw new InvalidOperationException("Can not set member when CanSet is false");
+            Guard.AgainstViolation(CanSet, "Can not set member when CanSet is false");
             return setMethod(container, memberValue);
         }
 
         public object GetMember(object container)
         {
-            if (!CanGet)
-                throw new InvalidOperationException("Can not get member when CanGet is false");
+            Guard.AgainstViolation(CanGet, "Can not get member when CanGet is false");
             return getMethod(container);
         }
 

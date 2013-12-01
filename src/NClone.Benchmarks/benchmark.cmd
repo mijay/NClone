@@ -1,3 +1,3 @@
 pushd bin\Release
-NClone.Benchmarks.exe
+start /b /wait /realtime NClone.Benchmarks.exe
 popd

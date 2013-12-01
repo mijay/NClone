@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using mijay.Utils;
-using mijay.Utils.Collections;
 using mijay.Utils.Reflection;
 using NClone.MemberAccess;
 using NClone.MetadataProviders;
@@ -17,7 +15,7 @@ namespace NClone.ReplicationStrategies
     internal class CommonReplicationStrategy: IReplicationStrategy
     {
         private readonly Type entityType;
-        private readonly IEnumerable<Tuple<ReplicationBehavior, IMemberAccessor>> memberDescriptions;
+        private readonly MemberReplicationInfo[] memberDescriptions;
 
         public CommonReplicationStrategy(IMetadataProvider metadataProvider, Type entityType)
         {
@@ -30,8 +28,8 @@ namespace NClone.ReplicationStrategies
 
             memberDescriptions = metadataProvider.GetFieldsReplicationInfo(entityType)
                 .Where(t => t.Behavior != ReplicationBehavior.Ignore)
-                .Select(t => Tuple.Create(t.Behavior, FieldAccessorBuilder.BuildFor(entityType, t.Member, true)))
-                .Materialize();
+                .Select(t => new MemberReplicationInfo(entityType, t))
+                .ToArray();
         }
 
         public object Replicate(object source, IReplicationContext context)
@@ -41,14 +39,29 @@ namespace NClone.ReplicationStrategies
                 entityType, source.GetType());
 
             object result = FormatterServices.GetUninitializedObject(entityType);
-            foreach (var memberDescription in memberDescriptions) {
-                object memberValue = memberDescription.Item2.GetMember(source);
-                object replicatedValue = memberDescription.Item1 == ReplicationBehavior.DeepCopy
+            foreach (var memberReplicationInfo in memberDescriptions) {
+                object memberValue = memberReplicationInfo.GetMember(source);
+                object replicatedValue = memberReplicationInfo.Behavior == ReplicationBehavior.DeepCopy
                     ? context.Replicate(memberValue)
                     : memberValue;
-                result = memberDescription.Item2.SetMember(result, replicatedValue);
+                result = memberReplicationInfo.SetMember(result, replicatedValue);
             }
             return result;
+        }
+
+        private struct MemberReplicationInfo
+        {
+            public readonly ReplicationBehavior Behavior;
+            public readonly Func<object, object> GetMember;
+            public readonly Func<object, object, object> SetMember;
+
+            public MemberReplicationInfo(Type containerType, FieldReplicationInfo fieldReplicationInfo)
+            {
+                Behavior = fieldReplicationInfo.Behavior;
+                IMemberAccessor memberAccessor = FieldAccessorBuilder.BuildFor(containerType, fieldReplicationInfo.Member, true);
+                GetMember = memberAccessor.GetMember;
+                SetMember = memberAccessor.SetMember;
+            }
         }
     }
 }

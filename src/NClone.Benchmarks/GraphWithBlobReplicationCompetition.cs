@@ -19,12 +19,7 @@ namespace NClone.Benchmarks
         [Benchmark]
         public Action ReplicatorClone()
         {
-            var source = new SomeClass
-                         {
-                             Property = Enumerable.Range(0, blobSize)
-                                 .Select(i => new SomeClass2 { field = i.ToString() })
-                                 .ToArray()
-                         };
+            SomeClass source = CreateData();
 
             var replicator = new ObjectReplicator(new ConventionalMetadataProvider());
 
@@ -37,17 +32,32 @@ namespace NClone.Benchmarks
         [Benchmark]
         public Action ReflectionClone()
         {
+            SomeClass source = CreateData();
+
+            return () => {
+                       source = source.DeepClone();
+                       Consume(source);
+                   };
+        }
+
+        [Benchmark]
+        public Action SimpleDataCreation()
+        {
+            return () => {
+                       SomeClass data = CreateData();
+                       Consume(data);
+                   };
+        }
+
+        private static SomeClass CreateData()
+        {
             var source = new SomeClass
                          {
                              Property = Enumerable.Range(0, blobSize)
                                  .Select(i => new SomeClass2 { field = i.ToString() })
                                  .ToArray()
                          };
-
-            return () => {
-                       source = source.DeepClone();
-                       Consume(source);
-                   };
+            return source;
         }
 
         private class SomeClass

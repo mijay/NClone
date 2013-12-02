@@ -94,5 +94,15 @@ namespace mijay.Utils.Collections
         {
             return !source.Any();
         }
+
+        /// <summary>
+        /// Checks whether the given <paramref name="source"/> contains any element
+        /// from <paramref name="elements"/> list.
+        /// </summary>
+        public static bool ContainsAny<T>(this IEnumerable<T> source, params T[] elements)
+        {
+            var elementsHash = new HashSet<T>(elements);
+            return source.Any(elementsHash.Contains);
+        }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using mijay.Utils.Collections;
 
 namespace NClone.ObjectReplication
 {
@@ -9,13 +7,10 @@ namespace NClone.ObjectReplication
     /// </summary>
     public class CircularReferenceFoundException: Exception
     {
-        public CircularReferenceFoundException(object[] cyclePrefix, object[] cycle)
-            : base(string.Format(
+        public CircularReferenceFoundException()
+            : base(
                 //note: when hooks will be added - change this message
-                "The following reference cycle found during replication (cycle part is in parentheses):\n{0}({1})\n"
-                + "Currently copying cyclic object graph is not supported.",
-                cyclePrefix.Any() ? cyclePrefix.Select(x => x.ToString()).JoinStrings(" -> ") + " -> " : "",
-                cycle.Select(x => x.ToString()).JoinStrings(" -> ")))
+                "Cyclic reference found during replication. Currently copying cyclic object graph is not supported.")
         {
         }
     }

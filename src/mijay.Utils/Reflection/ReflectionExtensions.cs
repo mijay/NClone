@@ -15,7 +15,7 @@ namespace mijay.Utils.Reflection
         private static readonly Regex backingFieldRegex = new Regex(@"^\<(?<propertyName>\w+)\>k__BackingField$",
             RegexOptions.Compiled | RegexOptions.Singleline);
 
-        private static readonly BindingFlags instanceMember = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        private const BindingFlags instanceMember = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
         /// <summary>
         /// Checks whether the given <paramref name="type"/> cref="type"/> is <see cref="Nullable{T}"/>.

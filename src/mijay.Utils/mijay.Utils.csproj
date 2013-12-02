@@ -49,6 +49,7 @@
     <Compile Include="Reflection\ILGeneratorExtensions.cs" />
     <Compile Include="Reflection\ReflectionExtensions.cs" />
     <Compile Include="Comparers\WrapperEqualityComparer.cs" />
+    <Compile Include="StringReferableBase.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

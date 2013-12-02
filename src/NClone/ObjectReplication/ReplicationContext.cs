@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using mijay.Utils;
-using mijay.Utils.Collections;
 using NClone.ReplicationStrategies;
 
 namespace NClone.ObjectReplication
@@ -12,7 +9,7 @@ namespace NClone.ObjectReplication
     /// </summary>
     internal class ReplicationContext: IReplicationContext
     {
-        private readonly CircularReferenceDetector circularReferenceDetector = new CircularReferenceDetector();
+        private static readonly object objectIsReplicatingMarker = new object();
         private readonly IDictionary<object, object> replicatedEntries = new Dictionary<object, object>();
         private readonly IReplicationStrategyFactory replicationStrategyFactory;
 
@@ -28,32 +25,30 @@ namespace NClone.ObjectReplication
                 return null;
 
             object result;
-            if (replicatedEntries.TryGetValue(source, out result))
+            if (TryGetReplicatedValue(source, out result))
                 return result;
 
-            using (circularReferenceDetector.EnterContext(source)) {
-                IReplicationStrategy replicationStrategy = replicationStrategyFactory.StrategyForType(source.GetType());
-                result = replicationStrategy.Replicate(source, this);
+            IReplicationStrategy replicationStrategy = replicationStrategyFactory.StrategyForType(source.GetType());
+            result = replicationStrategy.Replicate(source, this);
 
-                replicatedEntries.Add(source, result);
-                return result;
-            }
+            StoreReplicatedValue(source, result);
+            return result;
         }
 
-        private class CircularReferenceDetector
+        private bool TryGetReplicatedValue(object source, out object result)
         {
-            private readonly Stack<object> replicatingObjectsStack = new Stack<object>();
-
-            public IDisposable EnterContext(object replicatingObject)
-            {
-                if (replicatingObjectsStack.Contains(replicatingObject)) {
-                    object[] beforeCycle = replicatingObjectsStack.TakeWhile(x => x != replicatingObject).ToArray();
-                    object[] cycle = replicatingObjectsStack.Skip(beforeCycle.Length).Append(replicatingObject).ToArray();
-                    throw new CircularReferenceFoundException(beforeCycle, cycle);
-                }
-                replicatingObjectsStack.Push(replicatingObject);
-                return new DelegateDisposable(() => replicatingObjectsStack.Pop());
+            if (replicatedEntries.TryGetValue(source, out result)) {
+                if (ReferenceEquals(result, objectIsReplicatingMarker))
+                    throw new CircularReferenceFoundException();
+                return true;
             }
+            replicatedEntries.Add(source, objectIsReplicatingMarker);
+            return false;
+        }
+
+        private void StoreReplicatedValue(object source, object result)
+        {
+            replicatedEntries[source] = result;
         }
     }
 }

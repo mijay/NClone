@@ -1,6 +1,5 @@
 ﻿using System;
 using mijay.Utils;
-using NClone.MemberAccess;
 using NClone.ObjectReplication;
 
 namespace NClone.ReplicationStrategies
@@ -11,14 +10,10 @@ namespace NClone.ReplicationStrategies
     internal class CloneArrayReplicationStrategy: IReplicationStrategy
     {
         private readonly Type elementType;
-        private readonly Func<Array, int, object> arrayElementReader;
-        private readonly Action<Array, int, object> arrayElementWriter;
 
         public CloneArrayReplicationStrategy(Type elementType)
         {
             this.elementType = elementType;
-            arrayElementReader = ArrayAccessorBuilder.BuildArrayElementReader(elementType);
-            arrayElementWriter = ArrayAccessorBuilder.BuildArrayElementWriter(elementType);
         }
 
         public object Replicate(object source, IReplicationContext context)
@@ -27,12 +22,10 @@ namespace NClone.ReplicationStrategies
                 "This replicator can copy only arrays of elements of type {0}, but {1} received",
                 elementType, source.GetType().GetElementType());
 
-            var sourceArray = source.As<Array>();
-            Array resultingArray = Array.CreateInstance(elementType, sourceArray.Length);
-            for (int i = sourceArray.Length - 1; i >= 0; i--) {
-                object sourceElement = arrayElementReader(sourceArray, i);
-                var resultingElement = context.Replicate(sourceElement);
-                arrayElementWriter(resultingArray, i, resultingElement);
+            var resultingArray = source.As<Array>().Clone().As<object[]>();
+            for (int i = resultingArray.Length - 1; i >= 0; i--) {
+                object resultingElement = context.Replicate(resultingArray[i]);
+                resultingArray[i] = resultingElement;
             }
             return resultingArray;
         }

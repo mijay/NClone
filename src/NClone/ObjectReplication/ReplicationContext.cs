@@ -21,9 +21,6 @@ namespace NClone.ObjectReplication
 
         public object Replicate(object source)
         {
-            if (source == null)
-                return null;
-
             object result;
             if (TryGetReplicatedValue(source, out result))
                 return result;
@@ -37,6 +34,10 @@ namespace NClone.ObjectReplication
 
         private bool TryGetReplicatedValue(object source, out object result)
         {
+            if (ReferenceEquals(source, null)) {
+                result = null;
+                return true;
+            }
             if (replicatedEntries.TryGetValue(source, out result)) {
                 if (ReferenceEquals(result, objectIsReplicatingMarker))
                     throw new CircularReferenceFoundException();
@@ -48,7 +49,7 @@ namespace NClone.ObjectReplication
 
         private void StoreReplicatedValue(object source, object result)
         {
-            replicatedEntries[source] = result;
+            replicatedEntries[source] = result; //note: ReplicationContext is created for one clonning => no concurrency
         }
     }
 }

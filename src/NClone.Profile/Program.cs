@@ -7,33 +7,32 @@ namespace NClone.Profile
     {
         public static void Main()
         {
+            SomeClass source = CreateData();
+
+            source = Clone.ObjectGraph(source);
+
+            Console.WriteLine(source.Property.Sum(x => x.field.Length));
+        }
+
+        private static SomeClass CreateData()
+        {
             var source = new SomeClass
-                         {
-                             field = 42,
-                             Property = new SomeClass2 { Property = new SomeClass3 { field = new int[1240] } }
-                         };
-
-            for (int i = 0; i < 200000; ++i)
-                source = Clone.ObjectGraph(source);
-
-            Console.WriteLine(source.field);
-            Console.WriteLine(source.Property.Property.field.Sum());
+            {
+                Property = Enumerable.Range(0, 200000)
+                    .Select(i => new SomeClass2 { field = i.ToString() })
+                    .ToArray()
+            };
+            return source;
         }
 
         private class SomeClass
         {
-            public int field;
-            public SomeClass2 Property { get; set; }
+            public SomeClass2[] Property { get; set; }
         }
 
         private class SomeClass2
         {
-            public SomeClass3 Property { get; set; }
-        }
-
-        private class SomeClass3
-        {
-            public int[] field;
+            public string field;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using mijay.Utils;
 using mijay.Utils.Reflection;
 using NClone.MetadataProviders;
@@ -11,8 +11,8 @@ namespace NClone.ReplicationStrategies
     /// </summary>
     internal class ReplicationStrategyFactory: IReplicationStrategyFactory
     {
-        private readonly ConcurrentDictionary<Type, IReplicationStrategy> entityReplicators =
-            new ConcurrentDictionary<Type, IReplicationStrategy>();
+        private readonly IDictionary<Type, IReplicationStrategy> entityReplicators =
+            new Dictionary<Type, IReplicationStrategy>();
 
         private readonly IMetadataProvider metadataProvider;
 
@@ -25,7 +25,14 @@ namespace NClone.ReplicationStrategies
         public IReplicationStrategy StrategyForType(Type type)
         {
             Guard.AgainstNull(type, "type");
-            return entityReplicators.GetOrAdd(type, BuildEntityReplicator);
+
+            IReplicationStrategy result;
+            if (!entityReplicators.TryGetValue(type, out result)) {
+                result = BuildEntityReplicator(type);
+                entityReplicators[type] = result; //note: optimistic concurrency - we can safely override value at this point
+            }
+
+            return result;
         }
 
         private IReplicationStrategy BuildEntityReplicator(Type type)

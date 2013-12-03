@@ -22,6 +22,8 @@ namespace NClone.Benchmarks
             SomeClass source = CreateData();
 
             var replicator = new ObjectReplicator(new ConventionalMetadataProvider());
+            replicator.Replicate(new SomeClass());
+            replicator.Replicate(new SomeClass2());
 
             return () => {
                        source = replicator.Replicate(source);

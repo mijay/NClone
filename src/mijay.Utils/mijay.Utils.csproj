@@ -41,6 +41,7 @@
     <Compile Include="Collections\DictionaryExtensions.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
     <Compile Include="Comparers\DelegatedComparer.cs" />
+    <Compile Include="Comparers\ReferenceEqualityComparer.cs" />
     <Compile Include="Reflection\AttributeExtensions.cs" />
     <Compile Include="DelegateDisposable.cs" />
     <Compile Include="Guard.cs" />

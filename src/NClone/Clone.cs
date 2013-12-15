@@ -17,8 +17,9 @@ namespace NClone
     /// clone(objectC).</para>
     /// 
     /// <para>The way how <see cref="Clone"/> clones objects can be configured. First, it respects annotations done via
-    /// <see cref="CustomReplicationBehaviorAttribute"/> (see more in <see cref="AttributeBasedMetadataProvider"/> and <see cref="CustomReplicationBehaviorAttribute"/>).
-    /// And second, it follows three basic conventions (see more in <see cref="ConventionalMetadataProvider"/>):
+    /// <see cref="CustomReplicationBehaviorAttribute"/> (see more in <see cref="AttributeBasedMetadataProvider"/>
+    /// and <see cref="CustomReplicationBehaviorAttribute"/>). And second, it follows three basic conventions (see more in
+    /// <see cref="ConventionalMetadataProvider"/>):
     /// <list type="bullet">
     /// <item>do not deep copy structures — copies them by-value instead;</item>
     /// <item>do not copy delegates — uses <c>null</c>s in resulting object graphs;</item>
@@ -29,9 +30,9 @@ namespace NClone
     /// not want <see cref="Clone"/> to take described conventions into account, you can use <see cref="ObjectIgnoringConventions{T}"/>
     /// method instead.</para>
     /// 
-    /// <para>Note that <see cref="Clone"/> is only a static wrapper over an instance <see cref="ObjectReplicator"/>,
-    /// which uses <see cref="IMetadataProvider"/> to get meta-information about replicating types. In case you need more extensibility,
-    /// consider using <see cref="ObjectReplicator"/> directly  .</para>
+    /// <para>Note that <see cref="Clone"/> is only a static wrapper over an instance of <see cref="ObjectReplicator"/> class,
+    /// which uses specific <see cref="IMetadataProvider"/> to get meta-information about replicating types. In case you need
+    /// more extensibility, consider using <see cref="ObjectReplicator"/> directly.</para>
     /// </remarks>
     /// <seealso cref="ObjectReplicator"/>
     /// <seealso cref="ConventionalMetadataProvider"/>

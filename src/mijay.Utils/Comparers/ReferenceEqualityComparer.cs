@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime;
 
 namespace mijay.Utils.Comparers
 {
@@ -11,13 +10,11 @@ namespace mijay.Utils.Comparers
         {
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         public new bool Equals(object x, object y)
         {
             return ReferenceEquals(x, y);
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         public int GetHashCode(object obj)
         {
             return ReferenceEquals(obj, null) ? 0 : obj.GetHashCode();

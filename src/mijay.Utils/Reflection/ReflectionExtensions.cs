@@ -134,5 +134,15 @@ namespace mijay.Utils.Reflection
             declaringEvent = field.DeclaringType.GetEvent(field.Name, BindingFlags.DeclaredOnly | instanceMember);
             return declaringEvent != null;
         }
+
+#if !NET45
+        /// <summary>
+        /// Returns list of custom attributes associated with <paramref name="member"/>.
+        /// </summary>
+        public static IEnumerable<TAttribute> GetCustomAttributes<TAttribute>(this MemberInfo member)
+        {
+            return member.GetCustomAttributes(typeof (TAttribute), true).Cast<TAttribute>();
+        }
+#endif
     }
 }

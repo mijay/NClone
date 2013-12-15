@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using NClone.MetadataProviders;
@@ -23,7 +24,7 @@ namespace NClone
     /// <list type="bullet">
     /// <item>do not deep copy structures — copies them by-value instead;</item>
     /// <item>do not copy delegates — uses <c>null</c>s in resulting object graphs;</item>
-    /// <item>throws when lazy-evaluated (like <see cref="Lazy{T}"/> or <see cref="IQueryable{T}"/>) objects are found.</item>
+    /// <item>throws when lazy-evaluated (like non-collection <see cref="IEnumerable{T}"/> or <see cref="IQueryable{T}"/>) objects are found.</item>
     /// </list></para>
     /// 
     /// <para>The main method of <see cref="Clone"/> class is <see cref="ObjectGraph{T}"/>, that executes object cloning. In case you do

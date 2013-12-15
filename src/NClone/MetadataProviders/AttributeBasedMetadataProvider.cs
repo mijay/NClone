@@ -1,7 +1,10 @@
-﻿using System;
+using System;
 using System.Reflection;
 using JetBrains.Annotations;
 using mijay.Utils.Collections;
+#if !NET45
+using mijay.Utils.Reflection;
+#endif
 
 namespace NClone.MetadataProviders
 {

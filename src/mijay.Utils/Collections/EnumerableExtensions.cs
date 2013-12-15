@@ -58,7 +58,11 @@ namespace mijay.Utils.Collections
         /// </summary>
         public static string JoinStrings([InstantHandle] this IEnumerable<string> source, string separator)
         {
-            return String.Join(separator, source);
+#if NET40
+            return string.Join(separator, source);
+#else
+            return string.Join(separator, source.ToArray());
+#endif
         }
 
         /// <summary>
@@ -82,8 +86,13 @@ namespace mijay.Utils.Collections
         /// </summary>
         public static IEnumerable<T> Materialize<T>([InstantHandle] this IEnumerable<T> source)
         {
+#if NET45
             if (source is ICollection<T> || source is IReadOnlyCollection<T> || source is ICollection)
                 return source;
+#else
+            if (source is ICollection<T> || source is ICollection)
+                return source;
+#endif
             return source.ToArray();
         }
 

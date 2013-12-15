@@ -17,7 +17,8 @@ namespace NClone.Benchmarks
 
         private static void Consume(int result)
         {
-            Console.WriteLine(result);
+            if (result != 1088890)
+                throw new Exception(result.ToString());
         }
 
         [Benchmark]

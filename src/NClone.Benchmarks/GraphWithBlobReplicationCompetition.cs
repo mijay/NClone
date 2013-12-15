@@ -13,7 +13,9 @@ namespace NClone.Benchmarks
 
         private static void Consume(SomeClass source)
         {
-            source.Property.Sum(x => x.field.Length);
+            int sum = source.Property.Sum(x => x.field.field.Length);
+            if (sum != 1088890)
+                throw new Exception(sum.ToString());
         }
 
         [Benchmark]
@@ -56,7 +58,7 @@ namespace NClone.Benchmarks
             var source = new SomeClass
                          {
                              Property = Enumerable.Range(0, blobSize)
-                                 .Select(i => new SomeClass2 { field = i.ToString() })
+                                 .Select(i => new SomeClass2 { field = new SomeClass3 { field = i.ToString() } })
                                  .ToArray()
                          };
             return source;
@@ -68,6 +70,11 @@ namespace NClone.Benchmarks
         }
 
         private class SomeClass2
+        {
+            public SomeClass3 field;
+        }
+
+        private class SomeClass3
         {
             public string field;
         }

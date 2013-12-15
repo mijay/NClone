@@ -19,11 +19,18 @@ namespace NClone.MetadataProviders
     {
         private readonly ReplicationBehavior replicationBehavior;
 
+        /// <summary>
+        /// Constructor for <see cref="CustomReplicationBehaviorAttribute"/>.
+        /// </summary>
         public CustomReplicationBehaviorAttribute(ReplicationBehavior replicationBehavior)
         {
             this.replicationBehavior = replicationBehavior;
         }
 
+        /// <summary>
+        /// Returns <see cref="ReplicationBehavior"/> assigned to member via
+        /// current <see cref="CustomReplicationBehaviorAttribute"/>.
+        /// </summary>
         public ReplicationBehavior GetReplicationBehavior()
         {
             return replicationBehavior;

@@ -21,12 +21,14 @@ namespace NClone.MetadataProviders
     /// </remarks>
     public class DefaultMetadataProvider: IMetadataProvider
     {
+        /// <inheritdoc />
         public ReplicationBehavior GetPerTypeBehavior(Type type)
         {
             Guard.AgainstNull(type, "type");
             return TryGetPerTypeBehavior(type) ?? ReplicationBehavior.DeepCopy;
         }
 
+        /// <inheritdoc />
         public IEnumerable<FieldReplicationInfo> GetFieldsReplicationInfo(Type type)
         {
             Guard.AgainstNull(type, "type");
@@ -119,7 +121,15 @@ namespace NClone.MetadataProviders
                 DeclaringMember = autoEvent;
             }
 
+            /// <summary>
+            /// <see cref="FieldInfo"/> of one field in replicated type.
+            /// </summary>
             public FieldInfo BackingField { get; private set; }
+
+            /// <summary>
+            /// <see cref="MemberInfo"/> of member that causes emitting <see cref="BackingField"/>
+            /// by compiler, e.g. event, auto-property, or field by itself.
+            /// </summary>
             public MemberInfo DeclaringMember { get; private set; }
         }
     }

@@ -58,7 +58,7 @@ namespace NClone.ReplicationStrategies
             public MemberReplicationInfo(Type containerType, FieldReplicationInfo fieldReplicationInfo)
             {
                 Behavior = fieldReplicationInfo.Behavior;
-                IMemberAccessor memberAccessor = FieldAccessorBuilder.BuildFor(containerType, fieldReplicationInfo.Member, true);
+                IMemberAccessor memberAccessor = FieldAccessorBuilder.BuildFor(containerType, fieldReplicationInfo.Field, true);
                 GetMember = memberAccessor.GetMember;
                 SetMember = memberAccessor.SetMember;
             }

@@ -220,7 +220,7 @@ namespace NClone.Tests.MetadataProviders
             FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithPublicInheritedField)).Single();
 
             Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.DeepCopy));
-            Assert.That(result.Member.Name, Is.EqualTo("field"));
+            Assert.That(result.Field.Name, Is.EqualTo("field"));
         }
 
         #endregion

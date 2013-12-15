@@ -7,6 +7,9 @@ namespace NClone.ObjectReplication
     /// </summary>
     public class CircularReferenceFoundException: Exception
     {
+        /// <summary>
+        /// Default constructor for <see cref="CircularReferenceFoundException"/>.
+        /// </summary>
         public CircularReferenceFoundException()
             : base(
                 //note: when hooks will be added - change this message

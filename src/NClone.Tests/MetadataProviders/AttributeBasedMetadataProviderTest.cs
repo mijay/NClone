@@ -37,7 +37,7 @@ namespace NClone.Tests.MetadataProviders
             FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithProperty)).Single();
 
             Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
-            Assert.That(result.Member.Name, Is.StringContaining("Property"));
+            Assert.That(result.Field.Name, Is.StringContaining("Property"));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace NClone.Tests.MetadataProviders
             FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof(ClassWithEvent)).Single();
 
             Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
-            Assert.That(result.Member.Name, Is.StringContaining("Event"));
+            Assert.That(result.Field.Name, Is.StringContaining("Event"));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace NClone.Tests.MetadataProviders
             FieldReplicationInfo result = metadataProvider.GetFieldsReplicationInfo(typeof (ClassWithInheritedProperty)).Single();
 
             Assert.That(result.Behavior, Is.EqualTo(ReplicationBehavior.Copy));
-            Assert.That(result.Member.Name, Is.StringContaining("Property"));
+            Assert.That(result.Field.Name, Is.StringContaining("Property"));
         }
 
         [CustomReplicationBehavior(ReplicationBehavior.Ignore)]

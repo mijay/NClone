@@ -20,12 +20,14 @@ namespace NClone.MetadataProviders
     /// <seealso cref="CustomReplicationBehaviorAttribute"/>
     public class AttributeBasedMetadataProvider: DefaultMetadataProvider
     {
+        /// <inheritdoc />
         protected override ReplicationBehavior? TryGetPerTypeBehavior(Type type)
         {
             return base.TryGetPerTypeBehavior(type)
                    ?? TryGetBehaviorFromAttribute(type);
         }
 
+        /// <inheritdoc />
         protected override ReplicationBehavior? TryGetPerMemberReplicationBehavior(CopyableFieldDescription fieldDescription)
         {
             return base.TryGetPerMemberReplicationBehavior(fieldDescription)

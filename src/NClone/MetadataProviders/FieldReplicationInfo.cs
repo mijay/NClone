@@ -8,13 +8,23 @@ namespace NClone.MetadataProviders
     /// </summary>
     public class FieldReplicationInfo
     {
-        public FieldReplicationInfo(FieldInfo member, ReplicationBehavior behavior)
+        /// <summary>
+        /// Constructor for <see cref="FieldReplicationInfo"/>
+        /// </summary>
+        public FieldReplicationInfo(FieldInfo field, ReplicationBehavior behavior)
         {
-            Member = member;
+            Field = field;
             Behavior = behavior;
         }
 
-        public FieldInfo Member { get; private set; }
+        /// <summary>
+        /// Field that should be affected during replication.
+        /// </summary>
+        public FieldInfo Field { get; private set; }
+
+        /// <summary>
+        /// <see cref="ReplicationBehavior"/> that should be applied to <see cref="Field"/>.
+        /// </summary>
         public ReplicationBehavior Behavior { get; private set; }
     }
 }

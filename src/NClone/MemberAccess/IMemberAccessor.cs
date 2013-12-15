@@ -18,6 +18,11 @@ namespace NClone.MemberAccess
         bool CanSet { get; }
 
         /// <summary>
+        /// Declared <see cref="Type"/> of the accessed member.
+        /// </summary>
+        Type MemberType { get; }
+
+        /// <summary>
         /// Sets value of accessed member in <paramref name="container"/> to <paramref name="memberValue"/>
         /// and returns modified <paramref name="container"/>.
         /// </summary>

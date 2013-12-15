@@ -44,7 +44,7 @@ namespace NClone.MemberAccess
                 ? CreateSetMethod(containerType, field)
                 : null;
 
-            return new MemberAccessor(getMethod, setMethod);
+            return new MemberAccessor(field.FieldType, getMethod, setMethod);
         }
 
         private static Func<object, object> CreateGetMethod(Type containerType, FieldInfo field)

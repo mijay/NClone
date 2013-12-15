@@ -11,11 +11,14 @@ namespace NClone.MemberAccess
         private readonly Func<object, object> getMethod;
         private readonly Func<object, object, object> setMethod;
 
-        public MemberAccessor(Func<object, object> getMethod, Func<object, object, object> setMethod)
+        public MemberAccessor(Type memberType, Func<object, object> getMethod, Func<object, object, object> setMethod)
         {
+            MemberType = memberType;
             this.setMethod = setMethod;
             this.getMethod = getMethod;
         }
+
+        public Type MemberType { get; private set; }
 
         public object SetMember(object container, object memberValue)
         {

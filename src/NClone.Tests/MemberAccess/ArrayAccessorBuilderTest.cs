@@ -8,6 +8,7 @@ namespace NClone.Tests.MemberAccess
     public class ArrayAccessorBuilderTest: TestBase
     {
         private double[] array;
+        private IArrayAccessor arrayAccessor;
         private double number;
 
         protected override void SetUp()
@@ -19,14 +20,13 @@ namespace NClone.Tests.MemberAccess
                 .Select(_ => random.NextDouble())
                 .ToArray();
             number = random.NextDouble();
+            arrayAccessor = ArrayAccessorBuilder.BuildForArrayOf(typeof (double));
         }
 
         [Test]
         public void BuildArrayElementReader_ItWorks()
         {
-            Func<Array, int, object> arrayElementReader = ArrayAccessorBuilder.BuildArrayElementReader(typeof (double));
-
-            object result = arrayElementReader(array, 25);
+            object result = arrayAccessor.GetElement(array, 25);
 
             Assert.That(result, Is.EqualTo(array[25]));
         }
@@ -34,9 +34,7 @@ namespace NClone.Tests.MemberAccess
         [Test]
         public void BuildArrayElementWriter_ItWorks()
         {
-            Action<Array, int, object> arrayElementWriter = ArrayAccessorBuilder.BuildArrayElementWriter(typeof (double));
-
-            arrayElementWriter(array, 25, number);
+            arrayAccessor.SetElement(array, 25, number);
 
             Assert.That(array[25], Is.EqualTo(number));
         }

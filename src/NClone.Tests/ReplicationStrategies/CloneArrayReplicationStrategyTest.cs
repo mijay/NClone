@@ -6,24 +6,23 @@ using mijay.Utils;
 using mijay.Utils.Collections;
 using NClone.ObjectReplication;
 using NClone.ReplicationStrategies;
-using NClone.Utils;
 using NUnit.Framework;
 
 namespace NClone.Tests.ReplicationStrategies
 {
     public class CloneArrayReplicationStrategyTest: TestBase
     {
-        private CloneArrayReplicationStrategy replicator;
         private IReplicationContext dummyContext;
+        private CloneArrayReplicationStrategy replicator;
 
         protected override void SetUp()
         {
             base.SetUp();
-            replicator = new CloneArrayReplicationStrategy(typeof(Class));
+            replicator = new CloneArrayReplicationStrategy(typeof (Class));
             dummyContext = A.Fake<IReplicationContext>(x => x.Strict());
         }
 
-        private static IReplicationContext ContextThatMaps(Class[] source, Class[] to)
+        private static IReplicationContext ContextThatMaps<T>(T[] source, T[] to)
         {
             var context = A.Fake<IReplicationContext>(x => x.Strict());
             source
@@ -51,9 +50,8 @@ namespace NClone.Tests.ReplicationStrategies
             var source = new[] { new Class(), new Class() };
             var expectedResult = new[] { new Class(), new Class() };
 
-            object result = replicator.Replicate(source, ContextThatMaps(source, to: expectedResult));
+            object result = replicator.Replicate(source, ContextThatMaps(source, expectedResult));
 
-            Assert.That(result.As<Class[]>(), Is.EquivalentTo(expectedResult));
             CollectionAssert.AreEqual(expectedResult, result.As<Class[]>());
         }
 
@@ -65,11 +63,27 @@ namespace NClone.Tests.ReplicationStrategies
             Assert.That(action, Throws.InstanceOf<ArgumentException>());
         }
 
+        [Test]
+        public void SourceIsArrayOfStructs_EachElementIsReplicated()
+        {
+            replicator = new CloneArrayReplicationStrategy(typeof(Struct));
+            var source = new[] { new Struct(), new Struct() };
+            var expectedResult = new[] { new Struct(), new Struct() };
+
+            object result = replicator.Replicate(source, ContextThatMaps(source, expectedResult));
+
+            CollectionAssert.AreEqual(expectedResult, result.As<Struct[]>());
+        }
+
         private class Class
         {
         }
 
         private class Inherited: Class
+        {
+        }
+
+        private struct Struct
         {
         }
     }

@@ -47,7 +47,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MemberAccess\ArrayAccessor.cs" />
     <Compile Include="MemberAccess\ArrayAccessorBuilder.cs" />
+    <Compile Include="MemberAccess\IArrayAccessor.cs" />
     <Compile Include="MetadataProviders\CustomReplicationBehaviorAttribute.cs" />
     <Compile Include="MetadataProviders\ConventionalMetadataProvider.cs" />
     <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />

@@ -6,24 +6,24 @@ using mijay.Utils.Reflection;
 namespace NClone.MemberAccess
 {
     /// <summary>
-    /// Factory for getArrayElement and setArrayElement methods.
+    /// Factory for <see cref="IArrayAccessor"/>s.
     /// </summary>
     public static class ArrayAccessorBuilder
     {
         /// <summary>
-        /// Builds getArrayElement method for arrays with elements of type <paramref name="arrayElementType"/>.
+        /// Builds <see cref="IArrayAccessor"/> for arrays with elements of type <paramref name="arrayElementType"/>.
         /// </summary>
-        /// <remarks>
-        /// getArrayElement function gets two arguments: untyped array (which should contain elements of
-        /// type <paramref name="arrayElementType"/>) and integer index in it. It returns value (casted to
-        /// <c>object</c>) stored in the array by the index.
-        /// </remarks>
-        public static Func<Array, int, object> BuildArrayElementReader(Type arrayElementType)
+        public static IArrayAccessor BuildForArrayOf(Type arrayElementType)
         {
             Guard.AgainstNull(arrayElementType, "arrayElementType");
 
             Type arrayType = arrayElementType.MakeArrayType();
+            return new ArrayAccessor(arrayElementType, BuildGetMethod(arrayType, arrayElementType),
+                BuildSetMethod(arrayType, arrayElementType));
+        }
 
+        private static Func<Array, int, object> BuildGetMethod(Type arrayType, Type arrayElementType)
+        {
             var readerDeclaration = new DynamicMethod(
                 "getFromArrayOf_" + arrayElementType.FullName,
                 typeof (object), new[] { typeof (Array), typeof (int) },
@@ -40,21 +40,8 @@ namespace NClone.MemberAccess
             return (Func<Array, int, object>) readerDeclaration.CreateDelegate(typeof (Func<Array, int, object>));
         }
 
-        /// <summary>
-        /// Builds setArrayElement method for arrays with elements of type <paramref name="arrayElementType"/>.
-        /// </summary>
-        /// <remarks>
-        /// setArrayElement function gets three arguments: untyped array (which should contain elements of
-        /// type <paramref name="arrayElementType"/>), integer index in it and value to be written (of type
-        /// <paramref name="arrayElementType"/>, but casted to <c>object</c>). It stores the given value in
-        /// the array by the given index.
-        /// </remarks>
-        public static Action<Array, int, object> BuildArrayElementWriter(Type arrayElementType)
+        private static Action<Array, int, object> BuildSetMethod(Type arrayType, Type arrayElementType)
         {
-            Guard.AgainstNull(arrayElementType, "arrayElementType");
-
-            Type arrayType = arrayElementType.MakeArrayType();
-
             var writerDeclaration = new DynamicMethod(
                 "setToArrayOf_" + arrayElementType.FullName,
                 null, new[] { typeof (Array), typeof (int), typeof (object) },

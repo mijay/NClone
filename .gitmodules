@@ -1,0 +1,3 @@
+[submodule "src/mijay.Utils"]
+	path = src/mijay.Utils
+	url = https://github.com/mijay/Utils.git

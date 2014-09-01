@@ -74,6 +74,27 @@ namespace NClone.Tests.ObjectReplication
         }
 
         [Test]
+        public void ReplicatesEqualButNotSameObjects_FactoryIsCalledForEach()
+        {
+            var source1 = new AlwaysEqualsClass();
+            var source2 = new AlwaysEqualsClass();
+            var strategy = A.Fake<IReplicationStrategy>();
+            var strategyFactory = A.Fake<IReplicationStrategyFactory>(x => x.Strict());
+            strategyFactory
+                .CallsTo(x => x.StrategyForType(typeof (AlwaysEqualsClass)))
+                .Returns(strategy);
+            var replicationContext = new ReplicationContext(strategyFactory);
+
+            replicationContext.Replicate(source1);
+            replicationContext.Replicate(source2);
+
+            strategy
+                .CallsTo(x => x.Replicate(null, null))
+                .WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Twice);
+        }
+
+        [Test]
         public void SourceContainsCircularReference_ExceptionIsThrown()
         {
             var source = new Class();
@@ -87,5 +108,29 @@ namespace NClone.Tests.ObjectReplication
         }
 
         private class Class { }
+
+        private class AlwaysEqualsClass
+        {
+            private bool Equals(AlwaysEqualsClass other)
+            {
+                return true;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                    return false;
+                if (ReferenceEquals(this, obj))
+                    return true;
+                if (obj.GetType() != this.GetType())
+                    return false;
+                return Equals((AlwaysEqualsClass) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return 42;
+            }
+        }
     }
 }

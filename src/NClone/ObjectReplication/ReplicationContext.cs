@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using mijay.Utils;
+using mijay.Utils.Comparers;
 using NClone.ReplicationStrategies;
 
 namespace NClone.ObjectReplication
@@ -10,7 +11,10 @@ namespace NClone.ObjectReplication
     internal class ReplicationContext: IReplicationContext
     {
         private static readonly object objectIsReplicatingMarker = new object();
-        private readonly IDictionary<object, object> replicatedEntries = new Dictionary<object, object>();
+
+        private readonly IDictionary<object, object> replicatedEntries =
+            new Dictionary<object, object>(ReferenceEqualityComparer.Instance);
+
         private readonly IReplicationStrategyFactory replicationStrategyFactory;
 
         public ReplicationContext(IReplicationStrategyFactory replicationStrategyFactory)

@@ -1,4 +1,5 @@
-﻿using FakeItEasy;
+﻿using System;
+using FakeItEasy;
 using FakeItEasy.ExtensionSyntax.Full;
 using NClone.ObjectReplication;
 using NClone.ReplicationStrategies;
@@ -8,36 +9,24 @@ namespace NClone.Tests.ObjectReplication
 {
     public class ReplicatorContextTest: TestBase
     {
-        private IReplicationStrategyFactory dummyFactory;
+        private ReplicationContext replicationContext;
+        private IReplicationStrategy replicationStrategy;
 
         protected override void SetUp()
         {
             base.SetUp();
-            dummyFactory = A.Fake<IReplicationStrategyFactory>(x => x.Strict());
-        }
-
-        private static IReplicationStrategyFactory FactoryForReplicatorThat(Class onReceiving, Class returns = null,
-                                                                            object callsContextWithArgument = null)
-        {
-            var strategy = A.Fake<IReplicationStrategy>(x => x.Strict());
-            strategy
-                .CallsTo(x => x.Replicate(onReceiving, A<IReplicationContext>.Ignored))
-                .ReturnsLazily(call => {
-                                   if (callsContextWithArgument != null)
-                                       call.Arguments.Get<IReplicationContext>(1).Replicate(callsContextWithArgument);
-                                   return returns;
-                               });
-            var strategyFactory = A.Fake<IReplicationStrategyFactory>(x => x.Strict());
-            strategyFactory
-                .CallsTo(x => x.StrategyForType(typeof (Class)))
-                .Returns(strategy);
-            return strategyFactory;
+            replicationStrategy = A.Fake<IReplicationStrategy>();
+            var simpleFactory = A.Fake<IReplicationStrategyFactory>(x => x.Strict());
+            simpleFactory
+                .CallsTo(x => x.StrategyForType(A<Type>.Ignored))
+                .Returns(replicationStrategy);
+            replicationContext = new ReplicationContext(simpleFactory);
         }
 
         [Test]
         public void SourceIsNull_NullReturned()
         {
-            object result = new ReplicationContext(dummyFactory).Replicate(null);
+            object result = replicationContext.Replicate(null);
 
             Assert.That(result, Is.Null);
         }
@@ -47,8 +36,9 @@ namespace NClone.Tests.ObjectReplication
         {
             var source = new Class();
             var sourceReplica = new Class();
-            IReplicationStrategyFactory strategyFactory = FactoryForReplicatorThat(onReceiving: source, returns: sourceReplica);
-            var replicationContext = new ReplicationContext(strategyFactory);
+            replicationStrategy
+                .CallsTo(x => x.Replicate(source, A<IReplicationContext>.Ignored))
+                .Returns(sourceReplica);
 
             object result = replicationContext.Replicate(source);
 
@@ -59,17 +49,12 @@ namespace NClone.Tests.ObjectReplication
         public void ReplicateSameSourceTwice_FactoryIsCalledOnlyOnce()
         {
             var source = new Class();
-            var sourceReplica = new Class();
-            IReplicationStrategyFactory strategyFactory = FactoryForReplicatorThat(onReceiving: source, returns: sourceReplica);
-            var replicationContext = new ReplicationContext(strategyFactory);
 
             replicationContext.Replicate(source);
             replicationContext.Replicate(source);
 
-            strategyFactory
-                .StrategyForType(typeof (Class))
-                .CallsTo(x => x.Replicate(null, null))
-                .WithAnyArguments()
+            replicationStrategy
+                .CallsTo(x => x.Replicate(null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -78,19 +63,12 @@ namespace NClone.Tests.ObjectReplication
         {
             var source1 = new AlwaysEqualsClass();
             var source2 = new AlwaysEqualsClass();
-            var strategy = A.Fake<IReplicationStrategy>();
-            var strategyFactory = A.Fake<IReplicationStrategyFactory>(x => x.Strict());
-            strategyFactory
-                .CallsTo(x => x.StrategyForType(typeof (AlwaysEqualsClass)))
-                .Returns(strategy);
-            var replicationContext = new ReplicationContext(strategyFactory);
 
             replicationContext.Replicate(source1);
             replicationContext.Replicate(source2);
 
-            strategy
-                .CallsTo(x => x.Replicate(null, null))
-                .WithAnyArguments()
+            replicationStrategy
+                .CallsTo(x => x.Replicate(null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Twice);
         }
 
@@ -98,16 +76,14 @@ namespace NClone.Tests.ObjectReplication
         public void SourceContainsCircularReference_ExceptionIsThrown()
         {
             var source = new Class();
-            IReplicationStrategyFactory strategyFactory = FactoryForReplicatorThat(onReceiving: source,
-                callsContextWithArgument: source);
-            var replicationContext = new ReplicationContext(strategyFactory);
+            replicationStrategy
+                .CallsTo(x => x.Replicate(source, A<IReplicationContext>.Ignored))
+                .Invokes((object _, IReplicationContext context) => context.Replicate(source));
 
             TestDelegate action = () => replicationContext.Replicate(source);
 
             Assert.That(action, Throws.InstanceOf<CircularReferenceFoundException>());
         }
-
-        private class Class { }
 
         private class AlwaysEqualsClass
         {
@@ -122,7 +98,7 @@ namespace NClone.Tests.ObjectReplication
                     return false;
                 if (ReferenceEquals(this, obj))
                     return true;
-                if (obj.GetType() != this.GetType())
+                if (obj.GetType() != GetType())
                     return false;
                 return Equals((AlwaysEqualsClass) obj);
             }
@@ -131,6 +107,10 @@ namespace NClone.Tests.ObjectReplication
             {
                 return 42;
             }
+        }
+
+        private class Class
+        {
         }
     }
 }

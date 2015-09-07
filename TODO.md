@@ -1,8 +1,6 @@
 ### *Must* todos
 
-1. Move mijay.Utils to separate GitHub repository
-2. Review documentation and naming - remove "replicate" term
-3. Replcade Guard static class by CodeContracts
+1. Review documentation and naming - remove "replicate" term
 
 ### *Can* todos
 

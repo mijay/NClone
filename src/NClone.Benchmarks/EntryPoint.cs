@@ -5,11 +5,11 @@ using NClone.Benchmarks.Competitions;
 
 namespace NClone.Benchmarks
 {
-    internal static class EntryPoint
+    static class EntryPoint
     {
         public static void Main()
         {
-            using (var writer = new StreamWriter("benchmark.csv"))
+            using (var writer = new StreamWriter("benchmark.log"))
             {
                 var runner = new BenchmarkRunner(new IBenchmarkLogger[] { new BenchmarkStreamLogger(writer), new BenchmarkConsoleLogger() });
                 runner.RunCompetition(new ArrayAccessCompetition());

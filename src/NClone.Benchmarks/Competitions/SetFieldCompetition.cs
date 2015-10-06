@@ -2,17 +2,25 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using BenchmarkDotNet;
+using BenchmarkDotNet.Tasks;
 using NClone.MemberAccess;
 
 namespace NClone.Benchmarks.Competitions
 {
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V35)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V40)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V45)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V40)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V45)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V451)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V452)]
     public class SetFieldCompetition
     {
-        private const int iterationCount = 200000;
-        private object someClass;
-        private Func<object, object, object> setViaExpression;
-        private Func<object, object, object> setViaEmit;
-        private Func<object, object, object> setViaReflection;
+        const int iterationCount = 200000;
+        object someClass;
+        Func<object, object, object> setViaExpression;
+        Func<object, object, object> setViaEmit;
+        Func<object, object, object> setViaReflection;
 
         [Setup]
         public void SetUp()
@@ -67,9 +75,9 @@ namespace NClone.Benchmarks.Competitions
                 someClass = setViaReflection(someClass, i);
         }
 
-        private class SomeClass
+        class SomeClass
         {
-            private int field;
+            int field;
         }
     }
 }

@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using BenchmarkDotNet;
+using BenchmarkDotNet.Tasks;
 using NClone.MemberAccess;
 
 namespace NClone.Benchmarks.Competitions
 {
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V35)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V40)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V45)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V40)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V45)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V451)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V452)]
     public class ArrayAccessCompetition
     {
-        private const int arraySize = 120000;
+        const int arraySize = 120000;
 
-        private Array sourceArray;
-        private Func<Array, int, object> getByAccessor;
-        private Action<Array, int, object> setByAccessor;
+        Array sourceArray;
+        Func<Array, int, object> getByAccessor;
+        Action<Array, int, object> setByAccessor;
 
         [Setup]
         public void SetUp()
@@ -68,7 +75,7 @@ namespace NClone.Benchmarks.Competitions
             Consume(destination.ToArray(typeof (int)));
         }
 
-        private static void Consume(Array array)
+        static void Consume(Array array)
         {
             if (array.Length != arraySize)
                 throw new Exception(array.Length.ToString());

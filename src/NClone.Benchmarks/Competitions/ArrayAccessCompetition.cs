@@ -13,7 +13,6 @@ namespace NClone.Benchmarks.Competitions
         private Array sourceArray;
         private Func<Array, int, object> getByAccessor;
         private Action<Array, int, object> setByAccessor;
-        private object[] sourceObjArray;
 
         [Setup]
         public void SetUp()
@@ -24,7 +23,6 @@ namespace NClone.Benchmarks.Competitions
                 source[i] = random.Next();
 
             sourceArray = source;
-            sourceObjArray = source.Cast<object>().ToArray();
 
             var accessor = ArrayAccessorBuilder.BuildForArrayOf(typeof (int));
             getByAccessor = accessor.GetElement;
@@ -54,20 +52,6 @@ namespace NClone.Benchmarks.Competitions
             {
                 var data = getByAccessor(sourceArray, i);
                 setByAccessor(destination, i, data);
-            }
-
-            Consume(destination);
-        }
-
-        [Benchmark, OperationsPerInvoke(arraySize)]
-        public void ViaCast()
-        {
-            var destination = new object[arraySize];
-
-            for (var i = 0; i < arraySize; ++i)
-            {
-                var data = sourceObjArray[i];
-                destination[i] = data;
             }
 
             Consume(destination);

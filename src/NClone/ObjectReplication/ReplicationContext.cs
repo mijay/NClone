@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using mijay.Utils;
 using mijay.Utils.Comparers;
 using NClone.ReplicationStrategies;
@@ -10,10 +11,10 @@ namespace NClone.ObjectReplication
     /// </summary>
     internal class ReplicationContext: IReplicationContext
     {
-        private static readonly object objectIsReplicatingMarker = new object();
+        private static readonly Task<object> nullTask = Task.FromResult<object>(null);
 
-        private readonly IDictionary<object, object> replicatedEntries =
-            new Dictionary<object, object>(ReferenceEqualityComparer.Instance);
+        private readonly IDictionary<object, TaskCompletionSource<object>> computingEntities =
+            new Dictionary<object, TaskCompletionSource<object>>(ReferenceEqualityComparer.Instance);
 
         private readonly IReplicationStrategyFactory replicationStrategyFactory;
 
@@ -23,37 +24,28 @@ namespace NClone.ObjectReplication
             this.replicationStrategyFactory = replicationStrategyFactory;
         }
 
-        public object Replicate(object source)
+        public Task<object> ReplicateAsync(object source)
         {
-            object result;
-            if (TryGetReplicatedValue(source, out result))
-                return result;
+            if (ReferenceEquals(source, null))
+                return nullTask;
 
+            TaskCompletionSource<object> resultAsync;
+            if (computingEntities.TryGetValue(source, out resultAsync))
+                return resultAsync.Task;
+
+            resultAsync = new TaskCompletionSource<object>();
+            computingEntities.Add(source, resultAsync);
+
+            var result = Replicate(source);
+
+            resultAsync.SetResult(result);
+            return resultAsync.Task;
+        }
+
+        private object Replicate(object source)
+        {
             IReplicationStrategy replicationStrategy = replicationStrategyFactory.StrategyForType(source.GetType());
-            result = replicationStrategy.Replicate(source, this);
-
-            StoreReplicatedValue(source, result);
-            return result;
-        }
-
-        private bool TryGetReplicatedValue(object source, out object result)
-        {
-            if (ReferenceEquals(source, null)) {
-                result = null;
-                return true;
-            }
-            if (replicatedEntries.TryGetValue(source, out result)) {
-                if (ReferenceEquals(result, objectIsReplicatingMarker))
-                    throw new CircularReferenceFoundException();
-                return true;
-            }
-            replicatedEntries.Add(source, objectIsReplicatingMarker);
-            return false;
-        }
-
-        private void StoreReplicatedValue(object source, object result)
-        {
-            replicatedEntries[source] = result; //note: ReplicationContext is created for one clonning => no concurrency
+            return replicationStrategy.Replicate(source, this);
         }
     }
 }

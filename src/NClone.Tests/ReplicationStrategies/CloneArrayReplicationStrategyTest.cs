@@ -29,7 +29,7 @@ namespace NClone.Tests.ReplicationStrategies
                 .Zip(to, Tuple.Create)
                 .ForEach(pair => context
                     .Configure()
-                    .CallsTo(x => x.Replicate(pair.Item1))
+                    .CallsTo(x => x.ReplicateAsync(pair.Item1))
                     .Returns(pair.Item2));
             return context;
         }

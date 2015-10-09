@@ -26,9 +26,9 @@ namespace NClone.Tests.ObjectReplication
         [Test]
         public void SourceIsNull_NullReturned()
         {
-            object result = replicationContext.Replicate(null);
+            var resultAsync = replicationContext.ReplicateAsync(null);
 
-            Assert.That(result, Is.Null);
+            Assert.That(resultAsync.Result, Is.Null);
         }
 
         [Test]
@@ -40,9 +40,9 @@ namespace NClone.Tests.ObjectReplication
                 .CallsTo(x => x.Replicate(source, A<IReplicationContext>.Ignored))
                 .Returns(sourceReplica);
 
-            object result = replicationContext.Replicate(source);
+            var resultAsync = replicationContext.ReplicateAsync(source);
 
-            Assert.That(result, Is.SameAs(sourceReplica));
+            Assert.That(resultAsync.Result, Is.SameAs(sourceReplica));
         }
 
         [Test]
@@ -50,9 +50,11 @@ namespace NClone.Tests.ObjectReplication
         {
             var source = new Class();
 
-            replicationContext.Replicate(source);
-            replicationContext.Replicate(source);
+            var resultAsync1 = replicationContext.ReplicateAsync(source);
+            var resultAsync2 = replicationContext.ReplicateAsync(source);
 
+            Assert.That(resultAsync1.IsCompleted);
+            Assert.That(resultAsync2.IsCompleted);
             replicationStrategy
                 .CallsTo(x => x.Replicate(null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -64,9 +66,11 @@ namespace NClone.Tests.ObjectReplication
             var source1 = new AlwaysEqualsClass();
             var source2 = new AlwaysEqualsClass();
 
-            replicationContext.Replicate(source1);
-            replicationContext.Replicate(source2);
+            var resultAsync1 = replicationContext.ReplicateAsync(source1);
+            var resultAsync2 = replicationContext.ReplicateAsync(source2);
 
+            Assert.That(resultAsync1.IsCompleted);
+            Assert.That(resultAsync2.IsCompleted);
             replicationStrategy
                 .CallsTo(x => x.Replicate(null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Twice);
@@ -75,14 +79,15 @@ namespace NClone.Tests.ObjectReplication
         [Test]
         public void SourceContainsCircularReference_ExceptionIsThrown()
         {
-            var source = new Class();
-            replicationStrategy
-                .CallsTo(x => x.Replicate(source, A<IReplicationContext>.Ignored))
-                .Invokes((object _, IReplicationContext context) => context.Replicate(source));
-
-            TestDelegate action = () => replicationContext.Replicate(source);
-
-            Assert.That(action, Throws.InstanceOf<CircularReferenceFoundException>());
+            throw new NotImplementedException();
+//            var source = new Class();
+//            replicationStrategy
+//                .CallsTo(x => x.Replicate(source, A<IReplicationContext>.Ignored))
+//                .Invokes((object _, IReplicationContext context) => context.Replicate(source));
+//
+//            TestDelegate action = () => replicationContext.Replicate(source);
+//
+//            Assert.That(action, Throws.InstanceOf<CircularReferenceFoundException>());
         }
 
         private class AlwaysEqualsClass

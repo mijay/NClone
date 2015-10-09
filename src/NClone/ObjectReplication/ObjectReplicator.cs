@@ -1,4 +1,5 @@
-﻿using mijay.Utils;
+﻿using System;
+using mijay.Utils;
 using NClone.MetadataProviders;
 using NClone.ReplicationStrategies;
 
@@ -49,7 +50,10 @@ namespace NClone.ObjectReplication
         /// </exception>
         public T Replicate<T>(T source)
         {
-            return new ReplicationContext(replicationStrategyFactory).Replicate(source).As<T>();
+            var result = new ReplicationContext(replicationStrategyFactory).ReplicateAsync(source);
+            if (!result.IsCompleted)
+                throw new InvalidOperationException("Cannot replicate object graph - the resulting task is not completed!");
+            return result.Result.As<T>();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace NClone.ReplicationStrategies
             var resultingArray = source.As<Array>().Clone().As<Array>();
             for (int i = resultingArray.Length - 1; i >= 0; i--) {
                 object sourceElement = getElement(resultingArray, i);
-                object resultingElement = context.Replicate(sourceElement);
+                object resultingElement = context.ReplicateAsync(sourceElement);
                 setElement(resultingArray, i, resultingElement);
             }
             return resultingArray;

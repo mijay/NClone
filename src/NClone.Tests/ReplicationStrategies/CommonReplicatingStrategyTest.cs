@@ -7,7 +7,6 @@ using mijay.Utils;
 using NClone.MetadataProviders;
 using NClone.ObjectReplication;
 using NClone.ReplicationStrategies;
-using NClone.Utils;
 using NUnit.Framework;
 
 namespace NClone.Tests.ReplicationStrategies
@@ -46,7 +45,7 @@ namespace NClone.Tests.ReplicationStrategies
         {
             var replicationContext = A.Fake<IReplicationContext>(x => x.Strict());
             replicationContext
-                .CallsTo(x => x.Replicate(onReceiving))
+                .CallsTo(x => x.ReplicateAsync(onReceiving))
                 .Returns(returns);
             return replicationContext;
         }

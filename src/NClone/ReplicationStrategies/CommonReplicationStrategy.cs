@@ -42,7 +42,7 @@ namespace NClone.ReplicationStrategies
             foreach (var memberReplicationInfo in memberDescriptions) {
                 object memberValue = memberReplicationInfo.GetMember(source);
                 object replicatedValue = memberReplicationInfo.Behavior == ReplicationBehavior.DeepCopy
-                    ? context.Replicate(memberValue)
+                    ? context.ReplicateAsync(memberValue)
                     : memberValue;
                 result = memberReplicationInfo.SetMember(result, replicatedValue);
             }

@@ -1,5 +1,7 @@
 ### *Must* todos
 
+1. Make `Guard` debug-only, and use new helpers on PublicApi borders.
+1. Do not use emit - use Expressions. Apparently, they are faster.
 1. Review documentation and naming - remove "replicate" term
 
 ### *Can* todos

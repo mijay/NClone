@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq.Expressions;
 using BenchmarkDotNet;
 using BenchmarkDotNet.Tasks;
 using NClone.MemberAccess;
@@ -20,6 +21,7 @@ namespace NClone.Benchmarks.Competitions
         Array sourceArray;
         Func<Array, int, object> getByAccessor;
         Action<Array, int, object> setByAccessor;
+        Action<Array, int, Array> setViaExpression;
 
         [Setup]
         public void SetUp()
@@ -34,6 +36,28 @@ namespace NClone.Benchmarks.Competitions
             var accessor = ArrayAccessorBuilder.BuildForArrayOf(typeof (int));
             getByAccessor = accessor.GetElement;
             setByAccessor = accessor.SetElement;
+
+            var xSourceArray = Expression.Parameter(typeof (Array));
+            var xDestinationArray = Expression.Parameter(typeof (Array));
+            var xIndex = Expression.Parameter(typeof (int));
+            var xSetItem = Expression.Lambda<Action<Array, int, Array>>(
+                Expression.Assign(
+                    Expression.ArrayAccess(Expression.Convert(xDestinationArray, typeof (int[])), xIndex),
+                    Expression.ArrayAccess(Expression.Convert(xSourceArray, typeof (int[])), xIndex)
+                    ),
+                xDestinationArray, xIndex, xSourceArray);
+            setViaExpression = xSetItem.Compile();
+        }
+
+        [Benchmark, OperationsPerInvoke(arraySize)]
+        public void ViaExpression()
+        {
+            var destination = (Array) new int[arraySize];
+
+            for (var i = 0; i < arraySize; ++i)
+                setViaExpression(destination, i, sourceArray);
+
+            Consume(destination);
         }
 
         [Benchmark, OperationsPerInvoke(arraySize)]

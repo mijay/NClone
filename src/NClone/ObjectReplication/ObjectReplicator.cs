@@ -6,7 +6,7 @@ using NClone.ReplicationStrategies;
 namespace NClone.ObjectReplication
 {
     /// <summary>
-    /// Object that is able to replicate acyclic object graphs.
+    /// Object that is able to replicate object graphs.
     /// </summary>
     /// <remarks>
     /// <para>Deep copy of the given object graph is other object graph, which is semantically equal (isomorphic) to the given one,
@@ -45,9 +45,6 @@ namespace NClone.ObjectReplication
         /// <summary>
         /// Replicate <paramref name="source"/>.
         /// </summary>
-        /// <exception cref="CircularReferenceFoundException">
-        /// Is thrown when the reference cycle is found in source object graph.
-        /// </exception>
         public T Replicate<T>(T source)
         {
             var result = new ReplicationContext(replicationStrategyFactory).ReplicateAsync(source);

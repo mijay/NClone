@@ -8,7 +8,7 @@ using NClone.ObjectReplication;
 namespace NClone
 {
     /// <summary>
-    /// Class that is able to clone (aka replicate or deep copy) acyclic object graphs. Static wrapper over <see cref="ObjectReplicator"/>.
+    /// Class that is able to clone (aka replicate or deep copy) arbitrary object graphs. Static wrapper over <see cref="ObjectReplicator"/>.
     /// </summary>
     /// <remarks>
     /// <para>Deep copy of the given object graph is other object graph, which is semantically equal (isomorphic) to the given one,
@@ -50,15 +50,12 @@ namespace NClone
         }
 
         /// <summary>
-        /// Replicates given <paramref name="source"/> acyclic object graph and return its deep copy.
+        /// Replicates given <paramref name="source"/> object graph and return its deep copy.
         /// </summary>
         /// <remarks>
         /// Uses both: conventions and attributes to adjust cloning process. Equivalent to <see cref="ObjectReplicator"/>
         /// with <see cref="ConventionalMetadataProvider"/>.
         /// </remarks>
-        /// <exception cref="CircularReferenceFoundException">
-        /// Is thrown when the reference cycle is found in source object graph.
-        /// </exception>
         [PublicAPI]
         public static T ObjectGraph<T>(T source)
         {
@@ -66,15 +63,12 @@ namespace NClone
         }
 
         /// <summary>
-        /// Replicates given <paramref name="source"/> acyclic object graph and return its deep copy.
+        /// Replicates given <paramref name="source"/> object graph and return its deep copy.
         /// </summary>
         /// <remarks>
         /// Uses only attributes to adjust cloning process. Equivalent to <see cref="ObjectReplicator"/>
         /// with <see cref="AttributeBasedMetadataProvider"/>.
         /// </remarks>
-        /// <exception cref="CircularReferenceFoundException">
-        /// Is thrown when the reference cycle is found in source object graph.
-        /// </exception>
         [PublicAPI]
         public static T ObjectIgnoringConventions<T>(T source)
         {

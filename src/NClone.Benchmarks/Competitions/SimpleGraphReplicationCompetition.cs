@@ -6,13 +6,13 @@ using NClone.ObjectReplication;
 
 namespace NClone.Benchmarks.Competitions
 {
-    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V35)]
-    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V40)]
-    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V45)]
-    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V40)]
-    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V45)]
-    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V451)]
-    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V452)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V35, jitVersion: BenchmarkJitVersion.LegacyJit)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V40, jitVersion: BenchmarkJitVersion.LegacyJit)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V45, jitVersion: BenchmarkJitVersion.LegacyJit)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X86, framework: BenchmarkFramework.V46, jitVersion: BenchmarkJitVersion.RyuJit)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V40, jitVersion: BenchmarkJitVersion.LegacyJit)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V45, jitVersion: BenchmarkJitVersion.LegacyJit)]
+    [BenchmarkTask(platform: BenchmarkPlatform.X64, framework: BenchmarkFramework.V46, jitVersion: BenchmarkJitVersion.RyuJit)]
     public class SimpleGraphReplicationCompetition
     {
         SomeClass source;

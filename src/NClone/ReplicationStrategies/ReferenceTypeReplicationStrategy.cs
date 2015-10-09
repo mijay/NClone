@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using mijay.Utils;
-using mijay.Utils.Reflection;
+using mijay.Utils.Tasks;
 using NClone.MemberAccess;
 using NClone.MetadataProviders;
 using NClone.ObjectReplication;
@@ -10,19 +10,19 @@ using NClone.ObjectReplication;
 namespace NClone.ReplicationStrategies
 {
     /// <summary>
-    /// Implementation of <see cref="IReplicationStrategy"/> for general reference or value types.
+    /// Implementation of <see cref="IReplicationStrategy"/> for general reference types.
     /// </summary>
-    internal class CommonReplicationStrategy: IReplicationStrategy
+    internal class ReferenceTypeReplicationStrategy: IReplicationStrategy
     {
         private readonly Type entityType;
         private readonly MemberReplicationInfo[] memberDescriptions;
 
-        public CommonReplicationStrategy(IMetadataProvider metadataProvider, Type entityType)
+        public ReferenceTypeReplicationStrategy(IMetadataProvider metadataProvider, Type entityType)
         {
             Guard.AgainstNull(metadataProvider, "metadataProvider");
             Guard.AgainstNull(entityType, "entityType");
-            Guard.AgainstViolation(!entityType.IsNullable() && !entityType.IsArray,
-                "CommonReplicationStrategy is not applicable to nullable or array types");
+            Guard.AgainstViolation(!entityType.IsValueType && !entityType.IsArray,
+                "ReferenceTypeReplicationStrategy is applicable only to by-ref types except arrays");
 
             this.entityType = entityType;
 
@@ -39,12 +39,16 @@ namespace NClone.ReplicationStrategies
                 entityType, source.GetType());
 
             object result = FormatterServices.GetUninitializedObject(entityType);
-            foreach (var memberReplicationInfo in memberDescriptions) {
+            foreach (var memberReplicationInfo in memberDescriptions)
+            {
                 object memberValue = memberReplicationInfo.GetMember(source);
-                object replicatedValue = memberReplicationInfo.Behavior == ReplicationBehavior.DeepCopy
-                    ? context.ReplicateAsync(memberValue)
-                    : memberValue;
-                result = memberReplicationInfo.SetMember(result, replicatedValue);
+                if (memberReplicationInfo.Behavior == ReplicationBehavior.DeepCopy)
+                {
+                    context.ReplicateAsync(memberValue)
+                        .Then(replicatedValue => memberReplicationInfo.SetMember(result, replicatedValue));
+                }
+                else
+                    memberReplicationInfo.SetMember(result, memberValue);
             }
             return result;
         }
@@ -53,14 +57,14 @@ namespace NClone.ReplicationStrategies
         {
             public readonly ReplicationBehavior Behavior;
             public readonly Func<object, object> GetMember;
-            public readonly Func<object, object, object> SetMember;
+            public readonly Action<object, object> SetMember;
 
             public MemberReplicationInfo(Type containerType, FieldReplicationInfo fieldReplicationInfo)
             {
                 Behavior = fieldReplicationInfo.Behavior;
                 IMemberAccessor memberAccessor = FieldAccessorBuilder.BuildFor(containerType, fieldReplicationInfo.Field, true);
                 GetMember = memberAccessor.GetMember;
-                SetMember = memberAccessor.SetMember;
+                SetMember = (obj, val) => memberAccessor.SetMember(obj, val);
             }
         }
     }

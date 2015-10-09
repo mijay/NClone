@@ -1,4 +1,5 @@
-﻿using FakeItEasy;
+﻿using System;
+using FakeItEasy;
 using FakeItEasy.ExtensionSyntax.Full;
 using NClone.MetadataProviders;
 using NClone.ReplicationStrategies;
@@ -58,13 +59,25 @@ namespace NClone.Tests.ReplicationStrategies
         }
 
         [Test]
-        public void SourceIsMarkedAsReplicate_CommonStrategyReturned()
+        public void SourceIsMarkedAsReplicate_ReferenceTypeStrategyReturned()
         {
             ReplicationStrategyFactory strategyFactory = StrategyWhere<Class>(isMarkedAs: ReplicationBehavior.DeepCopy);
 
             IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Class));
 
-            Assert.That(result, Is.InstanceOf<CommonReplicationStrategy>());
+            Assert.That(result, Is.InstanceOf<ReferenceTypeReplicationStrategy>());
+        }
+
+        [Test]
+        public void SourceStructIsMarkedAsReplicate_ValueTypeStrategyReturned()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test]
+        public void SourceNullableStructIsMarkedAsReplicate_ValueTypeStrategyReturned()
+        {
+            throw new NotImplementedException();
         }
 
         [Test]

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using mijay.Utils;
+using mijay.Utils.Tasks;
 using NClone.MemberAccess;
 using NClone.ObjectReplication;
 
@@ -34,8 +34,7 @@ namespace NClone.ReplicationStrategies
                 object sourceElement = getElement(resultingArray, i);
                 var _i = i;
                 context.ReplicateAsync(sourceElement)
-                    .ContinueWith(t => setElement(resultingArray, _i, t.Result),
-                        TaskContinuationOptions.ExecuteSynchronously);
+                    .Then(resultingElement => setElement(resultingArray, _i, resultingElement));
             }
             return resultingArray;
         }

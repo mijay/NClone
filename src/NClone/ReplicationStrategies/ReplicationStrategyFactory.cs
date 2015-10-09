@@ -46,9 +46,11 @@ namespace NClone.ReplicationStrategies
                 case ReplicationBehavior.DeepCopy:
                     if (type.IsArray)
                         return BuildArrayReplicator(type);
+                    if (!type.IsValueType)
+                        return new ReferenceTypeReplicationStrategy(metadataProvider, type);
                     if (type.IsNullable())
-                        return new CommonReplicationStrategy(metadataProvider, type.GetNullableUnderlyingType());
-                    return new CommonReplicationStrategy(metadataProvider, type);
+                        return new ValueTypeReplicationStrategy(metadataProvider, type.GetNullableUnderlyingType());
+                    return new ValueTypeReplicationStrategy(metadataProvider, type);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

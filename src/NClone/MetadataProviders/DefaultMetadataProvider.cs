@@ -47,10 +47,6 @@ namespace NClone.MetadataProviders
         {
             if (entityType.IsPrimitive || entityType.IsEnum || entityType == typeof (string))
                 return ReplicationBehavior.Copy;
-            if (entityType.IsNullable()) {
-                Type underlyingType = entityType.GetNullableUnderlyingType();
-                return GetPerTypeBehavior(underlyingType);
-            }
             return null;
         }
 

@@ -37,6 +37,9 @@ namespace NClone.ReplicationStrategies
 
         private IReplicationStrategy BuildEntityReplicator(Type type)
         {
+            if (type.IsNullable())
+                type = type.GetNullableUnderlyingType();
+
             ReplicationBehavior behavior = metadataProvider.GetPerTypeBehavior(type);
             switch (behavior) {
                 case ReplicationBehavior.Ignore:
@@ -48,8 +51,6 @@ namespace NClone.ReplicationStrategies
                         return BuildArrayReplicator(type);
                     if (!type.IsValueType)
                         return new ReferenceTypeReplicationStrategy(metadataProvider, type);
-                    if (type.IsNullable())
-                        return new ValueTypeReplicationStrategy(metadataProvider, type.GetNullableUnderlyingType());
                     return new ValueTypeReplicationStrategy(metadataProvider, type);
                 default:
                     throw new ArgumentOutOfRangeException();

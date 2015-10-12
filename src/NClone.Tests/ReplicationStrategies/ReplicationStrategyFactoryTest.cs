@@ -32,7 +32,7 @@ namespace NClone.Tests.ReplicationStrategies
                 .CallsTo(x => x.GetPerTypeBehavior(typeof (T)))
                 .Returns(whereElementsAreMarkedAs);
             metadataProvider
-                .CallsTo(x => x.GetFieldsReplicationInfo(typeof(T)))
+                .CallsTo(x => x.GetFieldsReplicationInfo(typeof (T)))
                 .Returns(new FieldReplicationInfo[0]);
 
             return new ReplicationStrategyFactory(metadataProvider);
@@ -71,13 +71,21 @@ namespace NClone.Tests.ReplicationStrategies
         [Test]
         public void SourceStructIsMarkedAsReplicate_ValueTypeStrategyReturned()
         {
-            throw new NotImplementedException();
+            ReplicationStrategyFactory strategyFactory = StrategyWhere<Struct>(isMarkedAs: ReplicationBehavior.DeepCopy);
+
+            IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Struct));
+
+            Assert.That(result, Is.InstanceOf<ValueTypeReplicationStrategy>());
         }
 
         [Test]
         public void SourceNullableStructIsMarkedAsReplicate_ValueTypeStrategyReturned()
         {
-            throw new NotImplementedException();
+            ReplicationStrategyFactory strategyFactory = StrategyWhere<Struct>(isMarkedAs: ReplicationBehavior.DeepCopy);
+
+            IReplicationStrategy result = strategyFactory.StrategyForType(typeof(Struct?));
+
+            Assert.That(result, Is.InstanceOf<ValueTypeReplicationStrategy>());
         }
 
         [Test]
@@ -114,7 +122,7 @@ namespace NClone.Tests.ReplicationStrategies
         [Test]
         public void SourceIsArrayOfClonnedTypes_CloneArrayStrategyReturned()
         {
-            ReplicationStrategyFactory strategyFactory = StrategyForArrayOf<Class>(whereElementsAreMarkedAs : ReplicationBehavior.DeepCopy);
+            ReplicationStrategyFactory strategyFactory = StrategyForArrayOf<Class>(whereElementsAreMarkedAs: ReplicationBehavior.DeepCopy);
 
             IReplicationStrategy result = strategyFactory.StrategyForType(typeof (Class[]));
 
@@ -122,6 +130,11 @@ namespace NClone.Tests.ReplicationStrategies
         }
 
         private class Class
+        {
+            public object field;
+        }
+
+        private struct Struct
         {
             public object field;
         }

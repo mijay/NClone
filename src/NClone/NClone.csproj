@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET35;NET40;NET45</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -30,33 +30,33 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\NET45\</OutputPath>
-    <DefineConstants>TRACE;NET35;NET40;NET45</DefineConstants>
+    <DefineConstants>NET40;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\NClone.XML</DocumentationFile>
+    <DocumentationFile>bin\NET45\NClone.XML</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ILMergePlatform>v4</ILMergePlatform>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET35|AnyCPU'">
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <OutputPath>bin\NET35\</OutputPath>
-    <DefineConstants>TRACE;NET35</DefineConstants>
-    <DocumentationFile>bin\Release\NClone.XML</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET40|AnyCPU'">
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <OutputPath>bin\NET40\</OutputPath>
+    <DefineConstants>NET40</DefineConstants>
+    <DocumentationFile>bin\NET40\NClone.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <ILMergePlatform>v2</ILMergePlatform>
+    <ILMergePlatform>v4</ILMergePlatform>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET40|AnyCPU'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <OutputPath>bin\NET40\</OutputPath>
-    <DefineConstants>TRACE;NET35;NET40</DefineConstants>
-    <DocumentationFile>bin\Release\NClone.XML</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET46|AnyCPU'">
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <OutputPath>bin\NET46\</OutputPath>
+    <DefineConstants>NET40;NET45</DefineConstants>
+    <DocumentationFile>bin\NET46\NClone.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>

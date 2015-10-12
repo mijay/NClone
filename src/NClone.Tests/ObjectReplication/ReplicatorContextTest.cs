@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax.Full;
 using NClone.ObjectReplication;
@@ -77,21 +78,30 @@ namespace NClone.Tests.ObjectReplication
         }
 
         [Test]
-        public void SourceContainsCircularReference_ExceptionIsThrown()
+        public void ReplicateIsCalledRecursively_SecondTaskIsCompletedWithFirst()
         {
-            throw new NotImplementedException();
-//            var source = new Class();
-//            replicationStrategy
-//                .CallsTo(x => x.Replicate(source, A<IReplicationContext>.Ignored))
-//                .Invokes((object _, IReplicationContext context) => context.Replicate(source));
-//
-//            TestDelegate action = () => replicationContext.Replicate(source);
-//
-//            Assert.That(action, Throws.InstanceOf<CircularReferenceFoundException>());
+            var source = new Class();
+
+            Task<object> recursiveReplicateAsync = null;
+            replicationStrategy
+                .CallsTo(x => x.Replicate(source, replicationContext))
+                .Invokes(_ =>
+                {
+                    recursiveReplicateAsync = replicationContext.ReplicateAsync(source);
+                    Assert.That(recursiveReplicateAsync.IsCompleted, Is.False);
+                })
+                .Returns(new object());
+
+            var replicateAsync = replicationContext.ReplicateAsync(source);
+
+            Assert.That(replicateAsync.IsCompleted, Is.True);
+            Assert.That(recursiveReplicateAsync.IsCompleted, Is.True);
+            Assert.That(recursiveReplicateAsync.Result, Is.SameAs(replicateAsync.Result));
         }
 
         private class AlwaysEqualsClass
         {
+            // ReSharper disable once UnusedParameter.Local
             private bool Equals(AlwaysEqualsClass other)
             {
                 return true;

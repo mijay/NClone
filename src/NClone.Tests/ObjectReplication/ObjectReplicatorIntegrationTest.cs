@@ -3,7 +3,6 @@ using System.Diagnostics;
 using mijay.Utils;
 using NClone.MetadataProviders;
 using NClone.ObjectReplication;
-using NClone.Utils;
 using NUnit.Framework;
 
 namespace NClone.Tests.ObjectReplication
@@ -132,14 +131,15 @@ namespace NClone.Tests.ObjectReplication
         }
 
         [Test]
-        public void SourceContainsCircularReferences_ItIsDetected()
+        public void SourceContainsCircularReferences_ItIsCircularInReplica()
         {
             var source = new Class();
             source.field = source;
 
-            TestDelegate action = () => objectReplicator.Replicate(source);
+            var result = objectReplicator.Replicate(source);
 
-            Assert.That(action, Throws.InstanceOf<CircularReferenceFoundException>());
+            Assert.That(result, Is.Not.SameAs(source));
+            Assert.That(result.field, Is.SameAs(result));
         }
 
         [Test]

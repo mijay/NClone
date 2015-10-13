@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using mijay.Utils;
 using mijay.Utils.Comparers;
+using mijay.Utils.Tasks;
 using NClone.ReplicationStrategies;
 
 namespace NClone.ObjectReplication
@@ -11,7 +12,7 @@ namespace NClone.ObjectReplication
     /// </summary>
     internal class ReplicationContext: IReplicationContext
     {
-        private static readonly Task<object> nullTask = Task.FromResult<object>(null);
+        private static readonly Task<object> nullTask = TaskEx.FromResult<object>(null);
 
         private readonly IDictionary<object, TaskCompletionSource<object>> computingEntities =
             new Dictionary<object, TaskCompletionSource<object>>(ReferenceEqualityComparer.Instance);

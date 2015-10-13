@@ -28,13 +28,14 @@ namespace NClone.ReplicationStrategies
             Guard.AgainstViolation(source.GetType().GetElementType() == elementType,
                 "This replicator can copy only arrays of elements of type {0}, but {1} received",
                 elementType, source.GetType().GetElementType());
-            var resultingArray = source.As<Array>().Clone().As<Array>();
+            var sourceArray = source.As<Array>();
+            var resultingArray = Array.CreateInstance(elementType, sourceArray.Length); // todo: performance test this!
             for (int i = resultingArray.Length - 1; i >= 0; i--)
             {
-                object sourceElement = getElement(resultingArray, i);
-                var _i = i;
+                object sourceElement = getElement(sourceArray, i);
+                var localI = i;
                 context.ReplicateAsync(sourceElement)
-                    .Then(resultingElement => setElement(resultingArray, _i, resultingElement));
+                    .Then(resultingElement => setElement(resultingArray, localI, resultingElement));
             }
             return resultingArray;
         }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax;
+using FakeItEasy.ExtensionSyntax.Full;
 using mijay.Utils;
 using mijay.Utils.Collections;
 using NClone.ObjectReplication;
@@ -73,6 +75,26 @@ namespace NClone.Tests.ReplicationStrategies
             object result = replicator.Replicate(source, ContextThatMaps(source, expectedResult));
 
             CollectionAssert.AreEqual(expectedResult, result.As<Struct[]>());
+        }
+
+        [Test]
+        public void SourceIsArrayWithElementsThatAreReplicatedAsync_EachElementIsSetAfterReplication()
+        {
+            var sourceElement = new Class();
+            var resultTaskSource = new TaskCompletionSource<object>();
+
+            var context = A.Fake<IReplicationContext>(x => x.Strict());
+            context
+                .CallsTo(x => x.ReplicateAsync(sourceElement))
+                .ReturnsLazily(_ => resultTaskSource.Task);
+
+            var result = replicator.Replicate(new[] { sourceElement }, context).As<Class[]>();
+
+            CollectionAssert.AreEqual(new Class[] { null }, result);
+
+            var resultElement = new Class();
+            resultTaskSource.SetResult(resultElement);
+            CollectionAssert.AreEqual(new[] { resultElement }, result);
         }
 
         private class Class

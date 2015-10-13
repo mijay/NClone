@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using FakeItEasy;
 using FakeItEasy.ExtensionSyntax.Full;
 using mijay.Utils;
@@ -21,33 +22,24 @@ namespace NClone.Tests.ReplicationStrategies
             dummyContext = A.Fake<IReplicationContext>(x => x.Strict());
         }
 
-        private static ReferenceTypeReplicationStrategy ReplicatorFor<T>(IMetadataProvider metadataProvider = null)
+        private static ReferenceTypeReplicationStrategy ReplicatorFor<T>(IMetadataProvider with = null)
         {
-            return new ReferenceTypeReplicationStrategy(metadataProvider ?? A.Fake<IMetadataProvider>(), typeof (T));
+            return new ReferenceTypeReplicationStrategy(with ?? A.Fake<IMetadataProvider>(), typeof (T));
         }
 
         private static IMetadataProvider MetadataProviderFor<T>(Expression<Func<T, object>> member, ReplicationBehavior returnsBehavior)
         {
-            Expression memberAccess = member.Body is UnaryExpression
+            var memberAccess = member.Body is UnaryExpression
                 ? member.Body.As<UnaryExpression>().Operand
                 : member.Body;
             var fieldInfo = memberAccess.As<MemberExpression>().Member.As<FieldInfo>();
 
-            var metadataProvider = A.Fake<IMetadataProvider>();
+            var metadataProvider = A.Fake<IMetadataProvider>(x => x.Strict());
             metadataProvider
                 .CallsTo(x => x.GetFieldsReplicationInfo(typeof (T)))
                 .Returns(new[] { new FieldReplicationInfo(fieldInfo, returnsBehavior) });
 
             return metadataProvider;
-        }
-
-        private static IReplicationContext ReplicationContextThat<T>(T onReceiving, T returns)
-        {
-            var replicationContext = A.Fake<IReplicationContext>(x => x.Strict());
-            replicationContext
-                .CallsTo(x => x.ReplicateAsync(onReceiving))
-                .Returns(returns);
-            return replicationContext;
         }
 
         [Test]
@@ -59,21 +51,19 @@ namespace NClone.Tests.ReplicationStrategies
         }
 
         [Test]
-        public void SourceHasCtor_SourceIsReplicated_CtorWasNotCalledDuringReplication()
+        public void SourceHasCtor_SourceIsReplicated_CtorIsNotCalledDuringReplication()
         {
             var replicator = ReplicatorFor<ClassWithCtor>();
 
             var result = replicator.Replicate(new ClassWithCtor(), dummyContext).As<ClassWithCtor>();
 
-            Assert.That(result.CtorWasCalled, Is.False);
+            Assert.That(result.ctorWasCalled, Is.False);
         }
 
         [Test]
-        public void SourceHasFieldMarkedForCopy_SourceIsReplicated_FieldWasCopied()
+        public void SourceHasFieldMarkedForCopy_SourceIsReplicated_FieldIsCopied()
         {
-            IMetadataProvider metadataProvider = MetadataProviderFor<ClassWithField>(
-                member: x => x.field, returnsBehavior: ReplicationBehavior.Copy);
-            var replicator = ReplicatorFor<ClassWithField>(metadataProvider);
+            var replicator = ReplicatorFor<ClassWithField>(with: MetadataProviderFor<ClassWithField>(x => x.field, ReplicationBehavior.Copy));
 
             var source = new ClassWithField { field = new Class() };
             var result = replicator.Replicate(source, dummyContext).As<ClassWithField>();
@@ -82,46 +72,36 @@ namespace NClone.Tests.ReplicationStrategies
         }
 
         [Test]
-        public void SourceHasFieldMarkedForReplication_SourceIsReplicated_FieldWasReplicated()
+        public void SourceHasFieldMarkedForReplication_SourceIsReplicated_FieldIsSetAfterReplicatedViaContext()
         {
             var sourceField = new Class();
-            var resultField = new Class();
+            var resultTaskSource = new TaskCompletionSource<object>();
 
-            var metadataProvider = MetadataProviderFor<ClassWithField>(x => x.field, ReplicationBehavior.DeepCopy);
-            var replicator = ReplicatorFor<ClassWithField>(metadataProvider);
-            var context = ReplicationContextThat(onReceiving: sourceField, returns: resultField);
+            var replicator = ReplicatorFor<ClassWithField>(with: MetadataProviderFor<ClassWithField>(x => x.field, ReplicationBehavior.DeepCopy));
+            var context = A.Fake<IReplicationContext>(x => x.Strict());
+            context
+                .CallsTo(x => x.ReplicateAsync(sourceField))
+                .ReturnsLazily(_ => resultTaskSource.Task);
 
             var source = new ClassWithField { field = sourceField };
             var result = replicator.Replicate(source, context).As<ClassWithField>();
 
+            Assert.That(result.field, Is.Null);
+
+            var resultField = new Class();
+            resultTaskSource.SetResult(resultField);
             Assert.That(result.field, Is.SameAs(resultField));
-        }
-
-        [Test]
-        public void SourceIsValueType_SourceIsReplicated_FieldWasReplicated()
-        {
-            DateTime sourceField = DateTime.Today;
-            DateTime resultField = DateTime.Today.AddDays(1);
-
-            var metadataProvider = MetadataProviderFor<Struct>(x => x.field, ReplicationBehavior.DeepCopy);
-            var replicator = ReplicatorFor<Struct>(metadataProvider);
-            var context = ReplicationContextThat(onReceiving: sourceField, returns: resultField);
-
-            var source = new Struct { field = sourceField };
-            var result = replicator.Replicate(source, context).As<Struct>();
-
-            Assert.That(result.field, Is.EqualTo(resultField));
         }
 
         private class Class { }
 
         private class ClassWithCtor
         {
-            public readonly bool CtorWasCalled;
+            public readonly bool ctorWasCalled;
 
             public ClassWithCtor()
             {
-                CtorWasCalled = true;
+                ctorWasCalled = true;
             }
         }
 
@@ -131,10 +111,5 @@ namespace NClone.Tests.ReplicationStrategies
         }
 
         private class InheritedClass: Class { }
-
-        private struct Struct
-        {
-            public DateTime field;
-        }
     }
 }

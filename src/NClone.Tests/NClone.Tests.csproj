@@ -44,6 +44,7 @@
     <Compile Include="ReplicationStrategies\CopyArrayReplicationStrategyTest.cs" />
     <Compile Include="ReplicationStrategies\ReplicationStrategyFactoryTest.cs" />
     <Compile Include="ReplicationStrategies\ReferenceTypeReplicatingStrategyTest.cs" />
+    <Compile Include="ReplicationStrategies\ValueTypeReplicatingStrategyTest.cs" />
     <Compile Include="Shared\EnumerableExtensionTest.cs" />
     <Compile Include="MemberAccess\FieldAccessorBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

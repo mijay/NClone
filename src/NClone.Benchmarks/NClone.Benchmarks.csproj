@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Competitions\ArrayAccessCompetition.cs" />
+    <Compile Include="Competitions\ArrayCreationCompetition.cs" />
     <Compile Include="Competitions\DictionaryCompetition.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Competitions\GraphWithBlobReplicationCompetition.cs" />

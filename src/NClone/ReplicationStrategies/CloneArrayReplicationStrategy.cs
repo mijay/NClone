@@ -29,7 +29,7 @@ namespace NClone.ReplicationStrategies
                 "This replicator can copy only arrays of elements of type {0}, but {1} received",
                 elementType, source.GetType().GetElementType());
             var sourceArray = source.As<Array>();
-            var resultingArray = Array.CreateInstance(elementType, sourceArray.Length); // todo: performance test this!
+            var resultingArray = Array.CreateInstance(elementType, sourceArray.Length);
             for (int i = resultingArray.Length - 1; i >= 0; i--)
             {
                 object sourceElement = getElement(sourceArray, i);

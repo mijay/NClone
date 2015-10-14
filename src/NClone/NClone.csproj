@@ -81,6 +81,7 @@
     <Compile Include="MetadataProviders\DefaultMetadataProvider.cs" />
     <Compile Include="MetadataProviders\FieldReplicationInfo.cs" />
     <Compile Include="MetadataProviders\LazyTypeFoundException.cs" />
+    <Compile Include="ObjectReplication\ReplicationException.cs" />
     <Compile Include="ReplicationStrategies\CloneArrayReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\CopyArrayReplicationStrategy.cs" />
     <Compile Include="ReplicationStrategies\ReferenceTypeReplicationStrategy.cs" />

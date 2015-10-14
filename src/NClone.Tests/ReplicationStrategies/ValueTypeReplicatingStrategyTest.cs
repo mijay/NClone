@@ -91,7 +91,7 @@ namespace NClone.Tests.ReplicationStrategies
             var source = new StructWithField { field = sourceField };
             TestDelegate action = () => replicator.Replicate(source, context).As<StructWithField>();
 
-            Assert.That(action, Throws.InstanceOf<CircularReferenceFoundException>());
+            Assert.That(action, Throws.InstanceOf<ReplicationException>());
         }
 
         private struct Struct

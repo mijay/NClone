@@ -1,12 +1,14 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace NClone.ObjectReplication
 {
-    // todo: proper documentation here, in Clone, and in ObjectReplicator
+    /// <summary>
+    /// Indicates that object graph, which should be replicated, contains a cycle.
+    /// </summary>
+    [Obsolete("This exception is never thrown in NClone 1.5+, since replicating of recursive structures is supported"), PublicAPI]
     public class CircularReferenceFoundException: Exception
     {
-       public CircularReferenceFoundException()
-       {
-       }
+        private CircularReferenceFoundException() { }
     }
 }

@@ -30,7 +30,7 @@ namespace NClone.ReplicationStrategies
                 case ReplicationBehavior.DeepCopy:
                     var replicatedValueAsync = context.ReplicateAsync(memberValue);
                     if (!replicatedValueAsync.IsCompleted)
-                        throw new CircularReferenceFoundException();
+                        throw ReplicationException.CycleThroughValueTypeFound();
                     target = memberReplicationInfo.setMember(target, replicatedValueAsync.Result);
                     break;
                 }

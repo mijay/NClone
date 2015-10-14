@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using NClone.MetadataProviders;
@@ -56,6 +55,10 @@ namespace NClone
         /// Uses both: conventions and attributes to adjust cloning process. Equivalent to <see cref="ObjectReplicator"/>
         /// with <see cref="ConventionalMetadataProvider"/>.
         /// </remarks>
+        /// <exception cref="ReplicationException">
+        /// Is thrown when object found that cannot be replicated. Examples of such objects are: COM objects, structures on
+        /// the last step (when traversed depth-first) of a reference cycle.
+        /// </exception>
         [PublicAPI]
         public static T ObjectGraph<T>(T source)
         {
@@ -69,6 +72,10 @@ namespace NClone
         /// Uses only attributes to adjust cloning process. Equivalent to <see cref="ObjectReplicator"/>
         /// with <see cref="AttributeBasedMetadataProvider"/>.
         /// </remarks>
+        /// <exception cref="ReplicationException">
+        /// Is thrown when object found that cannot be replicated. Examples of such objects are: COM objects, structures on
+        /// the last step (when traversed depth-first) of a reference cycle.
+        /// </exception>
         [PublicAPI]
         public static T ObjectIgnoringConventions<T>(T source)
         {

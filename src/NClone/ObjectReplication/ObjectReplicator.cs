@@ -45,6 +45,10 @@ namespace NClone.ObjectReplication
         /// <summary>
         /// Replicate <paramref name="source"/>.
         /// </summary>
+        /// <exception cref="ReplicationException">
+        /// Is thrown when object found that cannot be replicated. Examples of such objects are: COM objects, structures on
+        /// the last step (when traversed depth-first) of a reference cycle.
+        /// </exception>
         public T Replicate<T>(T source)
         {
             var result = new ReplicationContext(replicationStrategyFactory).ReplicateAsync(source);

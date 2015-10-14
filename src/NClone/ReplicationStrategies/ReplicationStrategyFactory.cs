@@ -39,6 +39,7 @@ namespace NClone.ReplicationStrategies
         {
             if (type.IsNullable())
                 type = type.GetNullableUnderlyingType();
+            // todo: throw when COM or Contextful type is found
 
             ReplicationBehavior behavior = metadataProvider.GetPerTypeBehavior(type);
             switch (behavior) {

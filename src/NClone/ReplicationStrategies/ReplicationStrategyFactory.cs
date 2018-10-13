@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using mijay.Utils;
 using mijay.Utils.Reflection;
 using NClone.MetadataProviders;
@@ -11,8 +11,8 @@ namespace NClone.ReplicationStrategies
     /// </summary>
     internal class ReplicationStrategyFactory: IReplicationStrategyFactory
     {
-        private readonly IDictionary<Type, IReplicationStrategy> entityReplicators =
-            new Dictionary<Type, IReplicationStrategy>();
+        private readonly ConcurrentDictionary<Type, IReplicationStrategy> entityReplicators =
+            new ConcurrentDictionary<Type, IReplicationStrategy>();
 
         private readonly IMetadataProvider metadataProvider;
 

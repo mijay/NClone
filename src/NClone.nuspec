@@ -20,7 +20,5 @@
     <file src="NClone\bin\net45\*.xml" target="lib\net45" />
     <file src="NClone\bin\net40\*.dll" target="lib\net40" />
     <file src="NClone\bin\net40\*.xml" target="lib\net40" />
-    <file src="NClone\bin\net35\*.dll" target="lib\net35" />
-    <file src="NClone\bin\net35\*.xml" target="lib\net35" />
   </files>
 </package>

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NClone</id>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <authors>Dmitry Kononchuk</authors>
     <owners>Dmitry Kononchuk</owners>
     <licenseUrl>https://github.com/mijay/NClone/blob/master/LICENSE</licenseUrl>
@@ -13,7 +13,7 @@
     <copyright>Copyright © Dmitry Kononchuk 2013</copyright>
     <tags>Clone DeepClone Copy DeepCopy Replicate ICloneable Tools</tags>
     <dependencies />
-    <releaseNotes>Support for lower framework versions (.net 4.0, .net 3.5) is added.</releaseNotes>
+    <releaseNotes>Fix an issue when concurrent execution of Clone would cause an exception.</releaseNotes>
   </metadata>
   <files>
     <file src="NClone\bin\net45\*.dll" target="lib\net45" />
